@@ -1,6 +1,5 @@
 ﻿using SmartBots.Domain.Common;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartBots.Data.Models
 {

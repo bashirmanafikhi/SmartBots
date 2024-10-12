@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SmartBots.Data.Models;
-using SmartBots.Infrastructure.Interceptors;
 using System.Reflection;
 
 namespace SmartBots.Infrastructure.Data

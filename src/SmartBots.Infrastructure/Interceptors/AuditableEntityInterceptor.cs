@@ -1,14 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using SmartBots.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SmartBots.Application.Interfaces;
-using SmartBots.Infrastructure.Common;
+using SmartBots.Domain.Interfaces;
 
 namespace SmartBots.Infrastructure.Interceptors
 {
