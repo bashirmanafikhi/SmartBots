@@ -8,11 +8,13 @@ namespace SmartBots.Domain.Entities
         public string Text { get; set; }
         public bool Completed { get; set; }
         public string ApplicationUserId { get; set; }
+        public TodoPriority Priority { get; set; }
 
-        public Todo(string applicationUserId, string text)
+        public Todo(string applicationUserId, string text, TodoPriority priority)
         {
             ApplicationUserId = applicationUserId;
             Text = text;
+            Priority = priority;
         }
 
         public void Complete()
@@ -29,5 +31,12 @@ namespace SmartBots.Domain.Entities
         {
             Completed = completed;
         }
+    }
+
+    public enum TodoPriority
+    {
+        Low,
+        Medium,
+        High
     }
 }

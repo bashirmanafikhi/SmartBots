@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartBots.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SmartBots.Infrastructure.Data;
 namespace SmartBots.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241013134114_AddPriorityForToDoTable")]
+    partial class AddPriorityForToDoTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,10 +205,6 @@ namespace SmartBots.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("Completed")
                         .HasColumnType("bit");
 
@@ -229,8 +228,6 @@ namespace SmartBots.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Todos");
                 });
@@ -349,20 +346,6 @@ namespace SmartBots.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SmartBots.Data.Models.Todo", b =>
-                {
-                    b.HasOne("SmartBots.Infrastructure.Data.ApplicationUser", null)
-                        .WithMany("Todos")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SmartBots.Infrastructure.Data.ApplicationUser", b =>
-                {
-                    b.Navigation("Todos");
                 });
 #pragma warning restore 612, 618
         }

@@ -27,7 +27,7 @@ namespace SmartBots.Application.Features.Todos
             if (!currentUserId.HasValue)
                 throw new UnauthorizedAccessException();
 
-            var todo = new Todo(currentUserId.Value.ToString(), command.Text);
+            var todo = new Todo(currentUserId.Value.ToString(), command.Text, command.Priority);
 
             await _todoRepository.AddAsync(todo, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

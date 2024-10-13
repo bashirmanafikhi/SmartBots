@@ -14,5 +14,6 @@ namespace SmartBots.Application.Features.Todos
         public Guid Id { get; set; }
         public string Text { get; set; }
         public bool Completed { get; set; }
+        public TodoPriority Priority { get; set; }
     }
 }
