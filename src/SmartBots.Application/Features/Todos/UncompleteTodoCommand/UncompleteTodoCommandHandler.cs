@@ -6,8 +6,8 @@ namespace SmartBots.Application.Features.Todos
 {
     public class UncompleteTodoCommandHandler : IRequestHandler<UncompleteTodoCommand, bool>
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ITodoRepository _todoRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UncompleteTodoCommandHandler(IUnitOfWork unitOfWork, ITodoRepository todoRepository)
         {
@@ -17,13 +17,12 @@ namespace SmartBots.Application.Features.Todos
 
         public async Task<bool> Handle(UncompleteTodoCommand command, CancellationToken cancellationToken)
         {
-            var todo = await _unitOfWork.Repository<Todo>().GetByIdAsync(command.Id);
+            var todo = await _todoRepository.GetByIdAsync(command.Id, cancellationToken);
             if (todo == null)
-            {
                 return false;
-            }
 
-            await _todoRepository.UncompleteAsync(todo);
+            todo.Uncomplete();
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return true;
         }

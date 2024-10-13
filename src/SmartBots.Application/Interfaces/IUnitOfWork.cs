@@ -4,12 +4,10 @@ namespace SmartBots.Application.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IGenericRepository<T> Repository<T>() where T : BaseAuditableEntity;
-
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-
-        Task<int> SaveAndRemoveCache(CancellationToken cancellationToken, params string[] cacheKeys);
-
-        Task Rollback();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task BeginTransactionAsync(CancellationToken cancellationToken = default);
+        Task CommitTransactionAsync(CancellationToken cancellationToken = default);
+        Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
     }
+
 }

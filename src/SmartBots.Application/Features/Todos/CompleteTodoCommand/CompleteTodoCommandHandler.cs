@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SmartBots.Application.Interfaces;
-using SmartBots.Data.Models;
 
 namespace SmartBots.Application.Features.Todos
 {
@@ -17,13 +16,12 @@ namespace SmartBots.Application.Features.Todos
 
         public async Task<bool> Handle(CompleteTodoCommand command, CancellationToken cancellationToken)
         {
-            var todo = await _unitOfWork.Repository<Todo>().GetByIdAsync(command.Id);
+            var todo = await _todoRepository.GetByIdAsync(command.Id, cancellationToken);
             if (todo == null)
-            {
                 return false;
-            }
 
-            await _todoRepository.CompleteAsync(todo);
+            todo.Complete();
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return true;
         }

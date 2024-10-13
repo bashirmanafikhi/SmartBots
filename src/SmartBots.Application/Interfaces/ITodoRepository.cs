@@ -1,13 +1,17 @@
 ﻿using SmartBots.Data.Models;
+using System.Linq.Expressions;
 
-namespace SmartBots.Application
+namespace SmartBots.Application.Interfaces
 {
     public interface ITodoRepository
     {
-        Task<IList<Todo>> GetAllAsync();
-        Task AddAsync(Todo item);
-        Task DeleteAsync(Todo item);
-        Task CompleteAsync(Todo item);
-        Task UncompleteAsync(Todo item);
+        Task<Todo?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<bool> AddAsync(Todo item, CancellationToken cancellationToken = default);
+        Task<bool> DeleteAsync(Todo item, CancellationToken cancellationToken = default);
+        Task<IList<Todo>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<IList<Todo>> GetFilteredAsync(
+            Expression<Func<Todo, bool>> filter,
+            CancellationToken cancellationToken = default);
+        IQueryable<Todo> Query();
     }
 }
