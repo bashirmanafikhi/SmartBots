@@ -1,4 +1,5 @@
-﻿using SmartBots.Application.Common.Mappings;
+﻿using SmartBots.Application.Common;
+using SmartBots.Application.Common.Mappings;
 using SmartBots.Domain.Interfaces;
 using System.Linq.Expressions;
 
@@ -16,8 +17,10 @@ namespace SmartBots.Application.Interfaces
             CancellationToken cancellationToken = default
         );
 
-        Task<List<TDestination>> GetFilteredAndProjectToAsync<TDestination>(
+        Task<(List<TDestination> Result, int Total)> GetFilteredAndProjectToAsync<TDestination>(
             Expression<Func<T, bool>> predicate,
+            Paging? paging = null,
+            Expression<Func<T, object>>? orderBy = null,
             CancellationToken cancellationToken = default) where TDestination : IMapFrom<T>;
 
         // Optional: Move to another interface if needed.

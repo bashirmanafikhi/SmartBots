@@ -2,50 +2,122 @@
 @rendermode InteractiveServer
 @using MediatR
 @using SmartBots.Application.Features.Todos
+@using SmartBots.Components.Pages.Shared
 @inject IMediator Mediator
 @attribute [Authorize]
 
 <PageTitle>Todo List</PageTitle>
 
-<div class="border" style="padding: 20px;">
+<!-- New Item Form -->
+<div class="border p-3">
     <h4>New Item</h4>
     <TodoItemForm OnItemAdded="@(async () => await ItemsChanged())" />
 </div>
 
-<div class="border" style="padding: 20px; margin-top: 20px;">
-    <div style="display: flex; flex-direction: column">
-        @foreach (var todo in Todos)
-        {
-            <div style="display: flex; margin-bottom: 10px;">
-                <div style="display: flex; align-items: center;margin-bottom: 10px;">
-                    <div class="@ItemClass(todo)" style="width: 280px;">@todo.Text</div>
-                </div>
-                @if (todo.Completed)
-                {
-                    <div style="width: 120px">
-                        <button class="btn btn-primary" onclick="@(() => UncompleteItem(todo))">Uncomplete</button>
-                    </div>
-                }
-                @if (!todo.Completed)
-                {
-                    <div style="width: 120px">
-                        <button class="btn btn-primary" onclick="@(() => CompleteItem(todo))">Complete</button>
-                    </div>
-                }
-                <div>
-                    <button class="btn btn-danger" onclick="@(() => DeleteItem(todo))">Delete</button>
-                </div>
+<!-- Search and Todo List Section -->
+<div class="border p-3 mt-3">
+
+    <!-- Search Section -->
+    <div class="form-row">
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search todos..." @bind="SearchKeyword" @bind:event="oninput" />
+                <button class="btn btn-primary" @onclick="PerformSearch">Search</button>
             </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- Todo List -->
+    <div class="todo-list">
+        @if (Todos.Any())
+        {
+            @foreach (var todo in Todos)
+            {
+                <div class="d-flex align-items-center mb-2">
+                    <div class="@ItemClass(todo)" style="width: 280px;">@todo.Text</div>
+
+                    @if (todo.Completed)
+                    {
+                        <button class="btn btn-primary btn-sm ms-2" @onclick="() => UncompleteItem(todo)">Uncomplete</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary btn-sm ms-2" @onclick="() => CompleteItem(todo)">Complete</button>
+                    }
+
+                    <button class="btn btn-danger btn-sm ms-2" @onclick="() => DeleteItem(todo)">Delete</button>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No todos found.</p>
         }
     </div>
 </div>
 
+<!-- Pagination Component -->
+<Pagination 
+    TotalItems="_totalItems" 
+    PageSize="_pageSize" 
+    CurrentPage="_currentPage" 
+    PageSizeOptions="new int[] { 5, 10, 20, 50 }"
+    OnPageChanged="HandlePageChanged"
+    OnPageSizeChanged="HandlePageSizeChanged" />
+
 @code {
     private IList<TodoDto> Todos { get; set; } = new List<TodoDto>();
+    private string SearchKeyword { get; set; } = string.Empty;
+
+    private int _currentPage = 1;
+    private int _pageSize = 10;
+    private int _totalItems;
 
     protected override async Task OnInitializedAsync()
     {
-        Todos = await Mediator.Send(new GetAllTodosQuery());
+        await LoadTodosAsync();
+    }
+
+    private async Task LoadTodosAsync()
+    {
+        var query = new GetAllTodosQuery
+        {
+            Criteria = new TodosSearchCriteria
+            {
+                Keyword = SearchKeyword
+            },
+            Paging = new Application.Common.Paging
+            {
+                PageNumber = _currentPage,
+                PageSize = _pageSize
+            }
+        };
+
+        var result = await Mediator.Send(query);
+
+        Todos = result.Items;
+        _totalItems = result.Total;
+    }
+
+    private async Task PerformSearch()
+    {
+        _currentPage = 1; // Reset to first page when searching
+        await LoadTodosAsync();
+    }
+
+    private async Task HandlePageChanged(int pageNumber)
+    {
+        _currentPage = pageNumber;
+        await LoadTodosAsync();
+    }
+
+    private async Task HandlePageSizeChanged(int pageSize)
+    {
+        _pageSize = pageSize;
+        _currentPage = 1; // Reset to first page when page size changes
+        await LoadTodosAsync();
     }
 
     public string ItemClass(TodoDto item)
@@ -55,25 +127,25 @@
 
     public async Task DeleteItem(TodoDto item)
     {
-        await Mediator.Send(new DeleteTodoCommand() { Id = item.Id });
+        await Mediator.Send(new DeleteTodoCommand { Id = item.Id });
         await ItemsChanged();
     }
 
     public async Task CompleteItem(TodoDto item)
     {
-        await Mediator.Send(new CompleteTodoCommand() { Id = item.Id });
+        await Mediator.Send(new CompleteTodoCommand { Id = item.Id });
         await ItemsChanged();
     }
 
     public async Task UncompleteItem(TodoDto item)
     {
-        await Mediator.Send(new UncompleteTodoCommand() { Id = item.Id });
+        await Mediator.Send(new UncompleteTodoCommand { Id = item.Id });
         await ItemsChanged();
     }
 
     public async Task ItemsChanged()
     {
-        Todos = await Mediator.Send(new GetAllTodosQuery());
+        await LoadTodosAsync();
         StateHasChanged();
     }
 }
