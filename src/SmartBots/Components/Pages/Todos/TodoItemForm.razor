@@ -8,7 +8,13 @@
 <EditForm Model="@NewItem" OnSubmit="@ItemAdded" class="mt-4">
     <div class="form-row align-items-center">
 
+
         <div class="form-group col-md-4">
+            <label for="itemText">Text:</label>
+            <InputText @bind-Value="NewItem.Text" class="form-control" id="itemText" />
+        </div>
+
+        <div class="form-group col-md-4 mb-2">
             <label for="priority">Priority:</label>
             <InputSelect @bind-Value="NewItem.Priority" class="form-control" id="priority">
                 @foreach (var priority in Enum.GetValues(typeof(TodoPriority)))
@@ -16,11 +22,6 @@
                     <option value="@priority">@priority</option>
                 }
             </InputSelect>
-        </div>
-
-        <div class="form-group col-md-4">
-            <label for="itemText">Text:</label>
-            <InputText @bind-Value="NewItem.Text" class="form-control" id="itemText" />
         </div>
 
         <div class="form-group col-md-4">
@@ -42,8 +43,12 @@
 
     public async Task ItemAdded()
     {
+        await Mediator.Send(new AddTodoCommand()
+        {
+            Text = NewItem.Text,
+            Priority = NewItem.Priority
+        });
 
-        await Mediator.Send(new AddTodoCommand() { Text = NewItem.Text });
         NewItem.Text = "";
 
         if (OnItemAdded != null)
