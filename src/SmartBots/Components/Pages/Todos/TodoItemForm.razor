@@ -1,16 +1,37 @@
 ﻿@using MediatR
 @using SmartBots.Application.Features.Todos
+@using SmartBots.Domain.Entities
 @inject IMediator Mediator
 
 
-<EditForm Model="@NewItem" OnSubmit="@ItemAdded">
-    <div style="display: flex; align-items: center; width: 400px;">
-        <div style="margin-right: 10px">Text:</div>
-        <InputText @bind-Value="NewItem.Text" class="form-control" style="margin-right: 10px" id="Item" />
-        <input type="submit" class="btn btn-primary" style="margin-right: 10px" value="Add" />
-        <input type="reset" class="btn btn-secondary" value="Clear" />
+<EditForm Model="@NewItem" OnSubmit="@ItemAdded" class="mt-4">
+    <div class="form-row align-items-center">
+
+        <div class="form-group col-md-4">
+            <label for="priority">Priority:</label>
+            <InputSelect @bind-Value="NewItem.Priority" class="form-control" id="priority">
+                @foreach (var priority in Enum.GetValues(typeof(TodoPriority)))
+                {
+                    <option value="@priority">@priority</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group col-md-4">
+            <label for="itemText">Text:</label>
+            <InputText @bind-Value="NewItem.Text" class="form-control" id="itemText" />
+        </div>
+
+        <div class="form-group col-md-4">
+            <div class="d-flex align-items-center h-100">
+                <input type="submit" class="btn btn-primary mr-2" value="Add" />
+                <input type="reset" class="btn btn-secondary" value="Clear" />
+            </div>
+        </div>
+
     </div>
 </EditForm>
+
 
 @code {
     [Parameter]

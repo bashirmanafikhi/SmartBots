@@ -20,7 +20,7 @@ namespace SmartBots.Application.Features.Todos
 
         public async Task<TodoDto> Handle(AddTodoCommand command, CancellationToken cancellationToken)
         {
-            var todo = new Todo(command.Text);
+            var todo = new Todo(command.Text, command.Priority);
 
             await _todoRepository.AddAsync(todo, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
