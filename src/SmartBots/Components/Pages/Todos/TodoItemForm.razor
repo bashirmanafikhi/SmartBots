@@ -2,6 +2,7 @@
 @using SmartBots.Application.Features.Todos
 @using SmartBots.Domain.Entities
 @inject IMediator Mediator
+@attribute [Authorize]
 
 
 <EditForm Model="@NewItem" OnSubmit="@ItemAdded" class="mt-4">

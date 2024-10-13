@@ -10,17 +10,24 @@ namespace SmartBots.Application.Features.Todos
         private readonly ITodoRepository _todoRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public AddTodoCommandHandler(IUnitOfWork unitOfWork, ITodoRepository todoRepository, IMapper mapper)
+        public AddTodoCommandHandler(IUnitOfWork unitOfWork, ITodoRepository todoRepository, IMapper mapper, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _todoRepository = todoRepository;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<TodoDto> Handle(AddTodoCommand command, CancellationToken cancellationToken)
         {
-            var todo = new Todo(command.Text, command.Priority);
+            var currentUserId = _currentUserService.GetUserId();
+
+            if (!currentUserId.HasValue)
+                throw new UnauthorizedAccessException();
+
+            var todo = new Todo(currentUserId.Value.ToString(), command.Text, command.Priority);
 
             await _todoRepository.AddAsync(todo, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

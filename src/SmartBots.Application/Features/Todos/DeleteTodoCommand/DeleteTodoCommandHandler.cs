@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SmartBots.Application.Interfaces;
+using SmartBots.Domain.Interfaces;
 
 namespace SmartBots.Application.Features.Todos
 {
@@ -7,11 +8,13 @@ namespace SmartBots.Application.Features.Todos
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITodoRepository _todoRepository;
+        private readonly ICurrentUserService _currentUserService;
 
-        public DeleteTodoCommandHandler(IUnitOfWork unitOfWork, ITodoRepository todoRepository)
+        public DeleteTodoCommandHandler(IUnitOfWork unitOfWork, ITodoRepository todoRepository, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _todoRepository = todoRepository;
+            _currentUserService = currentUserService;
         }
 
         public async Task<bool> Handle(DeleteTodoCommand command, CancellationToken cancellationToken)
@@ -21,6 +24,10 @@ namespace SmartBots.Application.Features.Todos
             {
                 return false;
             }
+
+            var currentuserid = _currentUserService.GetUserId();
+            todo.Authorize(currentuserid);
+
             await _todoRepository.DeleteAsync(todo, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -1,15 +1,18 @@
 ﻿using SmartBots.Domain.Common;
+using SmartBots.Domain.Interfaces;
 
 namespace SmartBots.Domain.Entities
 {
-    public class Todo : BaseAuditableEntity
+    public class Todo : BaseAuditableEntity, IUserOwnedEntity
     {
         public string Text { get; set; }
         public bool Completed { get; set; }
+        public string ApplicationUserId { get; set; }
         public TodoPriority Priority { get; set; }
 
-        public Todo(string text, TodoPriority priority)
+        public Todo(string applicationUserId, string text, TodoPriority priority)
         {
+            ApplicationUserId = applicationUserId;
             Text = text;
             Priority = priority;
         }

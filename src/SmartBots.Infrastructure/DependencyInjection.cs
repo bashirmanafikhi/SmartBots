@@ -44,6 +44,7 @@ namespace SmartBots.Infrastructure
             services
                 .AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork))
                 .AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>))
+                .AddTransient(typeof(IUserOwnedEntityRepository<>), typeof(UserOwnedEntityRepository<>))
                 .AddTransient<ITodoRepository, TodoRepository>()
                 .AddTransient<IExchangeRepository, ExchangeRepository>()
                 .AddTransient<ICurrentUserService, CurrentUserService>();

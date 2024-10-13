@@ -1,4 +1,6 @@
-﻿using SmartBots.Application.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartBots.Application.Features.Todos;
+using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Entities;
 using System.Linq.Expressions;
 
@@ -6,9 +8,9 @@ namespace SmartBots.Infrastructure.Repositories
 {
     public class TodoRepository : ITodoRepository
     {
-        private readonly IGenericRepository<Todo> _repository;
+        private readonly IUserOwnedEntityRepository<Todo> _repository;
 
-        public TodoRepository(IGenericRepository<Todo> repository)
+        public TodoRepository(IUserOwnedEntityRepository<Todo> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
@@ -52,5 +54,12 @@ namespace SmartBots.Infrastructure.Repositories
         {
             return _repository.Query();
         }
+
+        public async Task<List<TodoDto>> GetCurrentUserItems(
+            CancellationToken cancellationToken = default)
+        {
+            return await _repository.GetCurrentUserItemsAsync<TodoDto>(cancellationToken);
+        }
+
     }
 }
