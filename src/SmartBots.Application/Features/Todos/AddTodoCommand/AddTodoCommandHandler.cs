@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SmartBots.Application.Interfaces;
-using SmartBots.Data.Models;
+using SmartBots.Domain.Entities;
 
 namespace SmartBots.Application.Features.Todos
 {

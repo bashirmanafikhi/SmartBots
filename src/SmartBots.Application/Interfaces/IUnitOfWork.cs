@@ -1,6 +1,4 @@
-﻿using SmartBots.Domain.Common;
-
-namespace SmartBots.Application.Interfaces
+﻿namespace SmartBots.Application.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {

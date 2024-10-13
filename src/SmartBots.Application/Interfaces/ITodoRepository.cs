@@ -1,4 +1,4 @@
-﻿using SmartBots.Data.Models;
+﻿using SmartBots.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace SmartBots.Application.Interfaces

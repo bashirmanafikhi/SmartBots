@@ -4,21 +4,21 @@ using System.Linq.Expressions;
 
 namespace SmartBots.Infrastructure.Repositories
 {
-    public class TodoRepository : ITodoRepository
+    public class ExchangeRepository : IExchangeRepository
     {
-        private readonly IGenericRepository<Todo> _repository;
+        private readonly IGenericRepository<Exchange> _repository;
 
-        public TodoRepository(IGenericRepository<Todo> repository)
+        public ExchangeRepository(IGenericRepository<Exchange> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<Todo?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Exchange?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _repository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<bool> AddAsync(Todo item, CancellationToken cancellationToken = default)
+        public async Task<bool> AddAsync(Exchange item, CancellationToken cancellationToken = default)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
@@ -27,7 +27,7 @@ namespace SmartBots.Infrastructure.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Todo item, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteAsync(Exchange item, CancellationToken cancellationToken = default)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
@@ -36,19 +36,19 @@ namespace SmartBots.Infrastructure.Repositories
             return true;
         }
 
-        public async Task<IList<Todo>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IList<Exchange>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _repository.GetAllAsync(cancellationToken);
         }
 
-        public async Task<IList<Todo>> GetFilteredAsync(
-            Expression<Func<Todo, bool>> filter,
+        public async Task<IList<Exchange>> GetFilteredAsync(
+            Expression<Func<Exchange, bool>> filter,
             CancellationToken cancellationToken = default)
         {
             return await _repository.GetFilteredAsync(filter, cancellationToken);
         }
 
-        public IQueryable<Todo> Query()
+        public IQueryable<Exchange> Query()
         {
             return _repository.Query();
         }

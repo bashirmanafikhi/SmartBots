@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SmartBots.Application.Interfaces;
-using SmartBots.Data.Models;
 
 namespace SmartBots.Application.Features.Todos
 {

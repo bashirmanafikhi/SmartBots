@@ -1,6 +1,6 @@
 ﻿using SmartBots.Domain.Common;
 
-namespace SmartBots.Data.Models
+namespace SmartBots.Domain.Entities
 {
     public class Todo : BaseAuditableEntity
     {

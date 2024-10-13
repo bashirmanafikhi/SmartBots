@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SmartBots.Application.Interfaces;
-using SmartBots.Data.Models;
 using SmartBots.Domain.Common;
 using SmartBots.Infrastructure.Data;
 using System.Linq.Expressions;

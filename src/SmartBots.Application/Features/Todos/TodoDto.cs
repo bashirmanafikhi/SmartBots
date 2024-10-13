@@ -1,5 +1,5 @@
 ﻿using SmartBots.Application.Common.Mappings;
-using SmartBots.Data.Models;
+using SmartBots.Domain.Entities;
 
 namespace SmartBots.Application.Features.Todos
 {

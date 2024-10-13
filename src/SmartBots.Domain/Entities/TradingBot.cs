@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartBots.Data.Models
+namespace SmartBots.Domain.Entities
 {
     public class TradingBot
     {

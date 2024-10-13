@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SmartBots.Data.Models;
+using SmartBots.Domain.Entities;
 using System.Reflection;
 
 namespace SmartBots.Infrastructure.Data
@@ -8,6 +8,7 @@ namespace SmartBots.Infrastructure.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Todo> Todos => Set<Todo>();
+        public DbSet<Exchange> Exchanges => Set<Exchange>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -2,7 +2,6 @@
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using SmartBots.Application.Interfaces;
-using SmartBots.Data.Models;
 
 namespace SmartBots.Application.Features.Todos
 {
@@ -26,7 +25,6 @@ namespace SmartBots.Application.Features.Todos
             var todoDtos = todosQuery
                 .ProjectTo<TodoDto>(_mapper.ConfigurationProvider)
                 .ToList();
-                //.ToListAsync(cancellationToken);
 
             return todoDtos;
         }
