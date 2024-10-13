@@ -1,6 +1,4 @@
 ﻿using SmartBots.Application.Common.Mappings;
-using SmartBots.Application.Features.Todos;
-using SmartBots.Data.Models;
 using SmartBots.Domain.Interfaces;
 using System.Linq.Expressions;
 

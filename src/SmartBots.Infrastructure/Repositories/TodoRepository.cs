@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartBots.Application.Features.Todos;
 using SmartBots.Application.Interfaces;
-using SmartBots.Data.Models;
+using SmartBots.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace SmartBots.Infrastructure.Repositories

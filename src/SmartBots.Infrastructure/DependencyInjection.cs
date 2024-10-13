@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SmartBots.Application;
 using SmartBots.Application.Interfaces;
 using SmartBots.Infrastructure.Common;
 using SmartBots.Infrastructure.Data;
@@ -47,6 +46,7 @@ namespace SmartBots.Infrastructure
                 .AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>))
                 .AddTransient(typeof(IUserOwnedEntityRepository<>), typeof(UserOwnedEntityRepository<>))
                 .AddTransient<ITodoRepository, TodoRepository>()
+                .AddTransient<IExchangeRepository, ExchangeRepository>()
                 .AddTransient<ICurrentUserService, CurrentUserService>();
         }
     }

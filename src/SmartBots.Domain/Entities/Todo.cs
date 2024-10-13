@@ -1,7 +1,7 @@
 ﻿using SmartBots.Domain.Common;
 using SmartBots.Domain.Interfaces;
 
-namespace SmartBots.Data.Models
+namespace SmartBots.Domain.Entities
 {
     public class Todo : BaseAuditableEntity, IUserOwnedEntity
     {

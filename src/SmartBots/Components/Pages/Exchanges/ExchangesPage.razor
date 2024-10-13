@@ -1,0 +1,97 @@
+﻿@page "/ExchangesPage"
+@rendermode InteractiveServer
+@using MediatR
+@using SmartBots.Application.Features.Exchange
+@inject IMediator Mediator
+
+<PageTitle>Exchange List</PageTitle>
+
+<div class="container mt-4">
+    <h4 class="text-center mb-4">New Exchange</h4>
+    <EditForm Model="@NewExchange" OnSubmit="@ExchangeAdded">
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label>Name:</label>
+                <InputText @bind-Value="NewExchange.Name" class="form-control" />
+            </div>
+
+            <div class="form-group col-md-6 mb-3">
+                <label>Type:</label>
+                <InputSelect @bind-Value="NewExchange.Type" class="form-control">
+                    <option value="Binance">Binance</option>
+                    <option value="Coinbase">Coinbase</option>
+                </InputSelect>
+            </div>
+
+            <div class="form-group col-md-6 mb-3">
+                <label>API Key:</label>
+                <InputText @bind-Value="NewExchange.ApiKey" class="form-control" />
+            </div>
+
+            <div class="form-group col-md-6 mb-3">
+                <label>API Secret:</label>
+                <InputText @bind-Value="NewExchange.ApiSecret" class="form-control" />
+            </div>
+
+            <div class="form-group col-md-6 mt-3 mb-3">
+                <label>Is Test:</label>
+                <InputCheckbox @bind-Value="NewExchange.IsTest" class="form-check-input" />
+            </div>
+        </div>
+
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary mx-2">Add</button>
+            <button type="reset" class="btn btn-secondary mx-2">Clear</button>
+        </div>
+    </EditForm>
+</div>
+
+
+<div class="container mt-4">
+    <h4 class="text-center mb-4">Exchanges List</h4>
+    <div class="list-group">
+        @foreach (var exchange in Exchanges)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="exchange-name">@exchange.Name (@exchange.Type)</span>
+                <button class="btn btn-danger" onclick="@(() => DeleteExchange(exchange))">Delete</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private IList<ExchangeDto> Exchanges { get; set; } = new List<ExchangeDto>();
+    private ExchangeDto NewExchange = new ExchangeDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Exchanges = await Mediator.Send(new GetAllExchangesQuery());
+    }
+
+    public async Task ExchangeAdded()
+    {
+        await Mediator.Send(new AddExchangeCommand()
+            {
+                Name = NewExchange.Name,
+                Type = NewExchange.Type,
+                ApiKey = NewExchange.ApiKey,
+                ApiSecret = NewExchange.ApiSecret,
+                IsTest = NewExchange.IsTest
+            });
+        NewExchange = new ExchangeDto(); // Reset the new exchange object
+        await LoadExchanges();
+    }
+
+    public async Task DeleteExchange(ExchangeDto exchange)
+    {
+        await Mediator.Send(new DeleteExchangeCommand() { Id = exchange.Id });
+        await LoadExchanges();
+    }
+
+    private async Task LoadExchanges()
+    {
+        Exchanges = await Mediator.Send(new GetAllExchangesQuery());
+        StateHasChanged();
+    }
+}

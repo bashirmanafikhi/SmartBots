@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using SmartBots.Data.Models;
+using SmartBots.Domain.Entities;
 
 namespace SmartBots.Infrastructure.Data
 {

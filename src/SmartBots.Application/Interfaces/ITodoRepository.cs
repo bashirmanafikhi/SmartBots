@@ -1,5 +1,5 @@
-﻿using SmartBots.Application.Features.Todos;
-using SmartBots.Data.Models;
+﻿using SmartBots.Domain.Entities;
+using SmartBots.Application.Features.Todos;
 using System.Linq.Expressions;
 
 namespace SmartBots.Application.Interfaces
