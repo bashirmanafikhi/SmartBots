@@ -1,4 +1,5 @@
-﻿using SmartBots.Data.Models;
+﻿using SmartBots.Application.Features.Todos;
+using SmartBots.Data.Models;
 using System.Linq.Expressions;
 
 namespace SmartBots.Application.Interfaces
@@ -13,5 +14,6 @@ namespace SmartBots.Application.Interfaces
             Expression<Func<Todo, bool>> filter,
             CancellationToken cancellationToken = default);
         IQueryable<Todo> Query();
+        Task<List<TodoDto>> GetCurrentUserItems(CancellationToken cancellationToken = default);
     }
 }

@@ -20,10 +20,11 @@ namespace SmartBots.Application.Features.Todos
             if (todo == null)
                 return false;
 
-            todo.Complete();
-
             var currentUserId = _currentUserService.GetUserId();
             todo.Authorize(currentUserId);
+
+            todo.Complete();
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return true;
         }

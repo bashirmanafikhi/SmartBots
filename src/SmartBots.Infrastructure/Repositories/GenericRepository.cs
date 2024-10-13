@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SmartBots.Application.Common.Mappings;
 using SmartBots.Application.Interfaces;
-using SmartBots.Data.Models;
 using SmartBots.Domain.Common;
 using SmartBots.Infrastructure.Data;
 using System.Linq.Expressions;
@@ -14,12 +14,14 @@ namespace SmartBots.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<GenericRepository<T>> _logger;
-        private DbSet<T> _dbSet => _dbContext.Set<T>();  // Lazy initialization
+        private readonly IMapper _mapper;
+        protected DbSet<T> _dbSet => _dbContext.Set<T>();  // Lazy initialization
 
-        public GenericRepository(ApplicationDbContext dbContext, ILogger<GenericRepository<T>> logger)
+        public GenericRepository(ApplicationDbContext dbContext, ILogger<GenericRepository<T>> logger, IMapper mapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper;
         }
 
         public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
@@ -82,6 +84,17 @@ namespace SmartBots.Infrastructure.Repositories
             return await _dbSet
                 .AsNoTracking()
                 .Where(predicate)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<TDestination>> GetFilteredAndProjectToAsync<TDestination>(
+            Expression<Func<T, bool>> predicate,
+            CancellationToken cancellationToken = default) where TDestination : IMapFrom<T>
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(predicate)
+                .ProjectTo<TDestination>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
 

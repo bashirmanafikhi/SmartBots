@@ -1,4 +1,6 @@
-﻿using SmartBots.Data.Models;
+﻿using SmartBots.Application.Common.Mappings;
+using SmartBots.Application.Features.Todos;
+using SmartBots.Data.Models;
 using SmartBots.Domain.Interfaces;
 using System.Linq.Expressions;
 
@@ -15,6 +17,10 @@ namespace SmartBots.Application.Interfaces
             Expression<Func<T, bool>> predicate,
             CancellationToken cancellationToken = default
         );
+
+        Task<List<TDestination>> GetFilteredAndProjectToAsync<TDestination>(
+            Expression<Func<T, bool>> predicate,
+            CancellationToken cancellationToken = default) where TDestination : IMapFrom<T>;
 
         // Optional: Move to another interface if needed.
         Task<List<TDestination>> ProjectAllToAsync<TDestination>(

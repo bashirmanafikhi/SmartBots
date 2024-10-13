@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
 using SmartBots.Application.Interfaces;
 using SmartBots.Data.Models;
@@ -21,14 +20,7 @@ namespace SmartBots.Application.Features.Todos
 
         public async Task<List<TodoDto>> Handle(GetAllTodosQuery query, CancellationToken cancellationToken)
         {
-            var todosQuery = _todoRepository.Query();
-
-            var todoDtos = todosQuery
-                .ProjectTo<TodoDto>(_mapper.ConfigurationProvider)
-                .ToList();
-                //.ToListAsync(cancellationToken);
-
-            return todoDtos;
+            return await _todoRepository.GetCurrentUserItems(cancellationToken);
         }
     }
 }

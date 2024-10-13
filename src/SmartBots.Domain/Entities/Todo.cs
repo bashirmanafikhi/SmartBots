@@ -7,11 +7,11 @@ namespace SmartBots.Data.Models
     {
         public string Text { get; set; }
         public bool Completed { get; set; }
-        public Guid UserId { get; set; }
+        public string ApplicationUserId { get; set; }
 
-        public Todo(Guid userId, string text)
+        public Todo(string applicationUserId, string text)
         {
-            UserId = userId;
+            ApplicationUserId = applicationUserId;
             Text = text;
         }
 
