@@ -5,22 +5,25 @@ using SmartBots.Data.Models;
 
 namespace SmartBots.Application.Features.Todos
 {
-    public class AddTodoCommandHandler : IRequestHandler<AddTodoCommand, TodoDto>
+    public class AddTodoCommandHandler(
+        IUnitOfWork unitOfWork, 
+        ITodoRepository todoRepository, 
+        IMapper mapper,
+        ICurrentUserService currentUserService) : IRequestHandler<AddTodoCommand, TodoDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ITodoRepository _todoRepository;
-        private readonly IMapper _mapper;
-
-        public AddTodoCommandHandler(IUnitOfWork unitOfWork, ITodoRepository todoRepository, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _todoRepository = todoRepository;
-            _mapper = mapper;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly ITodoRepository _todoRepository = todoRepository;
+        private readonly IMapper _mapper = mapper;
+        private readonly ICurrentUserService _currentUserService = currentUserService;
 
         public async Task<TodoDto> Handle(AddTodoCommand command, CancellationToken cancellationToken)
         {
-            var todo = new Todo(command.Text);
+            var currentUserId = _currentUserService.GetUserId();
+
+            if (!currentUserId.HasValue)
+                throw new UnauthorizedAccessException();
+
+            var todo = new Todo(currentUserId.Value, command.Text);
 
             await _todoRepository.AddAsync(todo);
 

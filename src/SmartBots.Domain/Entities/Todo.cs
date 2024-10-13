@@ -1,14 +1,17 @@
 ﻿using SmartBots.Domain.Common;
+using SmartBots.Domain.Interfaces;
 
 namespace SmartBots.Data.Models
 {
-    public class Todo : BaseAuditableEntity
+    public class Todo : BaseAuditableEntity, IUserOwnedEntity
     {
         public string Text { get; set; }
         public bool Completed { get; set; }
+        public Guid UserId { get; set; }
 
-        public Todo(string text)
+        public Todo(Guid userId, string text)
         {
+            UserId = userId;
             Text = text;
         }
 

@@ -1,6 +1,7 @@
 ﻿@using MediatR
 @using SmartBots.Application.Features.Todos
 @inject IMediator Mediator
+@attribute [Authorize]
 
 
 <EditForm Model="@NewItem" OnSubmit="@ItemAdded">
