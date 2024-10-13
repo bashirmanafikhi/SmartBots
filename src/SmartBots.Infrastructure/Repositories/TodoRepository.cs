@@ -1,6 +1,7 @@
-﻿using SmartBots.Application;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartBots.Application.Interfaces;
 using SmartBots.Data.Models;
+using System.Linq.Expressions;
 
 namespace SmartBots.Infrastructure.Repositories
 {
@@ -10,34 +11,47 @@ namespace SmartBots.Infrastructure.Repositories
 
         public TodoRepository(IGenericRepository<Todo> repository)
         {
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task AddAsync(Todo item)
+        public async Task<Todo?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            await _repository.AddAsync(item);
+            return await _repository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task DeleteAsync(Todo item)
+        public async Task<bool> AddAsync(Todo item, CancellationToken cancellationToken = default)
         {
-            await _repository.DeleteAsync(item);
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+
+            await _repository.AddAsync(item, cancellationToken);
+            return true;
         }
 
-        public async Task<IList<Todo>> GetAllAsync()
+        public async Task<bool> DeleteAsync(Todo item, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetAllAsync();
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+
+            await _repository.DeleteAsync(item, cancellationToken);
+            return true;
         }
 
-        public async Task CompleteAsync(Todo item)
+        public async Task<IList<Todo>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            item.Complete();
-            await _repository.UpdateAsync(item);
+            return await _repository.GetAllAsync(cancellationToken);
         }
 
-        public async Task UncompleteAsync(Todo item)
+        public async Task<IList<Todo>> GetFilteredAsync(
+            Expression<Func<Todo, bool>> filter,
+            CancellationToken cancellationToken = default)
         {
-            item.Uncomplete();
-            await _repository.UpdateAsync(item);
+            return await _repository.GetFilteredAsync(filter, cancellationToken);
+        }
+
+        public IQueryable<Todo> Query()
+        {
+            return _repository.Query();
         }
     }
 }

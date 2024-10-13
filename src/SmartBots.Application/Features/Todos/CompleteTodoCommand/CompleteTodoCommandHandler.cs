@@ -16,16 +16,14 @@ namespace SmartBots.Application.Features.Todos
 
         public async Task<bool> Handle(CompleteTodoCommand command, CancellationToken cancellationToken)
         {
-            var todo = await _unitOfWork.Repository<Todo>().GetByIdAsync(command.Id);
+            var todo = await _todoRepository.GetByIdAsync(command.Id, cancellationToken);
             if (todo == null)
-            {
                 return false;
-            }
+
+            todo.Complete();
 
             var currentUserId = _currentUserService.GetUserId();
             todo.Authorize(currentUserId);
-
-            await _todoRepository.CompleteAsync(todo);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return true;
         }

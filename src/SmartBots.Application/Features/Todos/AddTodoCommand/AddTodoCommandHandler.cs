@@ -11,9 +11,9 @@ namespace SmartBots.Application.Features.Todos
         IMapper mapper,
         ICurrentUserService currentUserService) : IRequestHandler<AddTodoCommand, TodoDto>
     {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly ITodoRepository _todoRepository = todoRepository;
-        private readonly IMapper _mapper = mapper;
+        private readonly ITodoRepository _todoRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         private readonly ICurrentUserService _currentUserService = currentUserService;
 
         public async Task<TodoDto> Handle(AddTodoCommand command, CancellationToken cancellationToken)
@@ -25,11 +25,11 @@ namespace SmartBots.Application.Features.Todos
 
             var todo = new Todo(currentUserId.Value, command.Text);
 
-            await _todoRepository.AddAsync(todo);
-
+            await _todoRepository.AddAsync(todo, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<TodoDto>(todo);
         }
     }
+
 }

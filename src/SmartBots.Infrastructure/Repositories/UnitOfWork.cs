@@ -1,74 +1,54 @@
-﻿using SmartBots.Application.Interfaces;
-using SmartBots.Domain.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using SmartBots.Application.Interfaces;
 using SmartBots.Infrastructure.Data;
-using System.Collections;
 
 namespace SmartBots.Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _dbContext;
-        private Hashtable _repositories;
-        private bool disposed;
+        private readonly ApplicationDbContext _context;
+        private IDbContextTransaction _transaction;
 
-        public UnitOfWork(ApplicationDbContext dbContext)
+        public UnitOfWork(ApplicationDbContext context)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public IGenericRepository<T> Repository<T>() where T : BaseAuditableEntity
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            if (_repositories == null)
-                _repositories = new Hashtable();
+            return await _context.SaveChangesAsync(cancellationToken);
+        }
 
-            var type = typeof(T).Name;
+        public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        }
 
-            if (!_repositories.ContainsKey(type))
+        public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+        {
+            if (_transaction != null)
             {
-                var repositoryType = typeof(GenericRepository<>);
-
-                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(T)), _dbContext);
-
-                _repositories.Add(type, repositoryInstance);
+                await _transaction.CommitAsync(cancellationToken);
+                _transaction.Dispose();
+                _transaction = null;
             }
-
-            return (IGenericRepository<T>)_repositories[type];
         }
 
-        public Task Rollback()
+        public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
         {
-            _dbContext.ChangeTracker.Entries().ToList().ForEach(x => x.Reload());
-            return Task.CompletedTask;
-        }
-
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            return await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-        public Task<int> SaveAndRemoveCache(CancellationToken cancellationToken, params string[] cacheKeys)
-        {
-            throw new NotImplementedException();
+            if (_transaction != null)
+            {
+                await _transaction.RollbackAsync(cancellationToken);
+                _transaction.Dispose();
+                _transaction = null;
+            }
         }
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposed)
-            {
-                if (disposing)
-                {
-                    //dispose managed resources
-                    _dbContext.Dispose();
-                }
-            }
-            //dispose unmanaged resources
-            disposed = true;
+            _context.Dispose();
+            _transaction?.Dispose();
         }
     }
 }

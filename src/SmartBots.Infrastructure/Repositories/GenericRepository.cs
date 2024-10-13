@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SmartBots.Application.Interfaces;
+using SmartBots.Data.Models;
 using SmartBots.Domain.Common;
 using SmartBots.Infrastructure.Data;
 using System.Linq.Expressions;
@@ -11,59 +13,81 @@ namespace SmartBots.Infrastructure.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseAuditableEntity
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly ILogger<GenericRepository<T>> _logger;
+        private DbSet<T> _dbSet => _dbContext.Set<T>();  // Lazy initialization
 
-        public GenericRepository(ApplicationDbContext dbContext)
+        public GenericRepository(ApplicationDbContext dbContext, ILogger<GenericRepository<T>> logger)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public IQueryable<T> Entities => _dbContext.Set<T>();
-
-        public async Task<T> AddAsync(T entity)
+        public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
         {
-            await _dbContext.Set<T>().AddAsync(entity);
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            _logger.LogDebug("Adding entity of type {EntityType}.", typeof(T).Name);
+            await _dbSet.AddAsync(entity, cancellationToken);
             return entity;
         }
 
-        public Task UpdateAsync(T entity)
+        public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
-            T exist = _dbContext.Set<T>().Find(entity.Id);
-            _dbContext.Entry(exist).CurrentValues.SetValues(entity);
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            _logger.LogDebug("Updating entity of type {EntityType}.", typeof(T).Name);
+            _dbSet.Update(entity);
             return Task.CompletedTask;
         }
 
-        public Task DeleteAsync(T entity)
+        public Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
-            _dbContext.Set<T>().Remove(entity);
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            _logger.LogDebug("Deleting entity of type {EntityType}.", typeof(T).Name);
+            _dbSet.Remove(entity);
             return Task.CompletedTask;
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _dbContext
-                .Set<T>()
-                .ToListAsync();
+            return await _dbSet
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Set<T>().FindAsync(id);
+            var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            if (entity == null)
+                _logger.LogWarning("Entity with ID {EntityId} not found.", id);
+
+            return entity;
         }
 
-        public async Task<List<TDestination>> ProjectAllToAsync<TDestination>(IConfigurationProvider configurationProvider, CancellationToken cancellationToken)
+        public async Task<List<TDestination>> ProjectAllToAsync<TDestination>(
+            IConfigurationProvider configurationProvider,
+            CancellationToken cancellationToken = default)
         {
-            return await _dbContext
-                .Set<T>()
+            return await _dbSet
+                .AsNoTracking()
                 .ProjectTo<TDestination>(configurationProvider)
                 .ToListAsync(cancellationToken);
         }
 
-        public Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate)
+        public async Task<List<T>> GetFilteredAsync(
+            Expression<Func<T, bool>> predicate,
+            CancellationToken cancellationToken = default)
         {
-            return _dbContext
-                .Set<T>()
+            return await _dbSet
+                .AsNoTracking()
                 .Where(predicate)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
+        }
+
+        public IQueryable<T> Query()
+        {
+            return _dbContext.Set<T>();
         }
     }
 }
