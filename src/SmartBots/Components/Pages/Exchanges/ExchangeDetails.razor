@@ -1,7 +1,17 @@
-﻿@page "/ExchangeDetails"
+﻿@page "/exchange/{id:guid}"
+@using SmartBots.Application.Features.Exchange
+@inject IMediator Mediator
 
 <h3>ExchangeDetails</h3>
 
-@code {
+Name: @exchange.Name
 
+@code {
+    [Parameter] public Guid Id { get; set; }
+    ExchangeDto exchange = new ExchangeDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        exchange = await Mediator.Send(new GetExchangeDetailsQuery() { Id = this.Id });
+    }
 }

@@ -1,15 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SmartBots.Domain.Common;
+using SmartBots.Domain.Interfaces;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartBots.Domain.Entities
 {
-    public class TradingBot
+    public class TradingBot : BaseAuditableEntity, IUserOwnedEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        public string UserId { get; set; }
 
         public int ExchangeId { get; set; }
 
@@ -85,6 +82,10 @@ namespace SmartBots.Domain.Entities
 
         // Start Conditions
         public string StartConditions { get; set; } // String representation of JSON (adjust as needed)
+
+
+        [Required]
+        public string ApplicationUserId { get; set; }
     }
 
     public enum BotType

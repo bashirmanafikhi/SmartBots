@@ -11,5 +11,17 @@ namespace SmartBots.Application.Features.Exchange
         public string ApiKey { get; set; }
         public string ApiSecret { get; set; }
         public bool IsTest { get; set; }
+
+        // Implicit conversion from Domain Entity to DTO
+        public static implicit operator ExchangeDto(Domain.Entities.Exchange exchange) =>
+            new ExchangeDto
+            {
+                Id = exchange.Id,
+                Name = exchange.Name,
+                Type = exchange.Type,
+                ApiKey = exchange.ApiKey,
+                ApiSecret = exchange.ApiSecret,
+                IsTest = exchange.IsTest
+            };
     }
 }

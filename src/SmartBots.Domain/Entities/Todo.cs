@@ -31,6 +31,12 @@ namespace SmartBots.Domain.Entities
         {
             Completed = completed;
         }
+
+        public void Update(string text, TodoPriority priority)
+        {
+            Text = text;
+            Priority = priority;
+        }
     }
 
     public enum TodoPriority

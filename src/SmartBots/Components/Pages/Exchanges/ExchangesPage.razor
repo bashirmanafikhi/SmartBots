@@ -1,6 +1,5 @@
 ﻿@page "/ExchangesPage"
 @rendermode InteractiveServer
-@using MediatR
 @using SmartBots.Application.Features.Exchange
 @inject IMediator Mediator
 @attribute [Authorize]
@@ -57,7 +56,9 @@
                 <span class="exchange-name">@exchange.Name (@exchange.Type)</span>
                 <div>
                     <button class="btn btn-danger" onclick="@(() => DeleteExchange(exchange))">Delete</button>
-                    <a class="btn btn-warning" href="ExchangeDetails">Details</a>
+                    <NavLink class="btn btn-warning" href="@($"exchange/{exchange.Id}")">
+                        Details
+                    </NavLink>
                 </div>
             </div>
         }

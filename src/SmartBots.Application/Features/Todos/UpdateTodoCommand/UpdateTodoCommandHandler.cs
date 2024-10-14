@@ -26,10 +26,8 @@ internal class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand, boo
         var currentUserId = _currentUserService.GetUserId();
         todo.Authorize(currentUserId);
 
-        todo.Text = request.Model.Text;
-        todo.Priority = request.Model.Priority;
+        todo.Update(request.Model.Text, request.Model.Priority);
 
-        await _repository.UpdateAsync(todo);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;

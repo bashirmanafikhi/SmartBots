@@ -13,10 +13,9 @@ namespace SmartBots.Application.Features
         {
             Plot myPlot = new();
 
-            double[] sin = Generate.Sin(51);
-            double[] cos = Generate.Cos(51);
-            myPlot.Add.Signal(sin);
-            myPlot.Add.Signal(cos);
+            var prices = Generate.RandomOHLCs(30);
+            myPlot.Add.Candlestick(prices);
+            myPlot.Axes.DateTimeTicksBottom();
 
             return Task.FromResult(myPlot);
         }
