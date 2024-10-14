@@ -1,4 +1,6 @@
-﻿using SmartBots.Application.Interfaces;
+﻿using SmartBots.Application.Common;
+using SmartBots.Application.Features.Exchange;
+using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Entities;
 using System.Linq.Expressions;
 
@@ -6,9 +8,9 @@ namespace SmartBots.Infrastructure.Repositories
 {
     public class ExchangeRepository : IExchangeRepository
     {
-        private readonly IGenericRepository<Exchange> _repository;
+        private readonly IUserOwnedEntityRepository<Exchange> _repository;
 
-        public ExchangeRepository(IGenericRepository<Exchange> repository)
+        public ExchangeRepository(IUserOwnedEntityRepository<Exchange> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
@@ -51,6 +53,14 @@ namespace SmartBots.Infrastructure.Repositories
         public IQueryable<Exchange> Query()
         {
             return _repository.Query();
+        }
+
+        public async Task<List<ExchangeDto>> GetCurrentUserItemsAsync(
+            CancellationToken cancellationToken = default)
+        {
+            (var result, _) = await _repository.GetCurrentUserItemsAsync<ExchangeDto>(cancellationToken: cancellationToken);
+
+            return result;
         }
     }
 }
