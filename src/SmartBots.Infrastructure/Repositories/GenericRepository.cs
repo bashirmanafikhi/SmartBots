@@ -100,7 +100,7 @@ namespace SmartBots.Infrastructure.Repositories
 
             if (orderBy is not null)
                 query = query.OrderBy(orderBy);
-            
+
             else if (paging is not null)
                 query = query.OrderBy(e => e.Id);
 

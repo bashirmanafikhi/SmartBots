@@ -14,16 +14,16 @@ public sealed class UserOwnedEntityRepository<T> : GenericRepository<T>, IUserOw
 {
     private readonly ICurrentUserService _currentUserService;
     public UserOwnedEntityRepository(
-        ApplicationDbContext dbContext, 
-        ILogger<GenericRepository<T>> logger, 
-        IMapper mapper, 
+        ApplicationDbContext dbContext,
+        ILogger<GenericRepository<T>> logger,
+        IMapper mapper,
         ICurrentUserService currentUserService) : base(dbContext, logger, mapper)
     {
         _currentUserService = currentUserService;
     }
 
     public async Task<(List<TDestination> Result, int Total)> GetCurrentUserItemsAsync<TDestination>(
-        Expression<Func<T, bool>> predicate = null, 
+        Expression<Func<T, bool>> predicate = null,
         Paging? paging = null,
         Expression<Func<T, object>>? orderBy = null,
         CancellationToken cancellationToken = default) where TDestination : IMapFrom<T>
@@ -32,8 +32,8 @@ public sealed class UserOwnedEntityRepository<T> : GenericRepository<T>, IUserOw
 
         Expression<Func<T, bool>> userIdPredicate = x => x.ApplicationUserId.ToUpper() == currentUserId;
 
-        predicate = (predicate is null) 
-                        ? userIdPredicate 
+        predicate = (predicate is null)
+                        ? userIdPredicate
                         : predicate.And(userIdPredicate);
 
         return await GetFilteredAndProjectToAsync<TDestination>(predicate, paging, orderBy, cancellationToken);

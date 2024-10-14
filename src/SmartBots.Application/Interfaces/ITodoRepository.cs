@@ -1,7 +1,7 @@
-﻿using SmartBots.Domain.Entities;
+﻿using SmartBots.Application.Common;
 using SmartBots.Application.Features.Todos;
+using SmartBots.Domain.Entities;
 using System.Linq.Expressions;
-using SmartBots.Application.Common;
 
 namespace SmartBots.Application.Interfaces
 {
@@ -9,7 +9,6 @@ namespace SmartBots.Application.Interfaces
     {
         Task<Todo?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<bool> AddAsync(Todo item, CancellationToken cancellationToken = default);
-        Task<bool> UpdateAsync(Todo item, CancellationToken cancellationToken = default);
         Task<bool> DeleteAsync(Todo item, CancellationToken cancellationToken = default);
         Task<IList<Todo>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IList<Todo>> GetFilteredAsync(

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SmartBots.Domain.Entities;
 
 namespace SmartBots.Application.Features.Todos;
 public class UpdateTodoCommand : IRequest<bool>

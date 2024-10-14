@@ -1,13 +1,10 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using SmartBots.Client.Pages;
+using SmartBots.Application;
 using SmartBots.Components;
 using SmartBots.Components.Account;
-using SmartBots.Infrastructure.Data;
 using SmartBots.Infrastructure;
-using SmartBots.Application;
-using SmartBots.Client;
+using SmartBots.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +28,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-//builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
 

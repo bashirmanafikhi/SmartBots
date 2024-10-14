@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartBots.Application.Common;
+﻿using SmartBots.Application.Common;
 using SmartBots.Application.Features.Todos;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Entities;
@@ -27,15 +26,6 @@ namespace SmartBots.Infrastructure.Repositories
                 throw new ArgumentNullException(nameof(item));
 
             await _repository.AddAsync(item, cancellationToken);
-            return true;
-        }
-
-        public async Task<bool> UpdateAsync(Todo item, CancellationToken cancellationToken = default)
-        {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
-
-            await _repository.UpdateAsync(item, cancellationToken);
             return true;
         }
 
@@ -71,7 +61,7 @@ namespace SmartBots.Infrastructure.Repositories
             Expression<Func<Todo, object>> orderBy,
             CancellationToken cancellationToken = default)
         {
-            var result =  await _repository.GetCurrentUserItemsAsync<TodoDto>(
+            var result = await _repository.GetCurrentUserItemsAsync<TodoDto>(
                 predicate,
                 paging,
                 orderBy,

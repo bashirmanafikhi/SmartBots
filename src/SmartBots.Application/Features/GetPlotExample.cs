@@ -1,11 +1,5 @@
 ﻿using MediatR;
 using ScottPlot;
-using SmartBots.Application.Features.Todos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartBots.Application.Features
 {

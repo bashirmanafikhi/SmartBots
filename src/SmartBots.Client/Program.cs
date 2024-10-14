@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using SmartBots.Client;
 using SmartBots.Application;
+using SmartBots.Client;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 

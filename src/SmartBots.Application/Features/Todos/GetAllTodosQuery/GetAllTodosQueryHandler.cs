@@ -2,8 +2,6 @@
 using MediatR;
 using SmartBots.Application.Common;
 using SmartBots.Application.Interfaces;
-using SmartBots.Domain.Entities;
-using System.Linq.Expressions;
 
 namespace SmartBots.Application.Features.Todos
 {

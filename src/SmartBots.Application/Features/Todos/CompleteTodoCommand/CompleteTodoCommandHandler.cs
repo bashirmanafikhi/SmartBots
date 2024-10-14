@@ -5,8 +5,8 @@ using SmartBots.Domain.Interfaces;
 namespace SmartBots.Application.Features.Todos
 {
     public class CompleteTodoCommandHandler(
-        IUnitOfWork unitOfWork, 
-        ITodoRepository todoRepository, 
+        IUnitOfWork unitOfWork,
+        ITodoRepository todoRepository,
         ICurrentUserService currentUserService) : IRequestHandler<CompleteTodoCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;

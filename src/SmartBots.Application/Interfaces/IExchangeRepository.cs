@@ -1,5 +1,4 @@
-﻿using SmartBots.Application.Common;
-using SmartBots.Application.Features.Exchange;
+﻿using SmartBots.Application.Features.Exchange;
 using SmartBots.Domain.Entities;
 using System.Linq.Expressions;
 

@@ -1,13 +1,13 @@
-using SmartBots.Client;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using SmartBots.Client;
+using SmartBots.Infrastructure.Data;
 using System.Diagnostics;
 using System.Security.Claims;
-using SmartBots.Infrastructure.Data;
 
 namespace SmartBots.Components.Account
 {
