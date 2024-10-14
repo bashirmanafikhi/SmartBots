@@ -19,6 +19,7 @@ namespace SmartBots.Infrastructure
 
             return services;
         }
+
         public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<AuditableEntityInterceptor>();
@@ -47,7 +48,8 @@ namespace SmartBots.Infrastructure
                 .AddTransient(typeof(IUserOwnedEntityRepository<>), typeof(UserOwnedEntityRepository<>))
                 .AddTransient<ITodoRepository, TodoRepository>()
                 .AddTransient<IExchangeRepository, ExchangeRepository>()
-                .AddTransient<ICurrentUserService, CurrentUserService>();
+                .AddTransient<ICurrentUserService, CurrentUserService>()
+                .AddTransient<IExchangeFactory, ExchangeFactory>();
         }
     }
 }

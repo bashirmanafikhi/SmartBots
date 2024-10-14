@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots.Application", "Sm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots.Infrastructure", "SmartBots.Infrastructure\SmartBots.Infrastructure.csproj", "{CC9E1E7E-9B4F-4436-976F-3D2D518BF917}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExchangePlatforms", "ExchangePlatforms", "{E2D65616-7B3F-4D9A-8164-C49ECBB3263B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBots.BinancePlatform", "SmartBots.BinancePlatform\SmartBots.BinancePlatform.csproj", "{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +37,16 @@ Global
 		{CC9E1E7E-9B4F-4436-976F-3D2D518BF917}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC9E1E7E-9B4F-4436-976F-3D2D518BF917}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC9E1E7E-9B4F-4436-976F-3D2D518BF917}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{99F5B0FB-28EF-4179-BFB6-3D8CA155C770} = {E2D65616-7B3F-4D9A-8164-C49ECBB3263B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BC9B790-57E5-4A4B-8BCE-E0E1E07BC021}
