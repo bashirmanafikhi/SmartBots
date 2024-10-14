@@ -1,0 +1,114 @@
+﻿@using Microsoft.AspNetCore.Components
+
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <!-- Page Size Selector -->
+    <div>
+        <label for="pageSizeSelect" class="form-label me-2">Items per page:</label>
+        <select id="pageSizeSelect" class="form-select form-select-sm d-inline-block w-auto" @onchange="OnPageSizeChange" value="@PageSize">
+            @foreach (var size in PageSizeOptions)
+            {
+                <option value="@size">@size</option>
+            }
+        </select>
+    </div>
+
+    <!-- Pagination Navigation -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination mb-0">
+            <!-- First Page Button -->
+            <li class="page-item @(IsFirstPage ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(1)" aria-label="First">
+                    <span aria-hidden="true">&laquo;</span>
+                </button>
+            </li>
+
+            <!-- Previous Page Button -->
+            <li class="page-item @(IsFirstPage ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(CurrentPage - 1)" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </button>
+            </li>
+
+            <!-- Page Number Buttons -->
+            @foreach (var pageNumber in GetPageNumbers())
+            {
+                <li class="page-item @(pageNumber == CurrentPage ? "active" : "")">
+                    <button class="page-link" @onclick="() => ChangePage(pageNumber)">@pageNumber</button>
+                </li>
+            }
+
+            <!-- Next Page Button -->
+            <li class="page-item @(IsLastPage ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(CurrentPage + 1)" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </button>
+            </li>
+
+            <!-- Last Page Button -->
+            <li class="page-item @(IsLastPage ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(TotalPages)" aria-label="Last">
+                    <span aria-hidden="true">&raquo;</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+    [Parameter]
+    public int TotalItems { get; set; } = 0;
+
+    [Parameter]
+    public int PageSize { get; set; } = 10;
+
+    [Parameter]
+    public int CurrentPage { get; set; } = 1;
+
+    [Parameter]
+    public EventCallback<int> OnPageChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageSizeChanged { get; set; }
+
+    [Parameter]
+    public IEnumerable<int> PageSizeOptions { get; set; } = new[] { 5, 10, 20, 50 };
+
+    private int TotalPages => Math.Max((int)Math.Ceiling((double)TotalItems / PageSize), 1);
+
+    private IEnumerable<int> GetPageNumbers()
+    {
+        const int maxPageButtons = 5;
+        int startPage = Math.Max(CurrentPage - 2, 1);
+        int endPage = Math.Min(startPage + maxPageButtons - 1, TotalPages);
+
+        // Adjust startPage if we're near the end
+        if (endPage - startPage < maxPageButtons - 1)
+        {
+            startPage = Math.Max(endPage - maxPageButtons + 1, 1);
+        }
+
+        return Enumerable.Range(startPage, endPage - startPage + 1);
+    }
+
+    private bool IsFirstPage => CurrentPage <= 1;
+    private bool IsLastPage => CurrentPage >= TotalPages;
+
+    private async Task ChangePage(int pageNumber)
+    {
+        if (pageNumber < 1 || pageNumber > TotalPages || pageNumber == CurrentPage)
+            return;
+
+        CurrentPage = pageNumber;
+        await OnPageChanged.InvokeAsync(CurrentPage);
+    }
+
+    private async Task OnPageSizeChange(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int newSize) && newSize != PageSize)
+        {
+            PageSize = newSize;
+            CurrentPage = 1; // Reset to first page when page size changes
+            await OnPageSizeChanged.InvokeAsync(PageSize);
+        }
+    }
+}

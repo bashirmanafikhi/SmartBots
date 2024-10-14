@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using SmartBots.Application.Common;
 using SmartBots.Application.Interfaces;
+using SmartBots.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace SmartBots.Application.Features.Todos
 {
-    public class GetAllTodosQueryHandler : IRequestHandler<GetAllTodosQuery, List<TodoDto>>
+    public class GetAllTodosQueryHandler : IRequestHandler<GetAllTodosQuery, PaginationResponse<TodoDto>>
     {
         private readonly ITodoRepository _todoRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -17,9 +20,16 @@ namespace SmartBots.Application.Features.Todos
             _mapper = mapper;
         }
 
-        public async Task<List<TodoDto>> Handle(GetAllTodosQuery query, CancellationToken cancellationToken)
+        public async Task<PaginationResponse<TodoDto>> Handle(GetAllTodosQuery query, CancellationToken cancellationToken)
         {
-            return await _todoRepository.GetCurrentUserItems(cancellationToken);
+            var predicate = query.Criteria.GetPredicateAsExpression();
+            var paging = query.Paging;
+
+            return await _todoRepository.GetCurrentUserItemsWithPaginationAsync(
+                predicate,
+                paging,
+                x => x.Priority,
+                cancellationToken);
         }
     }
 }

@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SmartBots.Application.Common;
 using SmartBots.Application.Common.Mappings;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Common;
@@ -87,20 +88,54 @@ namespace SmartBots.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<List<TDestination>> GetFilteredAndProjectToAsync<TDestination>(
-            Expression<Func<T, bool>> predicate,
-            CancellationToken cancellationToken = default) where TDestination : IMapFrom<T>
+        public async Task<(List<TDestination> Result, int Total)> GetFilteredAndProjectToAsync<TDestination>(
+        Expression<Func<T, bool>> predicate,
+        Paging? paging = null,
+        Expression<Func<T, object>>? orderBy = null,
+        CancellationToken cancellationToken = default) where TDestination : IMapFrom<T>
         {
-            return await _dbSet
+            var query = _dbSet
                 .AsNoTracking()
-                .Where(predicate)
+                .Where(predicate);
+
+            if (orderBy is not null)
+                query = query.OrderBy(orderBy);
+            
+            else if (paging is not null)
+                query = query.OrderBy(e => e.Id);
+
+            int total;
+            if (paging is not null)
+                (total, query) = await ApplyPagingAsync(query, paging, cancellationToken);
+
+            else
+                total = await query.CountAsync(cancellationToken);
+
+            var result = await query
                 .ProjectTo<TDestination>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
+
+            return (result, total);
+        }
+
+        private async Task<(int Total, IQueryable<T>)> ApplyPagingAsync(
+            IQueryable<T> query,
+            Paging paging,
+            CancellationToken cancellationToken = default)
+        {
+            var total = await query.CountAsync(cancellationToken);
+
+            var skip = (paging.PageNumber - 1) * paging.PageSize;
+            var take = paging.PageSize;
+
+            var pagingQuery = query.Skip(skip).Take(take);
+
+            return (total, pagingQuery);
         }
 
         public IQueryable<T> Query()
         {
-            return _dbContext.Set<T>();
+            return _dbSet.AsNoTracking();
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using SmartBots.Application.Common.Mappings;
+﻿using SmartBots.Application.Common;
+using SmartBots.Application.Common.Mappings;
 using SmartBots.Domain.Entities;
 
 namespace SmartBots.Application.Features.Todos
 {
-    public class TodoDto : IMapFrom<Todo>
+    public class TodoDto : BaseDto, IMapFrom<Todo>
     {
         public TodoDto() { }
         public TodoDto(string text)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartBots.Application.Common;
 using SmartBots.Application.Features.Todos;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Entities;
@@ -55,10 +56,19 @@ namespace SmartBots.Infrastructure.Repositories
             return _repository.Query();
         }
 
-        public async Task<List<TodoDto>> GetCurrentUserItems(
+        public async Task<PaginationResponse<TodoDto>> GetCurrentUserItemsWithPaginationAsync(
+            Expression<Func<Todo, bool>> predicate,
+            Paging? paging,
+            Expression<Func<Todo, object>> orderBy,
             CancellationToken cancellationToken = default)
         {
-            return await _repository.GetCurrentUserItemsAsync<TodoDto>(cancellationToken);
+            var result =  await _repository.GetCurrentUserItemsAsync<TodoDto>(
+                predicate,
+                paging,
+                orderBy,
+                cancellationToken);
+
+            return new PaginationResponse<TodoDto>(result.Result, result.Total);
         }
 
     }

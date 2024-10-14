@@ -1,6 +1,7 @@
 ﻿using SmartBots.Domain.Entities;
 using SmartBots.Application.Features.Todos;
 using System.Linq.Expressions;
+using SmartBots.Application.Common;
 
 namespace SmartBots.Application.Interfaces
 {
@@ -14,6 +15,10 @@ namespace SmartBots.Application.Interfaces
             Expression<Func<Todo, bool>> filter,
             CancellationToken cancellationToken = default);
         IQueryable<Todo> Query();
-        Task<List<TodoDto>> GetCurrentUserItems(CancellationToken cancellationToken = default);
+        Task<PaginationResponse<TodoDto>> GetCurrentUserItemsWithPaginationAsync(
+            Expression<Func<Todo, bool>> predicate,
+            Paging? paging,
+            Expression<Func<Todo, object>> orderBy,
+            CancellationToken cancellationToken = default);
     }
 }
