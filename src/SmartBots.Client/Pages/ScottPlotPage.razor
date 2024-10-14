@@ -1,0 +1,23 @@
+﻿@page "/ScottPlot"
+@rendermode InteractiveWebAssembly
+@using MediatR
+@inject IMediator Mediator
+
+@using ScottPlot
+@using ScottPlot.Blazor
+@using SmartBots.Application.Features
+
+<h1>ScottPlot 5 in Blazor</h1>
+
+<BlazorPlot @ref=BlazorPlot Style="width: 400px; height: 300px;" />
+
+@code {
+
+    BlazorPlot BlazorPlot { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var plot = await Mediator.Send(new GetPlotExample());
+        BlazorPlot.Reset(plot);
+    }
+}
