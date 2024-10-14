@@ -12,6 +12,17 @@ namespace SmartBots.BinancePlatform
 
         public BinanceClient(string apiKey, string secretKey)
         {
+
+            // get Bitcoin price data using Binance
+            var client = new Binance.Net.Clients.BinanceRestClient();
+            var klines = client.SpotApi.ExchangeData.GetKlinesAsync(
+                symbol: "BTCUSDT",
+                interval: Binance.Net.Enums.KlineInterval.OneMinute,
+                startTime: DateTime.Now.AddDays(-2),
+                endTime: DateTime.Now,
+                limit: 50);
+
+
             _client = new BinanceRestClient(options =>
             {
                 options.ApiCredentials = new ApiCredentials(apiKey, secretKey);

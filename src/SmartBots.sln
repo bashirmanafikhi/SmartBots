@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots", "SmartBots\SmartBots.csproj", "{8C3F8789-3D0A-40A5-93E2-526A6C1ACC9B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots.Domain", "SmartBots.Domain\SmartBots.Domain.csproj", "{E26834E6-7DAD-4502-8CF5-5D031C3DAB73}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots.Application", "SmartBots.Application\SmartBots.Application.csproj", "{AD3CDCFB-4366-4E2E-B2A3-5B8804BE137F}"
@@ -13,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots.Infrastructure", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExchangePlatforms", "ExchangePlatforms", "{E2D65616-7B3F-4D9A-8164-C49ECBB3263B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartBots.BinancePlatform", "SmartBots.BinancePlatform\SmartBots.BinancePlatform.csproj", "{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots.BinancePlatform", "SmartBots.BinancePlatform\SmartBots.BinancePlatform.csproj", "{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots.Client", "SmartBots.Client\SmartBots.Client.csproj", "{4671D013-AAC2-4B1C-BB06-5737B3AD1180}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartBots", "SmartBots\SmartBots.csproj", "{8F83E573-6111-4760-A8A8-0F1D8A0204EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8C3F8789-3D0A-40A5-93E2-526A6C1ACC9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C3F8789-3D0A-40A5-93E2-526A6C1ACC9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C3F8789-3D0A-40A5-93E2-526A6C1ACC9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C3F8789-3D0A-40A5-93E2-526A6C1ACC9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E26834E6-7DAD-4502-8CF5-5D031C3DAB73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E26834E6-7DAD-4502-8CF5-5D031C3DAB73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E26834E6-7DAD-4502-8CF5-5D031C3DAB73}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,6 +39,14 @@ Global
 		{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99F5B0FB-28EF-4179-BFB6-3D8CA155C770}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4671D013-AAC2-4B1C-BB06-5737B3AD1180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4671D013-AAC2-4B1C-BB06-5737B3AD1180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4671D013-AAC2-4B1C-BB06-5737B3AD1180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4671D013-AAC2-4B1C-BB06-5737B3AD1180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F83E573-6111-4760-A8A8-0F1D8A0204EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F83E573-6111-4760-A8A8-0F1D8A0204EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F83E573-6111-4760-A8A8-0F1D8A0204EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F83E573-6111-4760-A8A8-0F1D8A0204EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

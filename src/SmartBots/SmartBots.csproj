@@ -1,14 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-SmartBots-c8f7244e-2c48-4b86-95c9-6af153f1250d</UserSecretsId>
+    <UserSecretsId>aspnet-SmartBots-bcaa870f-b96a-4f72-9437-e6cc3cad771d</UserSecretsId>
   </PropertyGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\SmartBots.Infrastructure\SmartBots.Infrastructure.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartBots.Client\SmartBots.Client.csproj" />
+    <ProjectReference Include="..\SmartBots.Infrastructure\SmartBots.Infrastructure.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
+  </ItemGroup>
 
 </Project>
