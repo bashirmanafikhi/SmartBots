@@ -10,8 +10,10 @@
 
 <!-- New Item Form -->
 <div class="border p-3">
-    <h4>New Item</h4>
-    <TodoItemForm OnItemAdded="@(async () => await ItemsChanged())" />
+    <h4>@(IsUpdateMode ? "New Item" : "Update Item")</h4>
+    <TodoItemForm TodoId="@SelectedTodoId"
+                  OnItemSaved="@(async () => await ItemsChanged())"
+                  OnCancelUpdate="CancelUpdate" />
 </div>
 
 <!-- Search and Todo List Section -->
@@ -33,28 +35,48 @@
     <div class="todo-list">
         @if (Todos.Any())
         {
-            @foreach (var todo in Todos)
-            {
-                <div style="display: flex; margin-bottom: 10px;">
-                    <div style="display: flex; align-items: center;margin-bottom: 10px;">
-                        <div class="@ItemClass(todo)" style="width: 280px;">@todo.Text</div>
-                    </div>
-                    <div class="@ItemClass(todo)" style="width: 280px;">@todo.Text</div>
-                    <div style="display: flex; align-items: center;margin-bottom: 10px;">
-                        <div style="width: 280px;">@todo.Priority</div>
-                    </div>
-                    @if (todo.Completed)
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Text</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var todo in Todos)
                     {
-                        <button class="btn btn-primary btn-sm ms-2" @onclick="() => UncompleteItem(todo)">Uncomplete</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-primary btn-sm ms-2" @onclick="() => CompleteItem(todo)">Complete</button>
-                    }
+                        <tr>
+                            <td class="@ItemClass(todo)">@todo.Text</td>
+                            <td class="@ItemClass(todo)">@todo.Priority</td>
+                            <td>
+                                @if (todo.Completed)
+                                {
+                                    <span class="badge bg-success">Completed</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                }
+                            </td>
+                            <td>
+                                @if (todo.Completed)
+                                {
+                                    <button class="btn btn-primary btn-sm me-2" @onclick="() => UncompleteItem(todo)">Uncomplete</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary btn-sm me-2" @onclick="() => CompleteItem(todo)">Complete</button>
+                                }
 
-                    <button class="btn btn-danger btn-sm ms-2" @onclick="() => DeleteItem(todo)">Delete</button>
-                </div>
-            }
+                                <button class="btn btn-info btn-sm me-2" @onclick="() => EditItem(todo)">Update</button>
+                                <button class="btn btn-danger btn-sm" @onclick="() => DeleteItem(todo)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
         else
         {
@@ -64,13 +86,12 @@
 </div>
 
 <!-- Pagination Component -->
-<Pagination 
-    TotalItems="_totalItems" 
-    PageSize="_pageSize" 
-    CurrentPage="_currentPage" 
-    PageSizeOptions="new int[] { 5, 10, 20, 50 }"
-    OnPageChanged="HandlePageChanged"
-    OnPageSizeChanged="HandlePageSizeChanged" />
+<Pagination TotalItems="_totalItems"
+            PageSize="_pageSize"
+            CurrentPage="_currentPage"
+            PageSizeOptions="new int[] { 5, 10, 20, 50 }"
+            OnPageChanged="HandlePageChanged"
+            OnPageSizeChanged="HandlePageSizeChanged" />
 
 @code {
     private IList<TodoDto> Todos { get; set; } = new List<TodoDto>();
@@ -80,6 +101,10 @@
     private int _pageSize = 10;
     private int _totalItems;
 
+    private Guid? SelectedTodoId { get; set; }
+
+    private bool IsUpdateMode => !SelectedTodoId.HasValue || SelectedTodoId == Guid.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         await LoadTodosAsync();
@@ -88,17 +113,17 @@
     private async Task LoadTodosAsync()
     {
         var query = new GetAllTodosQuery
-        {
-            Criteria = new TodosSearchCriteria
             {
-                Keyword = SearchKeyword
-            },
-            Paging = new Application.Common.Paging
-            {
-                PageNumber = _currentPage,
-                PageSize = _pageSize
-            }
-        };
+                Criteria = new TodosSearchCriteria
+                {
+                    Keyword = SearchKeyword
+                },
+                Paging = new Application.Common.Paging
+                {
+                    PageNumber = _currentPage,
+                    PageSize = _pageSize
+                }
+            };
 
         var result = await Mediator.Send(query);
 
@@ -125,32 +150,45 @@
         await LoadTodosAsync();
     }
 
-    public string ItemClass(TodoDto item)
+    private string ItemClass(TodoDto item)
     {
-        return item.Completed ? "item-completed" : "";
+        return item.Completed ? "text-decoration-line-through text-muted" : "";
     }
 
-    public async Task DeleteItem(TodoDto item)
+    private async Task DeleteItem(TodoDto item)
     {
         await Mediator.Send(new DeleteTodoCommand { Id = item.Id });
         await ItemsChanged();
     }
 
-    public async Task CompleteItem(TodoDto item)
+    private async Task CompleteItem(TodoDto item)
     {
         await Mediator.Send(new CompleteTodoCommand { Id = item.Id });
         await ItemsChanged();
     }
 
-    public async Task UncompleteItem(TodoDto item)
+    private async Task UncompleteItem(TodoDto item)
     {
         await Mediator.Send(new UncompleteTodoCommand { Id = item.Id });
         await ItemsChanged();
     }
 
-    public async Task ItemsChanged()
+    private async Task EditItem(TodoDto item)
+    {
+        SelectedTodoId = item.Id;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task ItemsChanged()
     {
         await LoadTodosAsync();
         StateHasChanged();
+    }
+
+    private async Task CancelUpdate(string? _)
+    {
+        SelectedTodoId = null;
+        await InvokeAsync(StateHasChanged);
     }
 }

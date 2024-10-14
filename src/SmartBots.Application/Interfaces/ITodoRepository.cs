@@ -9,6 +9,7 @@ namespace SmartBots.Application.Interfaces
     {
         Task<Todo?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<bool> AddAsync(Todo item, CancellationToken cancellationToken = default);
+        Task<bool> UpdateAsync(Todo item, CancellationToken cancellationToken = default);
         Task<bool> DeleteAsync(Todo item, CancellationToken cancellationToken = default);
         Task<IList<Todo>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IList<Todo>> GetFilteredAsync(

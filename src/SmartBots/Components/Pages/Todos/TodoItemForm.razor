@@ -1,22 +1,25 @@
 ﻿@using MediatR
 @using SmartBots.Application.Features.Todos
 @using SmartBots.Domain.Entities
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Authorization
 @inject IMediator Mediator
 @attribute [Authorize]
 
+<EditForm Model="@NewItem" OnValidSubmit="@HandleValidSubmit" class="mt-4">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
-<EditForm Model="@NewItem" OnSubmit="@ItemAdded" class="mt-4">
     <div class="form-row align-items-center">
-
 
         <div class="form-group col-md-4">
             <label for="itemText">Text:</label>
-            <InputText @bind-Value="NewItem.Text" class="form-control" id="itemText" />
+            <InputText @bind-Value="NewItem.Text" class="form-control" id="itemText" required />
         </div>
 
         <div class="form-group col-md-4 mb-2">
             <label for="priority">Priority:</label>
-            <InputSelect @bind-Value="NewItem.Priority" class="form-control" id="priority">
+            <InputSelect @bind-Value="NewItem.Priority" class="form-control" id="priority" required>
                 @foreach (var priority in Enum.GetValues(typeof(TodoPriority)))
                 {
                     <option value="@priority">@priority</option>
@@ -26,34 +29,101 @@
 
         <div class="form-group col-md-4">
             <div class="d-flex align-items-center h-100">
-                <input type="submit" class="btn btn-primary mr-2" value="Add" />
-                <input type="reset" class="btn btn-secondary" value="Clear" />
+                <button type="submit" class="btn btn-primary mr-2">@SubmitButtonLabel</button>
+                @if (IsUpdateMode)
+                {
+                    <button type="button" class="btn btn-secondary" @onclick="CancelUpdate">Cancel</button>
+                }
+                <button type="reset" class="btn btn-secondary ms-2">Clear</button>
             </div>
         </div>
 
     </div>
 </EditForm>
 
-
 @code {
     [Parameter]
-    public required Action OnItemAdded { get; set; }
+    public Guid? TodoId { get; set; } // Optional parameter for Todo ID
 
-    private TodoDto NewItem = new TodoDto("");
+    [Parameter]
+    public required Action OnItemSaved { get; set; }
 
-    public async Task ItemAdded()
+    [Parameter]
+    public EventCallback<string?> OnCancelUpdate { get; set; }
+
+    private TodoDto NewItem { get; set; } = new TodoDto("");
+
+    private bool IsUpdateMode => TodoId.HasValue;
+
+    protected override async Task OnParametersSetAsync()
     {
-        await Mediator.Send(new AddTodoCommand()
+        if (IsUpdateMode)
         {
-            Text = NewItem.Text,
-            Priority = NewItem.Priority
-        });
-
-        NewItem.Text = "";
-
-        if (OnItemAdded != null)
-        {
-            OnItemAdded();
+            var fetchedItem = await Mediator.Send(new GetTodoQuery(TodoId!.Value));
+            if (fetchedItem != null)
+            {
+                NewItem = fetchedItem;
+            }
+            else
+            {
+                // Optionally handle the case where the Todo is not found
+                // For example, display a notification or log an error
+                // Here, we'll reset the form
+                NewItem = new TodoDto("");
+            }
         }
+        else
+        {
+            // Reset the form when not in update mode
+            NewItem = new TodoDto("");
+        }
+    }
+
+    private string SubmitButtonLabel => IsUpdateMode ? "Update" : "Add";
+
+    private async Task HandleValidSubmit()
+    {
+        if (IsUpdateMode)
+        {
+            // Update mode
+            await Mediator.Send(new UpdateTodoCommand
+            {
+                Id = TodoId!.Value,
+                Model = new TodoDto
+                {
+                    Text = NewItem.Text,
+                    Priority = NewItem.Priority
+                }
+            });
+        }
+        else
+        {
+            // Add mode
+            await Mediator.Send(new AddTodoCommand
+            {
+                Text = NewItem.Text,
+                Priority = NewItem.Priority
+            });
+        }
+
+        // Reset the form if in add mode
+        if (!IsUpdateMode)
+        {
+            NewItem = new TodoDto("");
+        }
+
+        // Notify the parent component
+        OnItemSaved?.Invoke();
+
+        // If in update mode, clear the TodoId to switch back to add mode
+        if (IsUpdateMode)
+        {
+            await OnCancelUpdate.InvokeAsync(null);
+        }
+    }
+
+    private async Task CancelUpdate()
+    {
+        await OnCancelUpdate.InvokeAsync(null);
     }
 }
