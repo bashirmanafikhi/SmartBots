@@ -30,6 +30,15 @@ namespace SmartBots.Infrastructure.Repositories
             return true;
         }
 
+        public async Task<bool> UpdateAsync(Todo item, CancellationToken cancellationToken = default)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+
+            await _repository.UpdateAsync(item, cancellationToken);
+            return true;
+        }
+
         public async Task<bool> DeleteAsync(Todo item, CancellationToken cancellationToken = default)
         {
             if (item == null)

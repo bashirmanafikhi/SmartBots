@@ -25,8 +25,8 @@ namespace SmartBots.Application.Features.Todos
                 return false;
             }
 
-            var currentuserid = _currentUserService.GetUserId();
-            todo.Authorize(currentuserid);
+            var currentuserId = _currentUserService.GetUserId();
+            todo.Authorize(currentuserId);
 
             await _todoRepository.DeleteAsync(todo, cancellationToken);
 
