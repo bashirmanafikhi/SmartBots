@@ -1,9 +1,10 @@
 ﻿using SmartBots.Domain.Common;
+using SmartBots.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace SmartBots.Domain.Entities
 {
-    public class Exchange : BaseAuditableEntity
+    public class Exchange : BaseAuditableEntity, IUserOwnedEntity
     {
         [Required]
         public string Name { get; set; }
@@ -19,6 +20,9 @@ namespace SmartBots.Domain.Entities
 
         [Required]
         public bool IsTest { get; set; }
+
+        [Required]
+        public string ApplicationUserId { get; set; }
     }
 
     public enum ExchangeType

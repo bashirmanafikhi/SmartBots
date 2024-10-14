@@ -1,4 +1,6 @@
-﻿using SmartBots.Domain.Entities;
+﻿using SmartBots.Application.Common;
+using SmartBots.Application.Features.Exchange;
+using SmartBots.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace SmartBots.Application.Interfaces
@@ -13,5 +15,7 @@ namespace SmartBots.Application.Interfaces
             Expression<Func<Exchange, bool>> filter,
             CancellationToken cancellationToken = default);
         IQueryable<Exchange> Query();
+
+        Task<List<ExchangeDto>> GetCurrentUserItemsAsync(CancellationToken cancellationToken = default);
     }
 }
