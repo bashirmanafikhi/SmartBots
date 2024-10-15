@@ -1,6 +1,7 @@
 ﻿using SmartBots.Application.Interfaces;
 using SmartBots.BinancePlatform;
 using SmartBots.Domain.Entities;
+using SmartBots.Domain.Enums;
 
 namespace SmartBots.Infrastructure.Common
 {

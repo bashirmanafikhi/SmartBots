@@ -10,7 +10,6 @@ namespace SmartBots.Infrastructure.Data
         public DbSet<Todo> Todos => Set<Todo>();
         public DbSet<Exchange> Exchanges => Set<Exchange>();
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SmartBots.Domain.Entities;
+using SmartBots.Domain.Enums;
 
 namespace SmartBots.Application.Features.Exchange
 {

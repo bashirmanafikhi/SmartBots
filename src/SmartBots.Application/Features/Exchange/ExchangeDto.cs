@@ -1,5 +1,5 @@
 ﻿using SmartBots.Application.Common.Mappings;
-using SmartBots.Domain.Entities;
+using SmartBots.Domain.Enums;
 
 namespace SmartBots.Application.Features.Exchange
 {

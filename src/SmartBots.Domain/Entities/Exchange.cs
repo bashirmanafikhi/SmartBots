@@ -1,4 +1,5 @@
 ﻿using SmartBots.Domain.Common;
+using SmartBots.Domain.Enums;
 using SmartBots.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
@@ -23,11 +24,5 @@ namespace SmartBots.Domain.Entities
 
         [Required]
         public string ApplicationUserId { get; set; }
-    }
-
-    public enum ExchangeType
-    {
-        Binance,
-        Coinbase
     }
 }

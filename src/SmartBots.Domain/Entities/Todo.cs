@@ -1,4 +1,5 @@
 ﻿using SmartBots.Domain.Common;
+using SmartBots.Domain.Enums;
 using SmartBots.Domain.Interfaces;
 
 namespace SmartBots.Domain.Entities
@@ -37,12 +38,5 @@ namespace SmartBots.Domain.Entities
             Text = text;
             Priority = priority;
         }
-    }
-
-    public enum TodoPriority
-    {
-        Low,
-        Medium,
-        High
     }
 }

@@ -1,6 +1,7 @@
 ﻿using SmartBots.Application.Common;
 using SmartBots.Application.Common.Extensions;
 using SmartBots.Domain.Entities;
+using SmartBots.Domain.Enums;
 using System.Linq.Expressions;
 
 namespace SmartBots.Application.Features.Todos;
