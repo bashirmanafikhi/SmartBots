@@ -17,7 +17,6 @@ namespace SmartBots.Application
 
         private static void AddFluentValidation(this IServiceCollection services)
         {
-            services.AddValidatorsFromAssemblyContaining<AddTodoCommandValidator>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         }
         private static void AddAutoMapper(this IServiceCollection services)

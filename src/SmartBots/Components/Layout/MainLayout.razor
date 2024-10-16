@@ -10,14 +10,37 @@
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
-        <article class="content px-4">
-            @Body
+        <article  class="content px-4">
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent Context="Exception">
+                    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                        <h4 class="alert-heading">Error</h4>
+                        <p>@Exception.Message</p>
+                        <hr>
+                        <button class="btn btn-primary" @onclick="() => errorBoundary?.Recover()">
+                            Recover
+                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="() => errorBoundary?.Recover()"></button>
+                    </div>
+                </ErrorContent>
+
+            </ErrorBoundary>
         </article>
     </main>
 </div>
 
-<div id="blazor-error-ui">
+
+@* <div id="blazor-error-ui-2">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
-</div>
+</div> *@
+
+
+@code{
+    ErrorBoundary? errorBoundary;
+}
+
