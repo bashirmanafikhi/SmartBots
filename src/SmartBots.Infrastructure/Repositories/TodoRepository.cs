@@ -55,7 +55,7 @@ namespace SmartBots.Infrastructure.Repositories
             return _repository.Query();
         }
 
-        public async Task<PaginationResponse<TodoDto>> GetCurrentUserItemsWithPaginationAsync(
+        public async Task<PaginatedList<TodoDto>> GetCurrentUserItemsWithPaginationAsync(
             Expression<Func<Todo, bool>> predicate,
             Paging? paging,
             Expression<Func<Todo, object>> orderBy,
@@ -67,7 +67,7 @@ namespace SmartBots.Infrastructure.Repositories
                 orderBy,
                 cancellationToken);
 
-            return new PaginationResponse<TodoDto>(result.Result, result.Total);
+            return new PaginatedList<TodoDto>(result.Result, result.Total);
         }
 
     }

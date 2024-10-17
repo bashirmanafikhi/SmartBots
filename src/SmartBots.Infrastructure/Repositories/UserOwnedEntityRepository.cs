@@ -5,6 +5,7 @@ using SmartBots.Application.Common.Extensions;
 using SmartBots.Application.Common.Mappings;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Common;
+using SmartBots.Domain.Entities;
 using SmartBots.Domain.Interfaces;
 using SmartBots.Infrastructure.Data;
 using System.Linq.Expressions;
@@ -20,6 +21,21 @@ public sealed class UserOwnedEntityRepository<T> : GenericRepository<T>, IUserOw
         ICurrentUserService currentUserService) : base(dbContext, logger, mapper)
     {
         _currentUserService = currentUserService;
+    }
+
+    new public async Task<bool> AddAsync(T item, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        var currentUserId = _currentUserService.GetUserId();
+
+        if (!currentUserId.HasValue)
+            throw new UnauthorizedAccessException();
+
+        item.ApplicationUserId = currentUserId!.Value.ToString();
+
+        await AddAsync(item, cancellationToken);
+        return true;
     }
 
     public async Task<(List<TDestination> Result, int Total)> GetCurrentUserItemsAsync<TDestination>(

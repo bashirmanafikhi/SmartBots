@@ -48,6 +48,7 @@ namespace SmartBots.Infrastructure
                 .AddTransient(typeof(IUserOwnedEntityRepository<>), typeof(UserOwnedEntityRepository<>))
                 .AddTransient<ITodoRepository, TodoRepository>()
                 .AddTransient<IExchangeRepository, ExchangeRepository>()
+                .AddTransient<ITradingBotRepository, TradingBotRepository>()
                 .AddTransient<ICurrentUserService, CurrentUserService>()
                 .AddTransient<IExchangeFactory, ExchangeFactory>();
         }

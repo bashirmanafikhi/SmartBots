@@ -15,7 +15,7 @@ namespace SmartBots.Application.Interfaces
             Expression<Func<Todo, bool>> filter,
             CancellationToken cancellationToken = default);
         IQueryable<Todo> Query();
-        Task<PaginationResponse<TodoDto>> GetCurrentUserItemsWithPaginationAsync(
+        Task<PaginatedList<TodoDto>> GetCurrentUserItemsWithPaginationAsync(
             Expression<Func<Todo, bool>> predicate,
             Paging? paging,
             Expression<Func<Todo, object>> orderBy,

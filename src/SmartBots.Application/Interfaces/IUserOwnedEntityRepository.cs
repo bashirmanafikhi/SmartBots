@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 namespace SmartBots.Application.Interfaces;
 public interface IUserOwnedEntityRepository<T> : IGenericRepository<T> where T : BaseAuditableEntity, IUserOwnedEntity
 {
+    Task<bool> AddAsync(T item, CancellationToken cancellationToken = default);
     Task<(List<TDestination> Result, int Total)> GetCurrentUserItemsAsync<TDestination>(
         Expression<Func<T, bool>> predicate = null,
         Paging? paging = null,

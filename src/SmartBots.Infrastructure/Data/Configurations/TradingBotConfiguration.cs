@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartBots.Domain.Entities;
+using System.Reflection.Emit;
 
 namespace SmartBots.Infrastructure.Data.Configurations
 {
@@ -17,6 +18,11 @@ namespace SmartBots.Infrastructure.Data.Configurations
             builder.HasMany(tb => tb.TradingRules)
                    .WithOne(tr => tr.TradingBot)
                    .HasForeignKey(tr => tr.TradingBotId);
+
+            builder.HasOne<ApplicationUser>()
+                .WithMany(au => au.TradingBots)
+                .HasForeignKey(tb => tb.ApplicationUserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

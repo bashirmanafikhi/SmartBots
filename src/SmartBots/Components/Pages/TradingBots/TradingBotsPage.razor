@@ -1,0 +1,129 @@
+﻿@page "/TradingBotsPage"
+@rendermode InteractiveServer
+@using MediatR
+@using SmartBots.Application.Features.TradingBots
+@using SmartBots.Components.Pages.Shared
+@inject IMediator Mediator
+@attribute [Authorize]
+
+<CustomErrorBoundary>
+    <PageTitle>Trading Bot List</PageTitle>
+
+    <div class="border p-3 mt-3">
+
+        <!-- Search Section -->
+        <div class="form-row">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search ..." @bind="SearchKeyword" @bind:event="oninput" />
+                    <button class="btn btn-primary" @onclick="PerformSearch">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- Trading Bot List -->
+        <div>
+            @if (TradingBots.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Exchange Account</th>
+                            <th>Base Asset</th>
+                            <th>Quote Asset</th>
+                            <th>Trade Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bot in TradingBots)
+                        {
+                            <tr>
+                                <td>@bot.Name</td>
+                                <td>@bot.ExchangeId</td>
+                                <td>@bot.BaseAsset</td>
+                                <td>@bot.QuoteAsset</td>
+                                <td>@bot.TradeSize</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No trading bots found.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Pagination Component -->
+    <Pagination TotalItems="_totalItems"
+                PageSize="_pageSize"
+                CurrentPage="_currentPage"
+                PageSizeOptions="new int[] { 5, 10, 20, 50 }"
+                OnPageChanged="HandlePageChanged"
+                OnPageSizeChanged="HandlePageSizeChanged" />
+
+
+</CustomErrorBoundary>
+@code {
+    private IList<TradingBotDto> TradingBots { get; set; } = new List<TradingBotDto>();
+    private string SearchKeyword { get; set; } = string.Empty;
+
+    private int _currentPage = 1;
+    private int _pageSize = 10;
+    private int _totalItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTodosAsync();
+    }
+
+    private async Task LoadTodosAsync()
+    {
+        var query = new SearchTradingBotsQuery
+        {
+            Criteria = new TradingBotsSearchCriteria
+            {
+                Keyword = SearchKeyword
+            },
+            Paging = new Application.Common.Paging
+            {
+                PageNumber = _currentPage,
+                PageSize = _pageSize
+            }
+        };
+
+        var result = await Mediator.Send(query);
+
+        TradingBots = result.Items;
+        _totalItems = result.Total;
+    }
+
+    private async Task PerformSearch()
+    {
+        _currentPage = 1; // Reset to first page when searching
+        await LoadTodosAsync();
+    }
+
+    private async Task HandlePageChanged(int pageNumber)
+    {
+        _currentPage = pageNumber;
+        await LoadTodosAsync();
+    }
+
+    private async Task HandlePageSizeChanged(int pageSize)
+    {
+        _pageSize = pageSize;
+        _currentPage = 1; // Reset to first page when page size changes
+        await LoadTodosAsync();
+    }
+
+    private async Task ItemsChanged()
+    {
+        await LoadTodosAsync();
+        StateHasChanged();
+    }
+}

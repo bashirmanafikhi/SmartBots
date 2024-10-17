@@ -11,9 +11,8 @@ namespace SmartBots.Domain.Entities
         public string ApplicationUserId { get; set; }
         public TodoPriority Priority { get; set; }
 
-        public Todo(string applicationUserId, string text, TodoPriority priority)
+        public Todo(string text, TodoPriority priority)
         {
-            ApplicationUserId = applicationUserId;
             Text = text;
             Priority = priority;
         }
