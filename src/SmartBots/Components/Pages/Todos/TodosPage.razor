@@ -6,93 +6,96 @@
 @inject IMediator Mediator
 @attribute [Authorize]
 
-<PageTitle>Todo List</PageTitle>
+<CustomErrorBoundary>
+    <PageTitle>Todo List</PageTitle>
 
-<!-- New Item Form -->
-<div class="border p-3">
-    <h4>@(IsUpdateMode ? "New Item" : "Update Item")</h4>
-    <TodoItemForm TodoId="@SelectedTodoId"
-                  OnItemSaved="@(async () => await ItemsChanged())"
-                  OnCancelUpdate="CancelUpdate" />
-</div>
+    <!-- New Item Form -->
+    <div class="border p-3">
+        <h4>@(IsUpdateMode ? "New Item" : "Update Item")</h4>
+        <TodoItemForm TodoId="@SelectedTodoId"
+                      OnItemSaved="@(async () => await ItemsChanged())"
+                      OnCancelUpdate="CancelUpdate" />
+    </div>
 
-<!-- Search and Todo List Section -->
-<div class="border p-3 mt-3">
+    <!-- Search and Todo List Section -->
+    <div class="border p-3 mt-3">
 
-    <!-- Search Section -->
-    <div class="form-row">
-        <div class="col-md-4">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search todos..." @bind="SearchKeyword" @bind:event="oninput" />
-                <button class="btn btn-primary" @onclick="PerformSearch">Search</button>
+        <!-- Search Section -->
+        <div class="form-row">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search todos..." @bind="SearchKeyword" @bind:event="oninput" />
+                    <button class="btn btn-primary" @onclick="PerformSearch">Search</button>
+                </div>
             </div>
+        </div>
+
+        <hr />
+
+        <!-- Todo List -->
+        <div class="todo-list">
+            @if (Todos.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Text</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var todo in Todos)
+                        {
+                            <tr>
+                                <td class="@ItemClass(todo)">@todo.Text</td>
+                                <td class="@ItemClass(todo)">@todo.Priority</td>
+                                <td>
+                                    @if (todo.Completed)
+                                    {
+                                        <span class="badge bg-success">Completed</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (todo.Completed)
+                                    {
+                                        <button class="btn btn-primary btn-sm me-2" @onclick="() => UncompleteItem(todo)">Uncomplete</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary btn-sm me-2" @onclick="() => CompleteItem(todo)">Complete</button>
+                                    }
+
+                                    <button class="btn btn-info btn-sm me-2" @onclick="() => EditItem(todo)">Update</button>
+                                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteItem(todo)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No todos found.</p>
+            }
         </div>
     </div>
 
-    <hr />
+    <!-- Pagination Component -->
+    <Pagination TotalItems="_totalItems"
+                PageSize="_pageSize"
+                CurrentPage="_currentPage"
+                PageSizeOptions="new int[] { 5, 10, 20, 50 }"
+                OnPageChanged="HandlePageChanged"
+                OnPageSizeChanged="HandlePageSizeChanged" />
 
-    <!-- Todo List -->
-    <div class="todo-list">
-        @if (Todos.Any())
-        {
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Text</th>
-                        <th>Priority</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var todo in Todos)
-                    {
-                        <tr>
-                            <td class="@ItemClass(todo)">@todo.Text</td>
-                            <td class="@ItemClass(todo)">@todo.Priority</td>
-                            <td>
-                                @if (todo.Completed)
-                                {
-                                    <span class="badge bg-success">Completed</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-warning text-dark">Pending</span>
-                                }
-                            </td>
-                            <td>
-                                @if (todo.Completed)
-                                {
-                                    <button class="btn btn-primary btn-sm me-2" @onclick="() => UncompleteItem(todo)">Uncomplete</button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-primary btn-sm me-2" @onclick="() => CompleteItem(todo)">Complete</button>
-                                }
 
-                                <button class="btn btn-info btn-sm me-2" @onclick="() => EditItem(todo)">Update</button>
-                                <button class="btn btn-danger btn-sm" @onclick="() => DeleteItem(todo)">Delete</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p>No todos found.</p>
-        }
-    </div>
-</div>
-
-<!-- Pagination Component -->
-<Pagination TotalItems="_totalItems"
-            PageSize="_pageSize"
-            CurrentPage="_currentPage"
-            PageSizeOptions="new int[] { 5, 10, 20, 50 }"
-            OnPageChanged="HandlePageChanged"
-            OnPageSizeChanged="HandlePageSizeChanged" />
-
+</CustomErrorBoundary>
 @code {
     private IList<TodoDto> Todos { get; set; } = new List<TodoDto>();
     private string SearchKeyword { get; set; } = string.Empty;

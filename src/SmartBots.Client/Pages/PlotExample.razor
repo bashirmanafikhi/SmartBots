@@ -1,0 +1,25 @@
+﻿@page "/plotExample"
+@rendermode InteractiveWebAssembly
+@using MediatR
+@inject IMediator Mediator
+@using ScottPlot
+@using ScottPlot.Blazor
+@using SmartBots.Application.Features
+<CustomErrorBoundary>
+
+    <h1>Plot Example</h1>
+
+    <div>
+        <BlazorPlot @ref=BlazorPlot Style="width: 500px; height: 400px;" />
+    </div>
+
+</CustomErrorBoundary>
+@code {
+    BlazorPlot BlazorPlot { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var plot = await Mediator.Send(new GetPlotExample());
+        BlazorPlot.Reset(plot);
+    }
+}

@@ -1,0 +1,43 @@
+﻿@inherits ErrorBoundary
+
+@if (CurrentException is not null)
+{
+    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert" aria-live="assertive">
+        <h4 class="alert-heading">An Unexpected Error Occurred</h4>
+        <p>@CurrentException.Message</p>
+
+        @if (ShowDetails)
+        {
+            <pre class="bg-light p-2 text-start overflow-auto text-wrap" style="max-height: 300px;">
+                @CurrentException.ToString()
+                    </pre>
+        }
+
+        <div class="d-flex justify-content-center gap-2 mt-3">
+            <button class="btn btn-primary" @onclick="Recover">Recover</button>
+            <button type="button" class="btn btn-secondary" @onclick="ToggleDetails">
+                @(ShowDetails ? "Hide Details" : "Show Details")
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    @ChildContent
+}
+
+@code {
+    private bool ShowDetails { get; set; } = false;
+
+    private void ToggleDetails()
+    {
+        ShowDetails = !ShowDetails;
+    }
+
+    protected override Task OnErrorAsync(Exception exception)
+    {
+        // Log error or perform additional error handling here
+        Console.Error.WriteLine($"Error: {exception.Message}");
+        return base.OnErrorAsync(exception);
+    }
+}

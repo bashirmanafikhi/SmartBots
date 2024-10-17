@@ -18,4 +18,10 @@
     <ProjectReference Include="..\SmartBots.Application\SmartBots.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="CustomErrorBoundary.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

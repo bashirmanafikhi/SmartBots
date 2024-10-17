@@ -1,9 +1,11 @@
 ﻿@page "/ExchangesPage"
 @rendermode InteractiveServer
 @using SmartBots.Application.Features.Exchange
+@using SmartBots.Components.Layout
 @inject IMediator Mediator
 @attribute [Authorize]
 
+<CustomErrorBoundary>
 <PageTitle>Exchange List</PageTitle>
 
 <div class="container mt-4">
@@ -65,6 +67,7 @@
     </div>
 </div>
 
+</CustomErrorBoundary>
 @code {
     private IList<ExchangeDto> Exchanges { get; set; } = new List<ExchangeDto>();
     private ExchangeDto NewExchange = new ExchangeDto();
