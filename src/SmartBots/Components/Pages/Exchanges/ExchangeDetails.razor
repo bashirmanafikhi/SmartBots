@@ -1,17 +1,78 @@
 ﻿@page "/exchange/{id:guid}"
 @using SmartBots.Application.Features.Exchange
+@using SmartBots.Application.Features.ExchangeApi
+@using SmartBots.Application.Interfaces
 @inject IMediator Mediator
+@rendermode InteractiveServer
 
-<h3>ExchangeDetails</h3>
+<h3>Account Info</h3>
+@if (accountInfo is null)
+{
+    <p>Loading Account Info ... </p>
+}
+else
+{
+    <div class="container my-5 fade-in">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Exchange Account Information</h4>
+            </div>
+            <div class="card-body">
+                <!-- Trade Capabilities Section -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <p><strong>Can Trade:</strong> @accountInfo.CanTrade</p>
+                        <p><strong>Can Withdraw:</strong> @accountInfo.CanWithdraw</p>
+                        <p><strong>Can Deposit:</strong> @accountInfo.CanDeposit</p>
+                    </div>
+                </div>
 
-Name: @exchange.Name
+                <!-- Commission Information -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <p><strong>Buyer Commission:</strong> @accountInfo.BuyerCommission %</p>
+                        <p><strong>Seller Commission:</strong> @accountInfo.SellerCommission %</p>
+                        <p><strong>Maker Commission:</strong> @accountInfo.MakerCommission %</p>
+                        <p><strong>Taker Commission:</strong> @accountInfo.TakerCommission %</p>
+                    </div>
+                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Free</th>
+                            <th>Locked</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var balance in accountInfo.Balances)
+                        {
+                            <tr>
+                                <td>@balance.Asset</td>
+                                <td>@balance.Free</td>
+                                <td>@balance.Locked</td>
+                                <td>@balance.Total</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+
 
 @code {
     [Parameter] public Guid Id { get; set; }
-    ExchangeDto exchange = new ExchangeDto();
 
-    protected override async Task OnInitializedAsync()
+    ExchangeAccountInfo accountInfo = null;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        exchange = await Mediator.Send(new GetExchangeDetailsQuery() { Id = this.Id });
+        accountInfo = await Mediator.Send(new GetExchangeAccountInfoQuery(Id));
+        StateHasChanged();
     }
 }

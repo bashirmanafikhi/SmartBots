@@ -3,12 +3,12 @@
     public interface IExchangeClient
     {
         #region Account Information
-        //Task<AccountInfo> GetAccountInfoAsync();
-        //Task<IEnumerable<Balance>> GetBalancesAsync();
+        Task<ExchangeAccountInfo> GetAccountInfoAsync();
         #endregion
 
         #region Assets
-        //Task<IEnumerable<Asset>> GetAssetsAsync();
+        Task<IEnumerable<Balance>> GetBalancesAsync();
+        Task<IEnumerable<Asset>> GetAssetsAsync();
         #endregion
 
         #region Spot Trading
@@ -27,30 +27,25 @@
         #endregion
     }
 
-    //public class AccountInfo
-    //{
-    //    public long MakerCommission { get; set; }
-    //    public long TakerCommission { get; set; }
-    //    public long BuyerCommission { get; set; }
-    //    public long SellerCommission { get; set; }
-    //    public bool CanTrade { get; set; }
-    //    public bool CanWithdraw { get; set; }
-    //    public bool CanDeposit { get; set; }
-    //    public
-    // IEnumerable<Balance> Balances
-    //    { get; set; }
-    //}
+    public class ExchangeAccountInfo
+    {
+        public decimal MakerCommission { get; set; }
+        public decimal TakerCommission { get; set; }
+        public decimal BuyerCommission { get; set; }
+        public decimal SellerCommission { get; set; }
+        public bool CanTrade { get; set; }
+        public bool CanWithdraw { get; set; }
+        public bool CanDeposit { get; set; }
+        public IEnumerable<Balance> Balances { get; set; }
+    }
 
-    //public class Balance
-    //{
-    //    public string Asset { get; set; }
-    //    public decimal Free { get; set; }
-    //    public decimal Locked
-    //    {
-    //        get;
-    //        set;
-    //    }
-    //}
+    public class Balance
+    {
+        public string Asset { get; set; }
+        public decimal Free { get; set; }
+        public decimal Locked { get; set; }
+        public decimal Total { get; set; }
+    }
 
     //public class OrderRequest
     //{
@@ -115,22 +110,22 @@
     //    public int Count { get; set; }
     //}
 
-    //public class Asset
-    //{
-    //    public string Symbol { get; set; }
-    //    public string Name { get; set; }
-    //    public decimal Weight { get; set; } // For calculating fees or other purposes
-    //    public bool IsMarginEnabled { get; set; }
-    //    public bool IsFuturesEnabled { get; set; }
+    public class Asset
+    {
+        public string Symbol { get; set; }
+        public string Name { get; set; }
+        public decimal Weight { get; set; } // For calculating fees or other purposes
+        public bool IsMarginEnabled { get; set; }
+        public bool IsFuturesEnabled { get; set; }
 
-    //    // Additional properties as needed:
-    //    // - MinimumOrderQty
-    //    // - PricePrecision
-    //    // - QuantityPrecision
-    //    // - BaseAsset
-    //    // - QuoteAsset
-    //    // ...
-    //}
+        // Additional properties as needed:
+        // - MinimumOrderQty
+        // - PricePrecision
+        // - QuantityPrecision
+        // - BaseAsset
+        // - QuoteAsset
+        // ...
+    }
 
     //public enum OrderSide
     //{
