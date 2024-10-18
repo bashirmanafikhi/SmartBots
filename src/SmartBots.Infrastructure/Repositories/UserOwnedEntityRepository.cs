@@ -5,7 +5,6 @@ using SmartBots.Application.Common.Extensions;
 using SmartBots.Application.Common.Mappings;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Common;
-using SmartBots.Domain.Entities;
 using SmartBots.Domain.Interfaces;
 using SmartBots.Infrastructure.Data;
 using System.Linq.Expressions;
@@ -34,7 +33,7 @@ public sealed class UserOwnedEntityRepository<T> : GenericRepository<T>, IUserOw
 
         item.ApplicationUserId = currentUserId!.Value.ToString();
 
-        await AddAsync(item, cancellationToken);
+        await base.AddAsync(item, cancellationToken);
         return true;
     }
 

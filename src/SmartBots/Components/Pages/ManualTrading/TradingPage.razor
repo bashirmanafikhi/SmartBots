@@ -1,0 +1,186 @@
+﻿@page "/TradingPage"
+@rendermode InteractiveServer
+@using SmartBots.Application.Features.Exchange
+@using SmartBots.Application.Features.ExchangeApi
+@using SmartBots.Application.Features.ExchangeApi.CancelOrderCommand
+@using SmartBots.Application.Features.ExchangeApi.GetOpenOrdersQuery
+@using SmartBots.Application.Features.ExchangeApi.GetOrdersQuery
+@using SmartBots.Application.Features.ExchangeApi.GetAvailableSymbolsQuery
+@using SmartBots.Application.Features.ExchangeApi.GetTickerPriceQuery
+@using SmartBots.Application.Features.ExchangeApi.PlaceOrderCommand
+@using SmartBots.Application.Interfaces
+@inject IMediator Mediator
+@attribute [Authorize]
+
+<CustomErrorBoundary>
+    <PageTitle>Trading Page</PageTitle>
+
+    <div class="container mt-4">
+        <h4 class="text-center mb-4">Trading Interface</h4>
+
+        <EditForm Model="@NewOrder" OnSubmit="@PlaceOrder">
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label>Exchange:</label>
+                    <InputSelect @bind-Value="SelectedExchangeId" class="form-control" @oninput="OnExchangeChanged">
+                        @foreach (var exchange in Exchanges)
+                        {
+                            <option value="@exchange.Id">@exchange.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="form-group col-md-6 mb-3">
+                    <label>Symbol:</label>
+                    <InputText @bind-Value="NewOrder.Symbol" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-6 mb-3">
+                    <label>Order Type:</label>
+                    <InputSelect @bind-Value="NewOrder.Type" class="form-control">
+                        <option value="Buy">Buy</option>
+                        <option value="Sell">Sell</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group col-md-6 mb-3">
+                    <label>Quantity:</label>
+                    <InputNumber @bind-Value="NewOrder.Quantity" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-6 mb-3">
+                    <label>Price:</label>
+                    <InputNumber @bind-Value="NewOrder.Price" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-6 mb-3">
+                    <label>Current Price:</label>
+                    <span>@CurrentPrice</span>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary mx-2" disabled="@(!CanPlaceOrder)">Place Order</button>
+                <button type="button" class="btn btn-secondary mx-2" @onclick="FetchCurrentPrice">Refresh Price</button>
+            </div>
+        </EditForm>
+    </div>
+
+    <div class="container mt-4">
+        <h4 class="text-center mb-4">Open Orders</h4>
+        <button class="btn btn-info mb-3" @onclick="LoadOpenOrders">Refresh Open Orders</button>
+        <div class="list-group">
+            @foreach (var order in OpenOrders)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>@order.Symbol - @order.Type</span>
+                    <div>
+                        <button class="btn btn-danger" @onclick="@(() => CancelOrder(order))">Cancel</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <h4 class="text-center mb-4">Order History</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Start Date:</label>
+                <InputDate @bind-Value="StartDate" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label>End Date:</label>
+                <InputDate @bind-Value="EndDate" class="form-control" />
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button class="btn btn-primary" @onclick="LoadOrderHistory">Fetch History</button>
+            </div>
+        </div>
+        <div class="list-group mt-3">
+            @foreach (var order in OrderHistory)
+            {
+                <div class="list-group-item">
+                    <span>@order.Symbol - @order.Type - @order.Price - @order.Quantity</span>
+                </div>
+            }
+        </div>
+    </div>
+</CustomErrorBoundary>
+
+@code {
+    private IEnumerable<ExchangeDto> Exchanges { get; set; } = new List<ExchangeDto>();
+    private IEnumerable<Symbol> AvailableSymbols { get; set; } = new List<Symbol>();
+    private OrderRequest NewOrder = new OrderRequest();
+    private Guid SelectedExchangeId { get; set; }
+    private string CurrentPrice { get; set; }
+    private IEnumerable<Order> OpenOrders { get; set; } = new List<Order>();
+    private IEnumerable<Order> OrderHistory { get; set; } = new List<Order>();
+    private DateTime? StartDate { get; set; }
+    private DateTime? EndDate { get; set; }
+    private bool CanPlaceOrder => !string.IsNullOrWhiteSpace(NewOrder.Symbol) && NewOrder.Price > 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Exchanges = await Mediator.Send(new GetAllExchangesQuery());
+
+        // Pre-select the first exchange if available
+        if (Exchanges.Any())
+        {
+            SelectedExchangeId = Exchanges.First().Id;
+            await OnExchangeChanged(SelectedExchangeId);
+        }
+    }
+
+    private async Task OnExchangeChanged(ChangeEventArgs e)
+    {
+        SelectedExchangeId = Guid.Parse(e.Value.ToString());
+        await OnExchangeChanged(SelectedExchangeId);
+    }
+
+    private async Task OnExchangeChanged(Guid exchangeId)
+    {
+        AvailableSymbols = await Mediator.Send(new GetAvailableSymbolsQuery(exchangeId, true));
+        await LoadOpenOrders();
+    }
+
+    private async Task FetchCurrentPrice()
+    {
+        if (SelectedExchangeId == Guid.Empty || string.IsNullOrWhiteSpace(NewOrder.Symbol))
+            return;
+
+        var tickerPrice = await Mediator.Send(new GetTickerPriceQuery(SelectedExchangeId, NewOrder.Symbol));
+        if (tickerPrice != null)
+        {
+            CurrentPrice = tickerPrice.Price.ToString();
+        }
+    }
+
+    public async Task PlaceOrder()
+    {
+        if (!CanPlaceOrder) return;
+
+        await Mediator.Send(new PlaceOrderCommand(SelectedExchangeId, NewOrder));
+        NewOrder = new OrderRequest(); // Reset the order form
+        await LoadOpenOrders();
+    }
+
+    private async Task CancelOrder(Order order)
+    {
+        await Mediator.Send(new CancelOrderCommand(SelectedExchangeId, order.Symbol, order.Id));
+        await LoadOpenOrders();
+    }
+
+    private async Task LoadOpenOrders()
+    {
+        if (SelectedExchangeId == Guid.Empty) return;
+
+        OpenOrders = await Mediator.Send(new GetOpenOrdersQuery(SelectedExchangeId));
+        StateHasChanged();
+    }
+
+    private async Task LoadOrderHistory()
+    {
+        OrderHistory = await Mediator.Send(new GetOrdersQuery(SelectedExchangeId, NewOrder.Symbol, StartDate, EndDate));
+    }
+}
