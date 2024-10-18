@@ -2,15 +2,8 @@
 using Binance.Net.Interfaces;
 using Binance.Net.Objects.Models;
 using Binance.Net.Objects.Models.Spot;
-using CryptoExchange.Net.CommonObjects;
-using CryptoExchange.Net.Interfaces;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartBots.BinancePlatform
 {
@@ -215,9 +208,10 @@ namespace SmartBots.BinancePlatform
 
         public static TickerPrice ToTickerPrice(this BinancePrice symbol)
         {
-            return new TickerPrice { 
-                Symbol = symbol.Symbol, 
-                Price = symbol.Price ,
+            return new TickerPrice
+            {
+                Symbol = symbol.Symbol,
+                Price = symbol.Price,
                 Timestamp = symbol.Timestamp
             };
         }

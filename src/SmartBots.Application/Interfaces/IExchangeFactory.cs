@@ -5,5 +5,6 @@ namespace SmartBots.Application.Interfaces
     public interface IExchangeFactory
     {
         IExchangeClient CreateExchangeClient(Exchange exchange);
+        IMarketDataClient CreateMarketDataClient(Exchange exchange);
     }
 }

@@ -167,7 +167,7 @@ namespace SmartBots.BinancePlatform
                 throw new Exception($"Failed to place test order: {orderResponse.Error?.Message}");
             }
 
-            return true; 
+            return true;
         }
     }
 }

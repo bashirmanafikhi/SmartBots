@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using SmartBots.Application.Features.Todos;
 using System.Reflection;
 
 namespace SmartBots.Application

@@ -1,5 +1,4 @@
 ﻿using SmartBots.Domain.Enums;
-using System.Diagnostics;
 
 namespace SmartBots.Application.Interfaces
 {
@@ -17,7 +16,7 @@ namespace SmartBots.Application.Interfaces
         Task<IEnumerable<Order>> GetOpenOrdersAsync(string symbol = null);
         Task<IEnumerable<Order>> GetOrdersAsync(string symbol = null, DateTime? startTime = null, DateTime? endTime = null);
         Task<Order> GetOrderAsync(string symbol, long orderId);
-        Task<bool> TestOrderAsync(OrderRequest orderRequest); 
+        Task<bool> TestOrderAsync(OrderRequest orderRequest);
     }
 
 
@@ -66,7 +65,7 @@ namespace SmartBots.Application.Interfaces
         public OrderType Type { get; set; }
         public decimal Quantity { get; set; }
         public decimal Price { get; set; }
-        public  OrderStatus Status { get; set; }
+        public OrderStatus Status { get; set; }
         public decimal Filled { get; set; }
         public TimeInForce TimeInForce { get; set; }
         public DateTime CreateTime { get; set; }

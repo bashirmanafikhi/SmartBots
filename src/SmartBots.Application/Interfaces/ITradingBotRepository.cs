@@ -17,6 +17,6 @@ public interface ITradingBotRepository
            CancellationToken cancellationToken = default);
 
     Task<List<TradingBotDto>> GetCurrentUserItemsAsync(
-        Expression<Func<TradingBot, bool>> predicate, 
+        Expression<Func<TradingBot, bool>> predicate,
         CancellationToken cancellationToken = default);
 }

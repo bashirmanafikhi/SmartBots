@@ -11,8 +11,8 @@ internal sealed class AddTradingBotCommandHandler : IRequestHandler<AddTradingBo
     private readonly IMapper _mapper;
 
     public AddTradingBotCommandHandler(
-        ITradingBotRepository tradingBotRepository, 
-        IUnitOfWork unitOfWork, 
+        ITradingBotRepository tradingBotRepository,
+        IUnitOfWork unitOfWork,
         IMapper mapper)
     {
         _tradingBotRepository = tradingBotRepository;

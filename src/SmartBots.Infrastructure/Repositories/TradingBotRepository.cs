@@ -38,11 +38,11 @@ public class TradingBotRepository : ITradingBotRepository
     }
 
     public async Task<List<TradingBotDto>> GetCurrentUserItemsAsync(
-        Expression<Func<TradingBot, bool>> predicate, 
+        Expression<Func<TradingBot, bool>> predicate,
         CancellationToken cancellationToken = default)
     {
         (var result, _) = await _repository.GetCurrentUserItemsAsync<TradingBotDto>(
-            predicate: predicate, 
+            predicate: predicate,
             cancellationToken: cancellationToken);
 
         return result;

@@ -24,6 +24,6 @@ public class TradingBotDtoValidator : AbstractValidator<TradingBotDto>
 {
     public TradingBotDtoValidator()
     {
-        
+
     }
 }
