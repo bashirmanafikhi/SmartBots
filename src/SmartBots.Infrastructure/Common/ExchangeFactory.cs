@@ -21,5 +21,16 @@ namespace SmartBots.Infrastructure.Common
                     throw new ArgumentException("Invalid exchange type");
             }
         }
+
+        public IMarketDataClient CreateMarketDataClient(Exchange exchange)
+        {
+            switch (exchange.Type)
+            {
+                case ExchangeType.Binance:
+                    return new BinanceMarketDataClient(exchange.ApiKey, exchange.ApiSecret);
+                default:
+                    throw new ArgumentException("Invalid exchange type");
+            }
+        }
     }
 }
