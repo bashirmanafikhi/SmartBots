@@ -3,7 +3,6 @@ using Binance.Net.Interfaces;
 using Binance.Net.Objects.Models;
 using Binance.Net.Objects.Models.Spot;
 using SmartBots.Application.Interfaces;
-using SmartBots.Domain.Enums;
 
 namespace SmartBots.BinancePlatform
 {
@@ -37,11 +36,11 @@ namespace SmartBots.BinancePlatform
             };
         }
 
-        public static SmartBots.Domain.Enums.OrderSide ToOrderSide(this Binance.Net.Enums.OrderSide binanceSide) =>
+        public static Application.Interfaces.OrderSide ToOrderSide(this Binance.Net.Enums.OrderSide binanceSide) =>
             binanceSide switch
             {
-                Binance.Net.Enums.OrderSide.Buy => SmartBots.Domain.Enums.OrderSide.BUY,
-                Binance.Net.Enums.OrderSide.Sell => SmartBots.Domain.Enums.OrderSide.SELL,
+                Binance.Net.Enums.OrderSide.Buy => Application.Interfaces.OrderSide.BUY,
+                Binance.Net.Enums.OrderSide.Sell => Application.Interfaces.OrderSide.SELL,
                 _ => throw new ArgumentException("Invalid Binance order side.")
             };
 
@@ -54,24 +53,24 @@ namespace SmartBots.BinancePlatform
                 _ => throw new ArgumentException("Invalid Binance order type.")
             };
 
-        public static SmartBots.Domain.Enums.OrderStatus ToOrderStatus(this Binance.Net.Enums.OrderStatus binanceStatus) =>
+        public static Application.Interfaces.OrderStatus ToOrderStatus(this Binance.Net.Enums.OrderStatus binanceStatus) =>
             binanceStatus switch
             {
-                Binance.Net.Enums.OrderStatus.New => SmartBots.Domain.Enums.OrderStatus.NEW,
-                Binance.Net.Enums.OrderStatus.PartiallyFilled => SmartBots.Domain.Enums.OrderStatus.PARTIALLY_FILLED,
-                Binance.Net.Enums.OrderStatus.Filled => SmartBots.Domain.Enums.OrderStatus.FILLED,
-                Binance.Net.Enums.OrderStatus.Canceled => SmartBots.Domain.Enums.OrderStatus.CANCELED,
-                Binance.Net.Enums.OrderStatus.PendingCancel => SmartBots.Domain.Enums.OrderStatus.PENDING_CANCEL,
-                Binance.Net.Enums.OrderStatus.Rejected => SmartBots.Domain.Enums.OrderStatus.REJECTED,
-                Binance.Net.Enums.OrderStatus.Expired => SmartBots.Domain.Enums.OrderStatus.EXPIRED,
+                Binance.Net.Enums.OrderStatus.New => Application.Interfaces.OrderStatus.NEW,
+                Binance.Net.Enums.OrderStatus.PartiallyFilled => Application.Interfaces.OrderStatus.PARTIALLY_FILLED,
+                Binance.Net.Enums.OrderStatus.Filled => Application.Interfaces.OrderStatus.FILLED,
+                Binance.Net.Enums.OrderStatus.Canceled => Application.Interfaces.OrderStatus.CANCELED,
+                Binance.Net.Enums.OrderStatus.PendingCancel => Application.Interfaces.OrderStatus.PENDING_CANCEL,
+                Binance.Net.Enums.OrderStatus.Rejected => Application.Interfaces.OrderStatus.REJECTED,
+                Binance.Net.Enums.OrderStatus.Expired => Application.Interfaces.OrderStatus.EXPIRED,
                 _ => throw new ArgumentException("Invalid Binance order status.")
             };
 
-        public static Binance.Net.Enums.OrderSide ToBinanceOrderSide(this SmartBots.Domain.Enums.OrderSide side) =>
+        public static Binance.Net.Enums.OrderSide ToBinanceOrderSide(this Application.Interfaces.OrderSide side) =>
             side switch
             {
-                SmartBots.Domain.Enums.OrderSide.BUY => Binance.Net.Enums.OrderSide.Buy,
-                SmartBots.Domain.Enums.OrderSide.SELL => Binance.Net.Enums.OrderSide.Sell,
+                Application.Interfaces.OrderSide.BUY => Binance.Net.Enums.OrderSide.Buy,
+                Application.Interfaces.OrderSide.SELL => Binance.Net.Enums.OrderSide.Sell,
                 _ => throw new ArgumentException("Invalid order side.")
             };
 
@@ -83,21 +82,21 @@ namespace SmartBots.BinancePlatform
                 _ => throw new ArgumentException("Invalid order type.")
             };
 
-        public static Binance.Net.Enums.TimeInForce ToBinanceTimeInForce(this SmartBots.Domain.Enums.TimeInForce timeInForce) =>
+        public static Binance.Net.Enums.TimeInForce ToBinanceTimeInForce(this Application.Interfaces.TimeInForce timeInForce) =>
             timeInForce switch
             {
-                SmartBots.Domain.Enums.TimeInForce.GTC => Binance.Net.Enums.TimeInForce.GoodTillCanceled,
-                SmartBots.Domain.Enums.TimeInForce.IOC => Binance.Net.Enums.TimeInForce.ImmediateOrCancel,
-                SmartBots.Domain.Enums.TimeInForce.FOK => Binance.Net.Enums.TimeInForce.FillOrKill,
+                Application.Interfaces.TimeInForce.GTC => Binance.Net.Enums.TimeInForce.GoodTillCanceled,
+                Application.Interfaces.TimeInForce.IOC => Binance.Net.Enums.TimeInForce.ImmediateOrCancel,
+                Application.Interfaces.TimeInForce.FOK => Binance.Net.Enums.TimeInForce.FillOrKill,
                 _ => throw new ArgumentException("Invalid time in force.")
             };
 
-        public static SmartBots.Domain.Enums.TimeInForce ToTimeInForce(this Binance.Net.Enums.TimeInForce binanceTimeInForce) =>
+        public static Application.Interfaces.TimeInForce ToTimeInForce(this Binance.Net.Enums.TimeInForce binanceTimeInForce) =>
             binanceTimeInForce switch
             {
-                Binance.Net.Enums.TimeInForce.GoodTillCanceled => SmartBots.Domain.Enums.TimeInForce.GTC,
-                Binance.Net.Enums.TimeInForce.ImmediateOrCancel => SmartBots.Domain.Enums.TimeInForce.IOC,
-                Binance.Net.Enums.TimeInForce.FillOrKill => SmartBots.Domain.Enums.TimeInForce.FOK,
+                Binance.Net.Enums.TimeInForce.GoodTillCanceled => Application.Interfaces.TimeInForce.GTC,
+                Binance.Net.Enums.TimeInForce.ImmediateOrCancel => Application.Interfaces.TimeInForce.IOC,
+                Binance.Net.Enums.TimeInForce.FillOrKill => Application.Interfaces.TimeInForce.FOK,
                 _ => throw new ArgumentException("Invalid Binance time in force.")
             };
 
@@ -213,6 +212,31 @@ namespace SmartBots.BinancePlatform
                 Symbol = symbol.Symbol,
                 Price = symbol.Price,
                 Timestamp = symbol.Timestamp
+            };
+        }
+
+        public static KlineData ToKlineData(this IBinanceStreamKlineData binanceKline)
+        {
+            return new KlineData
+            {
+                Symbol = binanceKline.Symbol,
+                Interval = (Application.Interfaces.KlineInterval)binanceKline.Data.Interval,
+                OpenTime = binanceKline.Data.OpenTime,
+                OpenPrice = binanceKline.Data.OpenPrice,
+                HighPrice = binanceKline.Data.HighPrice,
+                LowPrice = binanceKline.Data.LowPrice,
+                ClosePrice = binanceKline.Data.ClosePrice,
+                Volume = binanceKline.Data.Volume,
+                CloseTime = binanceKline.Data.CloseTime,
+            };
+        }
+
+        public static TickerData ToTickerData(this IBinanceTick binanceTick)
+        {
+            return new TickerData
+            {
+                Symbol = binanceTick.Symbol,
+                LastPrice = binanceTick.LastPrice,
             };
         }
     }

@@ -1,4 +1,5 @@
-﻿using SmartBots.Application.Interfaces;
+﻿using Microsoft.CodeAnalysis.Text;
+using SmartBots.Application.Interfaces;
 using SmartBots.BinancePlatform;
 using SmartBots.Domain.Entities;
 using SmartBots.Domain.Enums;
@@ -13,10 +14,6 @@ namespace SmartBots.Infrastructure.Common
             {
                 case ExchangeType.Binance:
                     return new BinanceClient(exchange.ApiKey, exchange.ApiSecret);
-
-                //case ExchangeType.Coinbase:
-                //    return new CoinbaseClient();
-                // Add more cases for other exchanges
                 default:
                     throw new ArgumentException("Invalid exchange type");
             }
@@ -28,6 +25,17 @@ namespace SmartBots.Infrastructure.Common
             {
                 case ExchangeType.Binance:
                     return new BinanceMarketDataClient(exchange.ApiKey, exchange.ApiSecret);
+                default:
+                    throw new ArgumentException("Invalid exchange type");
+            }
+        }
+
+        public IExchangeWebSocketClient CreateWebSocketClient(ExchangeType exchangeType)
+        {
+            switch (exchangeType)
+            {
+                case ExchangeType.Binance:
+                    return new BinanceWebSocketClient();
                 default:
                     throw new ArgumentException("Invalid exchange type");
             }

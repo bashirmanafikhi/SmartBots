@@ -1,4 +1,5 @@
 ﻿using SmartBots.Domain.Entities;
+using SmartBots.Domain.Enums;
 
 namespace SmartBots.Application.Interfaces
 {
@@ -6,5 +7,6 @@ namespace SmartBots.Application.Interfaces
     {
         IExchangeClient CreateExchangeClient(Exchange exchange);
         IMarketDataClient CreateMarketDataClient(Exchange exchange);
+        IExchangeWebSocketClient CreateWebSocketClient(ExchangeType exchangeType);
     }
 }

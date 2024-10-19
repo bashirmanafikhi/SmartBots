@@ -3,6 +3,8 @@
 @using Binance.Net.Clients
 @using Binance.Net.Interfaces
 @using CryptoExchange.Net.Objects.Sockets
+@using SmartBots.Application.Features.ExchangeApi.SubscribeToTickerUpdatesRequest
+@inject IMediator Mediator
 
 
 <h3>Current ETHUSDT Price:</h3>
@@ -13,13 +15,19 @@
     decimal lastPrice;
     protected override async Task OnInitializedAsync()
     {
-        var socketClient = new BinanceSocketClient();
-        var tickerSubscriptionResult = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync("ETHUSDT", HandleTickUpdates);
+        await SubscribeToTickerUpdates();
     }
 
-    private void HandleTickUpdates(DataEvent<IBinanceTick> update)
+    private async Task SubscribeToTickerUpdates()
     {
-        this.lastPrice = update.Data.LastPrice;
-        InvokeAsync(() => StateHasChanged());
+        bool isConnected = await Mediator.Send(new SubscribeToTickerUpdatesRequest
+        {
+            Symbol = "ETHUSDT",
+            OnUpdate = (tickerData) =>
+            {
+                this.lastPrice = tickerData.LastPrice;
+                InvokeAsync(() => StateHasChanged());
+            }
+        });
     }
 }
