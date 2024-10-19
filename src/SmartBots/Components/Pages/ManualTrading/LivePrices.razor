@@ -1,0 +1,25 @@
+﻿@page "/LivePrices"
+@rendermode InteractiveAuto
+@using Binance.Net.Clients
+@using Binance.Net.Interfaces
+@using CryptoExchange.Net.Objects.Sockets
+
+
+<h3>Current ETHUSDT Price:</h3>
+<h4>@lastPrice</h4>
+
+
+@code {
+    decimal lastPrice;
+    protected override async Task OnInitializedAsync()
+    {
+        var socketClient = new BinanceSocketClient();
+        var tickerSubscriptionResult = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync("ETHUSDT", HandleTickUpdates);
+    }
+
+    private void HandleTickUpdates(DataEvent<IBinanceTick> update)
+    {
+        this.lastPrice = update.Data.LastPrice;
+        InvokeAsync(() => StateHasChanged());
+    }
+}
