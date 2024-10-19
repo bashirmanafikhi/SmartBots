@@ -1,0 +1,33 @@
+﻿@page "/LivePrices"
+@rendermode InteractiveAuto
+@using Binance.Net.Clients
+@using Binance.Net.Interfaces
+@using CryptoExchange.Net.Objects.Sockets
+@using SmartBots.Application.Features.ExchangeApi.SubscribeToTickerUpdatesRequest
+@inject IMediator Mediator
+
+
+<h3>Current ETHUSDT Price:</h3>
+<h4>@lastPrice</h4>
+
+
+@code {
+    decimal lastPrice;
+    protected override async Task OnInitializedAsync()
+    {
+        await SubscribeToTickerUpdates();
+    }
+
+    private async Task SubscribeToTickerUpdates()
+    {
+        bool isConnected = await Mediator.Send(new SubscribeToTickerUpdatesRequest
+        {
+            Symbol = "ETHUSDT",
+            OnUpdate = (tickerData) =>
+            {
+                this.lastPrice = tickerData.LastPrice;
+                InvokeAsync(() => StateHasChanged());
+            }
+        });
+    }
+}
