@@ -1,73 +1,108 @@
-﻿@page "/TradingBotsPage"
-@rendermode InteractiveServer
+﻿@page "/TradingBots"
 @using MediatR
 @using SmartBots.Application.Features.TradingBots
 @using SmartBots.Components.Pages.Shared
+@rendermode InteractiveServer
 @inject IMediator Mediator
 @attribute [Authorize]
 
 <CustomErrorBoundary>
     <PageTitle>Trading Bot List</PageTitle>
 
-    <div class="border p-3 mt-3">
+    <div class="container mt-4">
+        <!-- Header Section with Page Title and Add Button -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Trading Bots</h2>
+            <NavLink class="btn btn-success" href="/tradingbot" title="Add New Trading Bot">
+                <i class="bi bi-plus-circle me-2"></i> Add Trading Bot
+            </NavLink>
+        </div>
 
         <!-- Search Section -->
-        <div class="form-row">
-            <div class="col-md-4">
+        <div class="row mb-4">
+            <div class="col-md-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search ..." @bind="SearchKeyword" @bind:event="oninput" />
-                    <button class="btn btn-primary" @onclick="PerformSearch">Search</button>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="Search by name..." 
+                        @bind="SearchKeyword" 
+                        @bind:event="oninput" 
+                        aria-label="Search Trading Bots" />
+                    <button class="btn btn-primary" @onclick="PerformSearch" type="button" title="Search">
+                        <i class="bi bi-search"></i> Search
+                    </button>
                 </div>
             </div>
         </div>
 
-        <hr />
-
-        <!-- Trading Bot List -->
-        <div>
-            @if (TradingBots.Any())
-            {
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Exchange Account</th>
-                            <th>Base Asset</th>
-                            <th>Quote Asset</th>
-                            <th>Trade Size</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+        <!-- Trading Bots Table -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Exchange Account</th>
+                        <th scope="col">Base Asset</th>
+                        <th scope="col">Quote Asset</th>
+                        <th scope="col">Trade Size</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (TradingBots.Any())
+                    {
                         @foreach (var bot in TradingBots)
                         {
                             <tr>
                                 <td>@bot.Name</td>
-                                <td>@bot.ExchangeId</td>
+                                <td>@bot.ExchangeAccountName</td>
                                 <td>@bot.BaseAsset</td>
                                 <td>@bot.QuoteAsset</td>
                                 <td>@bot.TradeSize</td>
+                                <td class="text-center">
+                                    <NavLink 
+                                        class="btn btn-sm btn-primary me-2" 
+                                        href="@($"tradingbot/{@bot.Id.ToString()}")"
+                                             title="@($"Edit {@bot.Name}")"
+                                             aria-label="@($"Edit {@bot.Name}")">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </NavLink>
+                                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteItem(bot)" aria-label="Delete @bot.Name">
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p>No trading bots found.</p>
-            }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No trading bots found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-    </div>
 
-    <!-- Pagination Component -->
-    <Pagination TotalItems="_totalItems"
+        <!-- Pagination Component -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+                <span>
+                    Showing @(((_currentPage - 1) * _pageSize) + 1) to @(Math.Min(_currentPage * _pageSize, _totalItems)) of @_totalItems entries
+                </span>
+            </div>
+            <Pagination 
+                TotalItems="_totalItems"
                 PageSize="_pageSize"
                 CurrentPage="_currentPage"
                 PageSizeOptions="new int[] { 5, 10, 20, 50 }"
                 OnPageChanged="HandlePageChanged"
                 OnPageSizeChanged="HandlePageSizeChanged" />
-
-
+        </div>
+    </div>
 </CustomErrorBoundary>
+
 @code {
     private IList<TradingBotDto> TradingBots { get; set; } = new List<TradingBotDto>();
     private string SearchKeyword { get; set; } = string.Empty;
@@ -78,10 +113,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadTodosAsync();
+        await LoadTradingBotsAsync();
     }
 
-    private async Task LoadTodosAsync()
+    private async Task LoadTradingBotsAsync()
     {
         var query = new SearchTradingBotsQuery
         {
@@ -105,25 +140,27 @@
     private async Task PerformSearch()
     {
         _currentPage = 1; // Reset to first page when searching
-        await LoadTodosAsync();
+        await LoadTradingBotsAsync();
     }
 
     private async Task HandlePageChanged(int pageNumber)
     {
         _currentPage = pageNumber;
-        await LoadTodosAsync();
+        await LoadTradingBotsAsync();
     }
 
     private async Task HandlePageSizeChanged(int pageSize)
     {
         _pageSize = pageSize;
         _currentPage = 1; // Reset to first page when page size changes
-        await LoadTodosAsync();
+        await LoadTradingBotsAsync();
     }
 
-    private async Task ItemsChanged()
+
+    private async Task DeleteItem(TradingBotDto item)
     {
-        await LoadTodosAsync();
+        await Mediator.Send(new DeleteTradingBotCommand(item.Id));
+        await PerformSearch();
         StateHasChanged();
     }
 }

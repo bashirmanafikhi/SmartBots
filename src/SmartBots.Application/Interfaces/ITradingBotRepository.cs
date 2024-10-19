@@ -6,8 +6,16 @@ using System.Linq.Expressions;
 namespace SmartBots.Application.Interfaces;
 public interface ITradingBotRepository
 {
+    Task<TradingBot?> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
     Task<bool> AddAsync(
         TradingBot item,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> DeleteAsync
+        (TradingBot item,
         CancellationToken cancellationToken = default);
 
     Task<PaginatedList<TradingBotDto>> GetCurrentUserItemsWithPaginationAsync(

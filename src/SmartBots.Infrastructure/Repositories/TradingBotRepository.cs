@@ -14,11 +14,30 @@ public class TradingBotRepository : ITradingBotRepository
         _repository = repository;
     }
 
-    public async Task<bool> AddAsync(TradingBot item, CancellationToken cancellationToken = default)
+    public async Task<TradingBot?> GetByIdAsync(
+        Guid id, 
+        CancellationToken cancellationToken = default)
+    {
+        return await _repository.GetByIdAsync(id, cancellationToken);
+    }
+
+    public async Task<bool> AddAsync(
+        TradingBot item, 
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(item);
 
         await _repository.AddAsync(item, cancellationToken);
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(
+        TradingBot item, 
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        await _repository.DeleteAsync(item, cancellationToken);
         return true;
     }
 

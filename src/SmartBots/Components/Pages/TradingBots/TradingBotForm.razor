@@ -1,5 +1,277 @@
-﻿<h3>Component</h3>
+﻿@page "/tradingbot/{TradingBotIdString?}"
+
+@using MediatR
+@using SmartBots.Application.Features.TradingBots
+@using SmartBots.Application.Features.Exchange
+@using SmartBots.Domain.Entities
+@using SmartBots.Domain.Enums
+@using Microsoft.AspNetCore.Components.Forms
+@rendermode InteractiveServer
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+
+<CustomErrorBoundary>
+    <div class="container mt-4">
+        <EditForm Model="@NewItem" OnSubmit="@HandleValidSubmit" class="mt-4">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="alert alert-danger" />
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Trading Bot Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Trading Bot Information -->
+                    <div class="accordion mb-4" id="tradingBotAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingInfo">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo">
+                                    <i class="bi bi-info-circle me-2"></i> Trading Bot Information
+                                </button>
+                            </h2>
+                            <div id="collapseInfo" class="accordion-collapse collapse show" aria-labelledby="headingInfo" data-bs-parent="#tradingBotAccordion">
+                                <div class="accordion-body">
+                                    <div class="row g-3">
+                                        <!-- Bot Name -->
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="botName" class="form-label">Bot Name <span class="text-danger">*</span></label>
+                                            <InputText @bind-Value="NewItem.Name" class="form-control" id="botName" placeholder="Enter bot name" required />
+                                        </div>
+
+                                        <!-- Exchange Account Name -->
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="exchangeAccount" class="form-label">Exchange Account Name <span class="text-danger">*</span></label>
+                                            <InputSelect @bind-Value="NewItem.ExchangeId" class="form-select" id="exchangeAccount" required>
+                                                @foreach (var exhange in Exchanges)
+                                                {
+                                                    <option value="@exhange.Id">@exhange.Name</option>
+                                                }
+                                            </InputSelect>
+                                        </div>
+
+                                        <!-- Base Asset -->
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="baseAsset" class="form-label">Base Asset <span class="text-danger">*</span></label>
+                                            <InputText @bind-Value="NewItem.BaseAsset" class="form-control" id="baseAsset" placeholder="e.g., BTC" required />
+                                        </div>
+
+                                        <!-- Quote Asset -->
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="quoteAsset" class="form-label">Quote Asset <span class="text-danger">*</span></label>
+                                            <InputText @bind-Value="NewItem.QuoteAsset" class="form-control" id="quoteAsset" placeholder="e.g., USDT" required />
+                                        </div>
+
+                                        <!-- Trade Size -->
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="tradeSize" class="form-label">Trade Size <span class="text-danger">*</span></label>
+                                            <InputNumber @bind-Value="NewItem.TradeSize" class="form-control" id="tradeSize" placeholder="Enter trade size" required />
+                                        </div>
+
+                                        <!-- Bot Type -->
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="botType" class="form-label">Bot Type <span class="text-danger">*</span></label>
+                                            <InputSelect @bind-Value="NewItem.BotType" class="form-select" id="botType" required>
+                                                @foreach (var botType in Enum.GetValues(typeof(BotType)))
+                                                {
+                                                    <option value="@botType">@botType</option>
+                                                }
+                                            </InputSelect>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extra Orders Settings -->
+                    <div class="accordion mb-4" id="extraOrdersAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingExtraOrders">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExtraOrders" aria-expanded="false" aria-controls="collapseExtraOrders">
+                                    <i class="bi bi-arrow-repeat me-2"></i> Extra Orders Settings
+                                </button>
+                            </h2>
+                            <div id="collapseExtraOrders" class="accordion-collapse collapse" aria-labelledby="headingExtraOrders" data-bs-parent="#extraOrdersAccordion">
+                                <div class="accordion-body">
+                                    <div class="row g-3">
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="extraOrderCount" class="form-label">Count</label>
+                                            <InputNumber @bind-Value="NewItem.ExtraOrders.Count" class="form-control" id="extraOrderCount" placeholder="Enter count" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="firstVolumeScale" class="form-label">First Volume Scale</label>
+                                            <InputNumber @bind-Value="NewItem.ExtraOrders.FirstVolumeScale" class="form-control" id="firstVolumeScale" placeholder="e.g., 1.5" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="firstDeviationPercentage" class="form-label">First Deviation Percentage</label>
+                                            <InputNumber @bind-Value="NewItem.ExtraOrders.FirstDeviationPercentage" class="form-control" id="firstDeviationPercentage" placeholder="e.g., 0.5" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="stepVolumeScale" class="form-label">Step Volume Scale</label>
+                                            <InputNumber @bind-Value="NewItem.ExtraOrders.StepVolumeScale" class="form-control" id="stepVolumeScale" placeholder="e.g., 1.2" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-4">
+                                            <label for="stepDeviationScale" class="form-label">Step Deviation Scale</label>
+                                            <InputNumber @bind-Value="NewItem.ExtraOrders.StepDeviationScale" class="form-control" id="stepDeviationScale" placeholder="e.g., 0.3" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stop Loss Settings -->
+                    <div class="accordion mb-4" id="stopLossAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingStopLoss">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStopLoss" aria-expanded="false" aria-controls="collapseStopLoss">
+                                    <i class="bi bi-shield-lock me-2"></i> Stop Loss Settings
+                                </button>
+                            </h2>
+                            <div id="collapseStopLoss" class="accordion-collapse collapse" aria-labelledby="headingStopLoss" data-bs-parent="#stopLossAccordion">
+                                <div class="accordion-body">
+                                    <div class="row g-3">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="stopLossPercentage" class="form-label">Stop Loss Percentage</label>
+                                            <InputNumber @bind-Value="NewItem.StopLoss.StopLossPercentage" class="form-control" id="stopLossPercentage" placeholder="e.g., 2.5" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="timeoutSeconds" class="form-label">Timeout Seconds</label>
+                                            <InputNumber @bind-Value="NewItem.StopLoss.TimeoutSeconds" class="form-control" id="timeoutSeconds" placeholder="e.g., 60" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-2 d-flex align-items-center">
+                                            <InputCheckbox @bind-Value="NewItem.StopLoss.UseStopLoss" class="form-check-input me-2" id="useStopLoss" />
+                                            <label for="useStopLoss" class="form-check-label">Use Stop Loss</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-2 d-flex align-items-center">
+                                            <InputCheckbox @bind-Value="NewItem.StopLoss.IncludeExtraOrdersPositions" class="form-check-input me-2" id="includeExtraOrders" />
+                                            <label for="includeExtraOrders" class="form-check-label">Include Extra Orders</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-2 d-flex align-items-center">
+                                            <InputCheckbox @bind-Value="NewItem.StopLoss.TrailingStopLoss" class="form-check-input me-2" id="trailingStopLoss" />
+                                            <label for="trailingStopLoss" class="form-check-label">Trailing Stop Loss</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Take Profit Settings -->
+                    <div class="accordion mb-4" id="takeProfitAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTakeProfit">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTakeProfit" aria-expanded="false" aria-controls="collapseTakeProfit">
+                                    <i class="bi bi-cash me-2"></i> Take Profit Settings
+                                </button>
+                            </h2>
+                            <div id="collapseTakeProfit" class="accordion-collapse collapse" aria-labelledby="headingTakeProfit" data-bs-parent="#takeProfitAccordion">
+                                <div class="accordion-body">
+                                    <div class="row g-3">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="takeProfitPercentage" class="form-label">Take Profit Percentage</label>
+                                            <InputNumber @bind-Value="NewItem.TakeProfit.TakeProfitPercentage" class="form-control" id="takeProfitPercentage" placeholder="e.g., 5.0" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label for="trailingDeviationPercentage" class="form-label">Trailing Deviation Percentage</label>
+                                            <InputNumber @bind-Value="NewItem.TakeProfit.TrailingDeviationPercentage" class="form-control" id="trailingDeviationPercentage" placeholder="e.g., 1.0" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 d-flex align-items-center">
+                                            <InputCheckbox @bind-Value="NewItem.TakeProfit.UseTakeProfit" class="form-check-input me-2" id="useTakeProfit" />
+                                            <label for="useTakeProfit" class="form-check-label">Use Take Profit</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 d-flex align-items-center">
+                                            <InputCheckbox @bind-Value="NewItem.TakeProfit.TrailingTakeProfit" class="form-check-input me-2" id="trailingTakeProfit" />
+                                            <label for="trailingTakeProfit" class="form-check-label">Trailing Take Profit</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit and Cancel Buttons -->
+            <div class="card-footer bg-transparent">
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-success">
+                        @SubmitButtonLabel
+                    </button>
+                    @if (IsUpdateMode)
+                    {
+                        <button type="button" class="btn btn-warning" @onclick="CancelUpdate">
+                            Cancel
+                        </button>
+                    }
+                    <button type="reset" class="btn btn-secondary">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</CustomErrorBoundary>
 
 @code {
+    [Parameter]
+    public string? TradingBotIdString { get; set; } // Corrected syntax
 
+    public Guid? TradingBotId { get; set; } // This parameter comes from the URL (null if not provided)
+
+    private TradingBotDto NewItem { get; set; }
+    private List<ExchangeDto> Exchanges { get; set; } = [];
+
+    private bool IsUpdateMode => TradingBotId.HasValue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        NewItem ??= new TradingBotDto();
+        await LoadExchanges();
+    }
+
+    private async Task LoadExchanges()
+    {
+        Exchanges = await Mediator.Send(new GetAllExchangesQuery());
+        StateHasChanged();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(TradingBotIdString) && Guid.TryParse(TradingBotIdString, out Guid parsedId))
+            TradingBotId = parsedId;
+
+        // If we have a valid Guid, we are in update mode
+        if (IsUpdateMode)
+            NewItem = await Mediator.Send(new GetTradingBotQuery(TradingBotId!.Value));
+    }
+
+    private string SubmitButtonLabel => IsUpdateMode ? "Update" : "Add";
+
+    private async Task HandleValidSubmit()
+    {
+        if (IsUpdateMode)
+        {
+            await Mediator.Send(new UpdateTradingBotCommand
+            {
+                Id = TradingBotId!.Value,
+                Model = NewItem
+            });
+        }
+        else
+        {
+            await Mediator.Send(new AddTradingBotCommand
+            {
+                Model = NewItem
+            });
+        }
+
+        NavigationManager.NavigateTo("/TradingBots");
+    }
+
+    private async Task CancelUpdate()
+    {
+        NavigationManager.NavigateTo("/TradingBots");
+    }
 }

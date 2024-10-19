@@ -35,5 +35,30 @@ namespace SmartBots.Domain.Entities
         public ExtraOrdersSettings ExtraOrders { get; set; } = new ExtraOrdersSettings();
         public StopLossSettings StopLoss { get; set; } = new StopLossSettings();
         public TakeProfitSettings TakeProfit { get; set; } = new TakeProfitSettings();
+
+        public void Update(
+            string name,
+            string baseAsset,
+            string quoteAsset,
+            double tradeSize,
+            BotType botType,
+            ExtraOrdersSettings extraOrders,
+            StopLossSettings stopLoss,
+            TakeProfitSettings takeProfit,
+            Exchange exchange)
+        {
+            Name = name;
+            BaseAsset = baseAsset;
+            QuoteAsset = quoteAsset;
+            TradeSize = tradeSize;
+            BotType = botType;
+
+            Exchange = exchange;
+            ExchangeId = exchange.Id;
+
+            ExtraOrders = extraOrders;
+            StopLoss = stopLoss;
+            TakeProfit = takeProfit;
+        }
     }
 }

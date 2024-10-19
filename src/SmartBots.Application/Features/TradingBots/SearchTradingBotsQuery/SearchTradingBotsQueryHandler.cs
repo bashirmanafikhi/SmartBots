@@ -17,9 +17,6 @@ public sealed class SearchTradingBotsQueryHandler : IRequestHandler<SearchTradin
         var predicate = query.Criteria.GetPredicateAsExpression();
         var paging = query.Paging;
 
-        //Expression<Func<TradingBot, bool>> exchangeIdPredicate = x => x.ExchangeId == query.ExchangeId;
-        //predicate = predicate.And(exchangeIdPredicate);
-
         return await _tradingBotRepository.GetCurrentUserItemsWithPaginationAsync(
                 predicate,
                 paging,
