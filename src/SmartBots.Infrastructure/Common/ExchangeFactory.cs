@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.Text;
-using SmartBots.Application.Interfaces;
+﻿using SmartBots.Application.Interfaces;
 using SmartBots.BinancePlatform;
 using SmartBots.Domain.Entities;
 using SmartBots.Domain.Enums;
