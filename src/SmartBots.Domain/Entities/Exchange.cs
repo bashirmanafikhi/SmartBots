@@ -24,5 +24,19 @@ namespace SmartBots.Domain.Entities
 
         [Required]
         public string ApplicationUserId { get; set; }
+
+        public void Update(
+            string name,
+            string apiKey,
+            string apiSecret,
+            bool isTest,
+            ExchangeType type)
+        {
+            Name = name;
+            ApiKey = apiKey; 
+            ApiSecret = apiSecret;
+            IsTest = isTest;
+            Type = type;
+        }
     }
 }

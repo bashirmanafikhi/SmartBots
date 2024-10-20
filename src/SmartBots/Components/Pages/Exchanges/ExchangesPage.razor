@@ -6,100 +6,132 @@
 @attribute [Authorize]
 
 <CustomErrorBoundary>
-<PageTitle>Exchange List</PageTitle>
+    <PageTitle>Exchange List</PageTitle>
 
-<div class="container mt-4">
-    <h4 class="text-center mb-4">New Exchange</h4>
-    <EditForm Model="@NewExchange" OnSubmit="@ExchangeAdded">
-        <div class="row">
-            <div class="form-group col-md-6 mb-3">
-                <label>Name:</label>
-                <InputText @bind-Value="NewExchange.Name" class="form-control" />
-            </div>
+    <div class="container mt-4">
+        <h4 class="text-center mb-4">@((!IsUpdateMode) ? "New Exchange" : "Edit Exchange")</h4>
+        <EditForm Model="@ExchangeModel" OnValidSubmit="@SubmitExchange">
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label>Name:</label>
+                    <InputText @bind-Value="ExchangeModel.Name" class="form-control" />
+                </div>
 
-            <div class="form-group col-md-6 mb-3">
-                <label>Type:</label>
-                <InputSelect @bind-Value="NewExchange.Type" class="form-control">
-                    <option value="Binance">Binance</option>
-                    <option value="Coinbase">Coinbase</option>
-                </InputSelect>
-            </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label>Type:</label>
+                    <InputSelect @bind-Value="ExchangeModel.Type" class="form-control">
+                        <option value="Binance">Binance</option>
+                        <option value="Coinbase">Coinbase</option>
+                    </InputSelect>
+                </div>
 
-            <div class="form-group col-md-6 mb-3">
-                <label>API Key:</label>
-                <InputText @bind-Value="NewExchange.ApiKey" class="form-control" />
-            </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label>API Key:</label>
+                    <InputText @bind-Value="ExchangeModel.ApiKey" class="form-control" />
+                </div>
 
-            <div class="form-group col-md-6 mb-3">
-                <label>API Secret:</label>
-                <InputText @bind-Value="NewExchange.ApiSecret" class="form-control" />
-            </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label>API Secret:</label>
+                    <InputText @bind-Value="ExchangeModel.ApiSecret" class="form-control" />
+                </div>
 
-            <div class="form-group col-md-6 mt-3 mb-3">
-                <label>Is Test:</label>
-                <InputCheckbox @bind-Value="NewExchange.IsTest" class="form-check-input" />
-            </div>
-        </div>
-
-        <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary mx-2">Add</button>
-            <button type="reset" class="btn btn-secondary mx-2">Clear</button>
-        </div>
-    </EditForm>
-</div>
-
-
-<div class="container mt-4">
-    <h4 class="text-center mb-4">Exchanges List</h4>
-    <div class="list-group">
-        @foreach (var exchange in Exchanges)
-        {
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span class="exchange-name">@exchange.Name (@exchange.Type)</span>
-                <div>
-                    <button class="btn btn-danger" onclick="@(() => DeleteExchange(exchange))">Delete</button>
-                    <NavLink class="btn btn-warning" href="@($"exchange/{exchange.Id}")">
-                        Get Account Info
-                    </NavLink>
+                <div class="form-group col-md-6 mt-3 mb-3">
+                    <label>Is Test:</label>
+                    <InputCheckbox @bind-Value="ExchangeModel.IsTest" class="form-check-input" />
                 </div>
             </div>
-        }
+
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary mx-2">@((IsUpdateMode) ? "Update" : "Add")</button>
+                <button type="button" class="btn btn-secondary mx-2" @onclick="ClearForm">Clear</button>
+            </div>
+        </EditForm>
     </div>
-</div>
+
+    <div class="container mt-4">
+        <h4 class="text-center mb-4">Exchanges List</h4>
+        <div class="list-group">
+            @foreach (var exchange in Exchanges)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="exchange-name">@exchange.Name (@exchange.Type)</span>
+                    <div>
+                        <button class="btn btn-danger" @onclick="@(() => DeleteExchange(exchange))">Delete</button>
+                        <button class="btn btn-primary mx-2" @onclick="@(() => EditExchange(exchange))">Edit</button>
+                        <NavLink class="btn btn-warning" href="@($"exchange/{exchange.Id}")">
+                            Get Account Info
+                        </NavLink>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 
 </CustomErrorBoundary>
+
 @code {
     private IList<ExchangeDto> Exchanges { get; set; } = new List<ExchangeDto>();
-    private ExchangeDto NewExchange = new ExchangeDto();
+    private ExchangeDto ExchangeModel = new ExchangeDto();
+
+    private bool IsUpdateMode => ExchangeModel.Id != Guid.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        Exchanges = await Mediator.Send(new GetAllExchangesQuery());
-    }
-
-    public async Task ExchangeAdded()
-    {
-        await Mediator.Send(new AddExchangeCommand()
-            {
-                Name = NewExchange.Name,
-                Type = NewExchange.Type,
-                ApiKey = NewExchange.ApiKey,
-                ApiSecret = NewExchange.ApiSecret,
-                IsTest = NewExchange.IsTest
-            });
-        NewExchange = new ExchangeDto(); // Reset the new exchange object
-        await LoadExchanges();
-    }
-
-    public async Task DeleteExchange(ExchangeDto exchange)
-    {
-        await Mediator.Send(new DeleteExchangeCommand() { Id = exchange.Id });
         await LoadExchanges();
     }
 
     private async Task LoadExchanges()
     {
         Exchanges = await Mediator.Send(new GetAllExchangesQuery());
-        StateHasChanged();
+    }
+
+    private async Task SubmitExchange()
+    {
+        if (IsUpdateMode)
+        {
+            await Mediator.Send(new UpdateExchangeAccountCommand()
+            {
+                Id = ExchangeModel.Id,
+                Model = ExchangeModel
+            });
+        }
+        else
+        {
+            await Mediator.Send(new AddExchangeCommand()
+            {
+                Name = ExchangeModel.Name,
+                Type = ExchangeModel.Type,
+                ApiKey = ExchangeModel.ApiKey,
+                ApiSecret = ExchangeModel.ApiSecret,
+                IsTest = ExchangeModel.IsTest
+            });
+        }
+
+        await LoadExchanges();
+        ClearForm();
+    }
+
+    private void EditExchange(ExchangeDto exchange)
+    {
+        ExchangeModel = new ExchangeDto
+            {
+                Id = exchange.Id,
+                Name = exchange.Name,
+                Type = exchange.Type,
+                ApiKey = exchange.ApiKey,
+                ApiSecret = exchange.ApiSecret,
+                IsTest = exchange.IsTest
+            };
+    }
+
+    private async Task DeleteExchange(ExchangeDto exchange)
+    {
+        await Mediator.Send(new DeleteExchangeCommand { Id = exchange.Id });
+        await LoadExchanges();
+    }
+
+    private void ClearForm()
+    {
+        ExchangeModel = new ExchangeDto();
     }
 }
