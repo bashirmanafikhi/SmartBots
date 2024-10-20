@@ -50,7 +50,8 @@ internal sealed class UpdateTradingBotCommandHandler : IRequestHandler<UpdateTra
             request.Model.ExtraOrders,
             request.Model.StopLoss,
             request.Model.TakeProfit,
-            exchangeAccount);
+            exchangeAccount,
+            request.Model.TradingRules);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

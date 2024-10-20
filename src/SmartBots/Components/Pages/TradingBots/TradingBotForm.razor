@@ -2,8 +2,8 @@
 
 @using MediatR
 @using SmartBots.Application.Features.TradingBots
+@using SmartBots.Application.Features.TradingRules
 @using SmartBots.Application.Features.Exchange
-@using SmartBots.Components.Pages.TradingBots.TradingRuleComponents
 @using SmartBots.Domain.Entities
 @using SmartBots.Domain.Entities.IndicatorRules
 @using SmartBots.Domain.Enums
@@ -209,24 +209,151 @@
                                 </h2>
                                 <div id="collapseTradingRules" class="accordion-collapse collapse" aria-labelledby="headingTradingRules" data-bs-parent="#tradingRulesAccordion">
                                     <div class="accordion-body">
-
-                                        <h3>Manage Trading Rules</h3>
-
-                                        @foreach (var tradingRule in NewItem.TradingRules)
-                                        {
-                                            <TradingRuleForm Rule="tradingRule" />
-                                            <hr />
-                                        }
-
+                                        <!-- Tables for Trading Rules -->
                                         <div class="row">
-                                            <InputSelect class="form-select" @bind-Value="SelectedRuleType">
-                                                <option value="BollingerBandsRule">Bollinger Bands</option>
-                                                <option value="MACDRule">MACD</option>
-                                            </InputSelect>
+                                            <!-- Bollinger Bands Rules Table -->
+                                            <div class="col-12 mb-4">
+                                                <h5>Bollinger Bands Rules</h5>
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Period</th>
+                                                                <th>Std Dev</th>
+                                                                <th>Open</th>
+                                                                <th>Close</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var rule in NewItem.TradingRules.OfType<BollingerBandsRule>())
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <InputNumber @bind-Value="rule.Period" class="form-control form-control-sm" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <InputNumber @bind-Value="rule.StandardDeviation" class="form-control form-control-sm" />
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <InputCheckbox @bind-Value="rule.IsUsedForOpening" class="form-check-input" />
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <InputCheckbox @bind-Value="rule.IsUsedForClosing" class="form-check-input" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveRule(rule))">Delete</button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- Add New Bollinger Bands Rule Button -->
+                                                <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddBollingerBandsRule">
+                                                    <i class="bi bi-plus"></i> Add Bollinger Bands Rule
+                                                </button>
+                                            </div>
 
-                                            <button class="btn btn-primary" @onclick="AddNewRule">
-                                                New Trading Rule of the selected type
-                                            </button>
+                                            <hr />
+
+                                            <!-- MACD Rules Table -->
+                                            <div class="col-12 mb-4">
+                                                <h5>MACD Rules</h5>
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Fast Period</th>
+                                                                <th>Slow Period</th>
+                                                                <th>Signal Line</th>
+                                                                <th>Open</th>
+                                                                <th>Close</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var rule in NewItem.TradingRules.OfType<MACDRule>())
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <InputNumber @bind-Value="rule.FastPeriod" class="form-control form-control-sm" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <InputNumber @bind-Value="rule.SlowPeriod" class="form-control form-control-sm" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <InputNumber @bind-Value="rule.SignalLinePeriod" class="form-control form-control-sm" />
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <InputCheckbox @bind-Value="rule.IsUsedForOpening" class="form-check-input" />
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <InputCheckbox @bind-Value="rule.IsUsedForClosing" class="form-check-input" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveRule(rule))">Delete</button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- Add New MACD Rule Button -->
+                                                <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddMACDRule">
+                                                    <i class="bi bi-plus"></i> Add MACD Rule
+                                                </button>
+                                            </div>
+
+                                            <hr />
+
+                                            <!-- RSI Rules Table -->
+                                            <div class="col-12 mb-4">
+                                                <h5>RSI Rules</h5>
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Period</th>
+                                                                <th>Overbought</th>
+                                                                <th>Oversold</th>
+                                                                <th>Open</th>
+                                                                <th>Close</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var rule in NewItem.TradingRules.OfType<RSIRule>())
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <InputNumber @bind-Value="rule.Period" class="form-control form-control-sm" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <InputNumber @bind-Value="rule.OverboughtThreshold" class="form-control form-control-sm" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <InputNumber @bind-Value="rule.OversoldThreshold" class="form-control form-control-sm" />
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <InputCheckbox @bind-Value="rule.IsUsedForOpening" class="form-check-input" />
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <InputCheckbox @bind-Value="rule.IsUsedForClosing" class="form-check-input" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveRule(rule))">Delete</button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- Add New RSI Rule Button -->
+                                                <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddRSIRule">
+                                                    <i class="bi bi-plus"></i> Add RSI Rule
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -259,18 +386,17 @@
 
 @code {
     [Parameter]
-    public string? TradingBotIdString { get; set; } // Corrected syntax
+    public string? TradingBotIdString { get; set; }
 
-    public Guid? TradingBotId { get; set; } // This parameter comes from the URL (null if not provided)
+    public Guid? TradingBotId { get; set; }
 
-    private TradingBotDto NewItem { get; set; }
-    private List<ExchangeAccountDto> Exchanges { get; set; } = [];
+    private TradingBotDto NewItem { get; set; } = new TradingBotDto();
+    private List<ExchangeAccountDto> Exchanges { get; set; } = new List<ExchangeAccountDto>();
 
     private bool IsUpdateMode => TradingBotId.HasValue;
 
     protected override async Task OnInitializedAsync()
     {
-        NewItem ??= new TradingBotDto();
         await LoadExchanges();
     }
 
@@ -285,7 +411,6 @@
         if (!string.IsNullOrWhiteSpace(TradingBotIdString) && Guid.TryParse(TradingBotIdString, out Guid parsedId))
             TradingBotId = parsedId;
 
-        // If we have a valid Guid, we are in update mode
         if (IsUpdateMode)
             NewItem = await Mediator.Send(new GetTradingBotQuery(TradingBotId!.Value));
     }
@@ -297,17 +422,17 @@
         if (IsUpdateMode)
         {
             await Mediator.Send(new UpdateTradingBotCommand
-                {
-                    Id = TradingBotId!.Value,
-                    Model = NewItem
-                });
+            {
+                Id = TradingBotId!.Value,
+                Model = NewItem
+            });
         }
         else
         {
             await Mediator.Send(new AddTradingBotCommand
-                {
-                    Model = NewItem
-                });
+            {
+                Model = NewItem
+            });
         }
 
         NavigationManager.NavigateTo("/TradingBots");
@@ -318,17 +443,53 @@
         NavigationManager.NavigateTo("/TradingBots");
     }
 
-    private string SelectedRuleType = "BollingerBandsRule";
-
-    private void AddNewRule()
+    private void AddBollingerBandsRule()
     {
-        TradingRule newRule = SelectedRuleType switch
+        var newRule = new BollingerBandsRule
         {
-            "BollingerBandsRule" => new BollingerBandsRule(),
-            "MACDRule" => new MACDRule(),
-            _ => throw new NotImplementedException()
+            Period = 20,
+            StandardDeviation = 2.0,
+            IsUsedForOpening = false,
+            IsUsedForClosing = false
         };
+        NewItem.TradingRules.Add(newRule);
+        StateHasChanged();
+    }
 
-         NewItem.TradingRules.Add(newRule);
+    private void AddMACDRule()
+    {
+        var newRule = new MACDRule
+        {
+            FastPeriod = 12,
+            SlowPeriod = 26,
+            SignalLinePeriod = 9,
+            IsUsedForOpening = false,
+            IsUsedForClosing = false
+        };
+        NewItem.TradingRules.Add(newRule); 
+        StateHasChanged();
+    }
+
+    private void AddRSIRule()
+    {
+        var newRule = new RSIRule
+        {
+            Period = 14,
+            OverboughtThreshold = 70,
+            OversoldThreshold = 30,
+            IsUsedForOpening = false,
+            IsUsedForClosing = false
+        };
+        NewItem.TradingRules.Add(newRule);
+        StateHasChanged();
+    }
+
+    private async Task RemoveRule(TradingRule rule)
+    {
+        if (IsUpdateMode)
+            await Mediator.Send(new DeleteTradingRuleCommand(rule.Id));
+
+        NewItem.TradingRules.Remove(rule);
+        StateHasChanged();
     }
 }

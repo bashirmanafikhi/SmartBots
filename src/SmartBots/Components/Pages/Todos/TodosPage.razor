@@ -9,6 +9,21 @@
 <CustomErrorBoundary>
     <PageTitle>Todo List</PageTitle>
 
+
+    <!-- Modal Example
+    <button class="btn btn-primary" @onclick="ShowModal">Show Modal</button>
+
+    <Modal @bind-IsVisible="IsModalVisible" Title="Sample Modal">
+        <Body>
+            <p>This is the body of the modal.</p>
+        </Body>
+        <Footer>
+            <button class="btn btn-secondary" @onclick="HideModal">Cancel</button>
+            <button class="btn btn-primary" @onclick="SaveChanges">Save</button>
+        </Footer>
+    </Modal>
+    -->
+
     <!-- New Item Form -->
     <div class="border p-3">
         <h4>@(IsUpdateMode ? "New Item" : "Update Item")</h4>
@@ -193,5 +208,24 @@
     {
         SelectedTodoId = null;
         await InvokeAsync(StateHasChanged);
+    }
+
+    // Modal Example
+    private bool IsModalVisible = false;
+
+    void ShowModal()
+    {
+        IsModalVisible = true;
+    }
+
+    void HideModal()
+    {
+        IsModalVisible = false;
+    }
+
+    void SaveChanges()
+    {
+        // Perform save operation
+        IsModalVisible = false;
     }
 }

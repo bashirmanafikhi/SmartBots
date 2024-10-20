@@ -45,7 +45,8 @@ namespace SmartBots.Domain.Entities
             ExtraOrdersSettings extraOrders,
             StopLossSettings stopLoss,
             TakeProfitSettings takeProfit,
-            ExchangeAccount exchange)
+            ExchangeAccount exchange,
+            List<TradingRule> tradingRules)
         {
             Name = name;
             BaseAsset = baseAsset;
@@ -59,6 +60,7 @@ namespace SmartBots.Domain.Entities
             ExtraOrders = extraOrders;
             StopLoss = stopLoss;
             TakeProfit = takeProfit;
+            TradingRules = tradingRules;
         }
     }
 }

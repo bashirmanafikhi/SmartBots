@@ -1,10 +1,10 @@
-﻿namespace SmartBots.Domain.Entities
-{
-    public abstract class TradingRule
-    {
-        // Primary Key
-        public Guid Id { get; set; }
+﻿using SmartBots.Domain.Common;
+using SmartBots.Domain.Interfaces;
 
+namespace SmartBots.Domain.Entities
+{
+    public abstract class TradingRule : BaseAuditableEntity
+    {
         // Foreign Key and Navigation Property
         public Guid TradingBotId { get; set; }
         public virtual TradingBot TradingBot { get; set; }

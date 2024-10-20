@@ -6,6 +6,7 @@ using SmartBots.Application.Common;
 using SmartBots.Application.Common.Mappings;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Common;
+using SmartBots.Domain.Entities;
 using SmartBots.Infrastructure.Data;
 using System.Linq.Expressions;
 
@@ -61,7 +62,22 @@ namespace SmartBots.Infrastructure.Repositories
 
         public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var entity = await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            IQueryable<T> query = _dbSet;
+
+            // Use EF Core metadata to get all navigation properties
+            var entityType = _dbContext.Model.FindEntityType(typeof(T));
+            if (entityType != null)
+            {
+                var navigations = entityType.GetNavigations();
+                foreach (var navigation in navigations)
+                {
+                    query = query.Include(navigation.Name);
+                }
+            }
+
+            // Retrieve the entity with the included navigation properties
+            var entity = await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+
             if (entity == null)
                 _logger.LogWarning("Entity with ID {EntityId} not found.", id);
 
