@@ -14,7 +14,7 @@ namespace SmartBots.Application.Features.Exchange
 
             RuleFor(x => x.Type)
                 .IsInEnum()
-                .WithMessage("Invalid exchange type");
+                .WithMessage("Invalid exchange account type");
 
             RuleFor(x => x.ApiKey)
                 .NotEmpty()

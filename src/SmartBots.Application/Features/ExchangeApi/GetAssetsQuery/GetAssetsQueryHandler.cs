@@ -5,10 +5,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetAssetsQuery
 {
     public class GetAssetsQueryHandler : IRequestHandler<GetAssetsQuery, IEnumerable<Asset>>
     {
-        private readonly IExchangeRepository _exchangeRepository;
-        private readonly IExchangeFactory _exchangeFactory;
+        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountFactory _exchangeFactory;
 
-        public GetAssetsQueryHandler(IExchangeRepository exchangeRepository, IExchangeFactory exchangeFactory)
+        public GetAssetsQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;
@@ -16,10 +16,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetAssetsQuery
 
         public async Task<IEnumerable<Asset>> Handle(GetAssetsQuery request, CancellationToken cancellationToken)
         {
-            var exchange = await _exchangeRepository.GetByIdAsync(request.ExchangeId);
-            if (exchange == null) return Enumerable.Empty<Asset>();
+            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.ExchangeAccountId);
+            if (exchangeAccount == null) return Enumerable.Empty<Asset>();
 
-            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchange);
+            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchangeAccount);
             return await exchangeClient.GetAssetsAsync();
         }
     }

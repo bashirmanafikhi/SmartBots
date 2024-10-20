@@ -7,7 +7,7 @@ namespace SmartBots.Infrastructure.Data
     public class ApplicationUser : IdentityUser
     {
         public ICollection<Todo> Todos { get; set; } = [];
-        public ICollection<Exchange> Exchanges { get; set; } = [];
+        public ICollection<ExchangeAccount> Exchanges { get; set; } = [];
         public ICollection<TradingBot> TradingBots { get; set; } = [];
 
         public ApplicationUser()

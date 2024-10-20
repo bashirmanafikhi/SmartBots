@@ -23,7 +23,7 @@
                 <div class="form-group col-md-6 mb-3">
                     <label>Exchange:</label>
                     <InputSelect @bind-Value="SelectedExchangeId" class="form-control" @oninput="OnExchangeChanged">
-                        @foreach (var exchange in Exchanges)
+                        @foreach (var exchange in ExchangeAccounts)
                         {
                             <option value="@exchange.Id">@exchange.Name</option>
                         }
@@ -109,7 +109,7 @@
 </CustomErrorBoundary>
 
 @code {
-    private IEnumerable<ExchangeDto> Exchanges { get; set; } = new List<ExchangeDto>();
+    private IEnumerable<ExchangeAccountDto> ExchangeAccounts { get; set; } = new List<ExchangeAccountDto>();
     private IEnumerable<Symbol> AvailableSymbols { get; set; } = new List<Symbol>();
     private OrderRequest NewOrder = new OrderRequest();
     private Guid SelectedExchangeId { get; set; }
@@ -122,12 +122,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Exchanges = await Mediator.Send(new GetAllExchangesQuery());
+        ExchangeAccounts = await Mediator.Send(new GetAllExchangesQuery());
 
         // Pre-select the first exchange if available
-        if (Exchanges.Any())
+        if (ExchangeAccounts.Any())
         {
-            SelectedExchangeId = Exchanges.First().Id;
+            SelectedExchangeId = ExchangeAccounts.First().Id;
             await OnExchangeChanged(SelectedExchangeId);
         }
     }

@@ -3,6 +3,6 @@ using SmartBots.Application.Interfaces;
 
 namespace SmartBots.Application.Features.ExchangeApi.PlaceOrderCommand
 {
-    public record PlaceOrderCommand(Guid ExchangeId, OrderRequest OrderRequest) : IRequest<Order>;
+    public record PlaceOrderCommand(Guid ExchangeAccountId, OrderRequest OrderRequest) : IRequest<Order>;
 
 }

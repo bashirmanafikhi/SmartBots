@@ -85,7 +85,7 @@ namespace SmartBots.BinancePlatform
             var exchangeInfo = await _client.SpotApi.ExchangeData.GetExchangeInfoAsync();
             if (!exchangeInfo.Success || exchangeInfo.Data == null)
             {
-                throw new Exception($"Failed to fetch exchange information: {exchangeInfo.Error?.Message}");
+                throw new Exception($"Failed to fetch exchange account information: {exchangeInfo.Error?.Message}");
             }
             return exchangeInfo;
         }

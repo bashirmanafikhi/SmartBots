@@ -5,21 +5,21 @@ using System.Linq.Expressions;
 
 namespace SmartBots.Infrastructure.Repositories
 {
-    public class ExchangeRepository : IExchangeRepository
+    public class ExchangeAccountRepository : IExchangeAccountRepository
     {
-        private readonly IUserOwnedEntityRepository<Exchange> _repository;
+        private readonly IUserOwnedEntityRepository<ExchangeAccount> _repository;
 
-        public ExchangeRepository(IUserOwnedEntityRepository<Exchange> repository)
+        public ExchangeAccountRepository(IUserOwnedEntityRepository<ExchangeAccount> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<Exchange?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<ExchangeAccount?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _repository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<bool> AddAsync(Exchange item, CancellationToken cancellationToken = default)
+        public async Task<bool> AddAsync(ExchangeAccount item, CancellationToken cancellationToken = default)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
@@ -28,7 +28,7 @@ namespace SmartBots.Infrastructure.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Exchange item, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteAsync(ExchangeAccount item, CancellationToken cancellationToken = default)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
@@ -37,27 +37,27 @@ namespace SmartBots.Infrastructure.Repositories
             return true;
         }
 
-        public async Task<IList<Exchange>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IList<ExchangeAccount>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _repository.GetAllAsync(cancellationToken);
         }
 
-        public async Task<IList<Exchange>> GetFilteredAsync(
-            Expression<Func<Exchange, bool>> filter,
+        public async Task<IList<ExchangeAccount>> GetFilteredAsync(
+            Expression<Func<ExchangeAccount, bool>> filter,
             CancellationToken cancellationToken = default)
         {
             return await _repository.GetFilteredAsync(filter, cancellationToken);
         }
 
-        public IQueryable<Exchange> Query()
+        public IQueryable<ExchangeAccount> Query()
         {
             return _repository.Query();
         }
 
-        public async Task<List<ExchangeDto>> GetCurrentUserItemsAsync(
+        public async Task<List<ExchangeAccountDto>> GetCurrentUserItemsAsync(
             CancellationToken cancellationToken = default)
         {
-            (var result, _) = await _repository.GetCurrentUserItemsAsync<ExchangeDto>(cancellationToken: cancellationToken);
+            (var result, _) = await _repository.GetCurrentUserItemsAsync<ExchangeAccountDto>(cancellationToken: cancellationToken);
 
             return result;
         }

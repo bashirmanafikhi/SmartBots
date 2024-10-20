@@ -5,9 +5,9 @@ internal sealed class SearchTradingBotsQueryValidator : AbstractValidator<Search
 {
     public SearchTradingBotsQueryValidator()
     {
-        RuleFor(q => q.ExchangeId)
+        RuleFor(q => q.ExchangeAccountId)
             .NotEmpty()
             .Must(id => id != Guid.Empty)
-            .WithMessage("Exchange ID must be provided and cannot be an empty GUID.");
+            .WithMessage("Exchange Account ID must be provided and cannot be an empty GUID.");
     }
 }

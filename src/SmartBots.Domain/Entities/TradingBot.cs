@@ -14,8 +14,8 @@ namespace SmartBots.Domain.Entities
         [Required]
         public string ApplicationUserId { get; set; }
 
-        public Guid ExchangeId { get; set; }
-        public virtual Exchange Exchange { get; set; } // Navigation property
+        public Guid ExchangeAccountId { get; set; }
+        public virtual ExchangeAccount ExchangeAccount { get; set; } // Navigation property
 
         [Required]
         [StringLength(100)]
@@ -45,7 +45,7 @@ namespace SmartBots.Domain.Entities
             ExtraOrdersSettings extraOrders,
             StopLossSettings stopLoss,
             TakeProfitSettings takeProfit,
-            Exchange exchange)
+            ExchangeAccount exchange)
         {
             Name = name;
             BaseAsset = baseAsset;
@@ -53,8 +53,8 @@ namespace SmartBots.Domain.Entities
             TradeSize = tradeSize;
             BotType = botType;
 
-            Exchange = exchange;
-            ExchangeId = exchange.Id;
+            ExchangeAccount = exchange;
+            ExchangeAccountId = exchange.Id;
 
             ExtraOrders = extraOrders;
             StopLoss = stopLoss;

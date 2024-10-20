@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartBots.Domain.Entities
 {
-    public class Exchange : BaseAuditableEntity, IUserOwnedEntity
+    public class ExchangeAccount : BaseAuditableEntity, IUserOwnedEntity
     {
         [Required]
         public string Name { get; set; }

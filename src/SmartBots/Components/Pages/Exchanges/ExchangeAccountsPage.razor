@@ -1,4 +1,4 @@
-﻿@page "/ExchangesPage"
+﻿@page "/ExchangesAccounts"
 @rendermode InteractiveServer
 @using SmartBots.Application.Features.Exchange
 @using SmartBots.Components.Layout
@@ -6,10 +6,10 @@
 @attribute [Authorize]
 
 <CustomErrorBoundary>
-    <PageTitle>Exchange List</PageTitle>
+    <PageTitle>Exchange Account List</PageTitle>
 
     <div class="container mt-4">
-        <h4 class="text-center mb-4">@((!IsUpdateMode) ? "New Exchange" : "Edit Exchange")</h4>
+        <h4 class="text-center mb-4">@((!IsUpdateMode) ? "New Exchange Account" : "Edit Exchange Account")</h4>
         <EditForm Model="@ExchangeModel" OnValidSubmit="@SubmitExchange">
             <div class="row">
                 <div class="form-group col-md-6 mb-3">
@@ -49,9 +49,9 @@
     </div>
 
     <div class="container mt-4">
-        <h4 class="text-center mb-4">Exchanges List</h4>
+        <h4 class="text-center mb-4">Exchange Accounts List</h4>
         <div class="list-group">
-            @foreach (var exchange in Exchanges)
+            @foreach (var exchange in ExchangeAccounts)
             {
                 <div class="list-group-item d-flex justify-content-between align-items-center">
                     <span class="exchange-name">@exchange.Name (@exchange.Type)</span>
@@ -70,8 +70,8 @@
 </CustomErrorBoundary>
 
 @code {
-    private IList<ExchangeDto> Exchanges { get; set; } = new List<ExchangeDto>();
-    private ExchangeDto ExchangeModel = new ExchangeDto();
+    private IList<ExchangeAccountDto> ExchangeAccounts { get; set; } = new List<ExchangeAccountDto>();
+    private ExchangeAccountDto ExchangeModel = new ExchangeAccountDto();
 
     private bool IsUpdateMode => ExchangeModel.Id != Guid.Empty;
 
@@ -82,7 +82,7 @@
 
     private async Task LoadExchanges()
     {
-        Exchanges = await Mediator.Send(new GetAllExchangesQuery());
+        ExchangeAccounts = await Mediator.Send(new GetAllExchangesQuery());
     }
 
     private async Task SubmitExchange()
@@ -111,9 +111,9 @@
         ClearForm();
     }
 
-    private void EditExchange(ExchangeDto exchange)
+    private void EditExchange(ExchangeAccountDto exchange)
     {
-        ExchangeModel = new ExchangeDto
+        ExchangeModel = new ExchangeAccountDto
             {
                 Id = exchange.Id,
                 Name = exchange.Name,
@@ -124,7 +124,7 @@
             };
     }
 
-    private async Task DeleteExchange(ExchangeDto exchange)
+    private async Task DeleteExchange(ExchangeAccountDto exchange)
     {
         await Mediator.Send(new DeleteExchangeCommand { Id = exchange.Id });
         await LoadExchanges();
@@ -132,6 +132,6 @@
 
     private void ClearForm()
     {
-        ExchangeModel = new ExchangeDto();
+        ExchangeModel = new ExchangeAccountDto();
     }
 }

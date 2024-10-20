@@ -3,7 +3,7 @@ using SmartBots.Domain.Enums;
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public class ExchangeDto : IMapFrom<Domain.Entities.Exchange>
+    public class ExchangeAccountDto : IMapFrom<Domain.Entities.ExchangeAccount>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -13,8 +13,8 @@ namespace SmartBots.Application.Features.Exchange
         public bool IsTest { get; set; }
 
         // Implicit conversion from Domain Entity to DTO
-        public static implicit operator ExchangeDto(Domain.Entities.Exchange exchange) =>
-            new ExchangeDto
+        public static implicit operator ExchangeAccountDto(Domain.Entities.ExchangeAccount exchange) =>
+            new ExchangeAccountDto
             {
                 Id = exchange.Id,
                 Name = exchange.Name,

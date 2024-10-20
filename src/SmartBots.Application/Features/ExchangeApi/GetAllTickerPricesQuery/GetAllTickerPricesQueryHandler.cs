@@ -5,10 +5,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetAllTickerPricesQuery
 {
     public class GetAllTickerPricesQueryHandler : IRequestHandler<GetAllTickerPricesQuery, IEnumerable<TickerPrice>>
     {
-        private readonly IExchangeRepository _exchangeRepository;
-        private readonly IExchangeFactory _exchangeFactory;
+        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountFactory _exchangeFactory;
 
-        public GetAllTickerPricesQueryHandler(IExchangeRepository exchangeRepository, IExchangeFactory exchangeFactory)
+        public GetAllTickerPricesQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;
@@ -16,10 +16,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetAllTickerPricesQuery
 
         public async Task<IEnumerable<TickerPrice>> Handle(GetAllTickerPricesQuery request, CancellationToken cancellationToken)
         {
-            var exchange = await _exchangeRepository.GetByIdAsync(request.ExchangeId);
-            if (exchange == null) return Enumerable.Empty<TickerPrice>();
+            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.ExchangeAccountId);
+            if (exchangeAccount == null) return Enumerable.Empty<TickerPrice>();
 
-            var marketDataClient = _exchangeFactory.CreateMarketDataClient(exchange);
+            var marketDataClient = _exchangeFactory.CreateMarketDataClient(exchangeAccount);
             return await marketDataClient.GetAllTickerPricesAsync();
         }
     }

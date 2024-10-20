@@ -10,7 +10,7 @@ public class TradingBotDto : BaseDto, IMapFrom<TradingBot>
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public Guid ExchangeId { get; set; }
+    public Guid ExchangeAccountId { get; set; }
     public string ExchangeAccountName { get; set; }
     public string BaseAsset { get; set; }
     public string QuoteAsset { get; set; }
@@ -20,7 +20,7 @@ public class TradingBotDto : BaseDto, IMapFrom<TradingBot>
     void IMapFrom<TradingBot>.Mapping(Profile profile)
     {
         profile.CreateMap<TradingBot, TradingBotDto>()
-            .ForMember(dest => dest.ExchangeAccountName, opt => opt.MapFrom(src => src.Exchange.Name))
+            .ForMember(dest => dest.ExchangeAccountName, opt => opt.MapFrom(src => src.ExchangeAccount.Name))
             .ReverseMap();
     }
 

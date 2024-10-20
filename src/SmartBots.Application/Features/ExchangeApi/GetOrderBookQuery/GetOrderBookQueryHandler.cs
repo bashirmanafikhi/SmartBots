@@ -5,10 +5,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetOrderBookQuery
 {
     public class GetOrderBookQueryHandler : IRequestHandler<GetOrderBookQuery, OrderBook>
     {
-        private readonly IExchangeRepository _exchangeRepository;
-        private readonly IExchangeFactory _exchangeFactory;
+        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountFactory _exchangeFactory;
 
-        public GetOrderBookQueryHandler(IExchangeRepository exchangeRepository, IExchangeFactory exchangeFactory)
+        public GetOrderBookQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;
@@ -16,10 +16,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetOrderBookQuery
 
         public async Task<OrderBook> Handle(GetOrderBookQuery request, CancellationToken cancellationToken)
         {
-            var exchange = await _exchangeRepository.GetByIdAsync(request.ExchangeId);
-            if (exchange == null) return null;
+            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.ExchangeAccountId);
+            if (exchangeAccount == null) return null;
 
-            var marketDataClient = _exchangeFactory.CreateMarketDataClient(exchange);
+            var marketDataClient = _exchangeFactory.CreateMarketDataClient(exchangeAccount);
             return await marketDataClient.GetOrderBookAsync(request.Symbol, request.Limit);
         }
     }

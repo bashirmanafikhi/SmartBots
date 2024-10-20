@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.SubscribeToTickerUpdatesReq
 {
     public class SubscribeToTickerUpdatesHandler : IRequestHandler<SubscribeToTickerUpdatesRequest, bool>
     {
-        private readonly IExchangeFactory _exchangeFactory;
+        private readonly IExchangeAccountFactory _exchangeFactory;
 
-        public SubscribeToTickerUpdatesHandler(IExchangeFactory exchangeFactory)
+        public SubscribeToTickerUpdatesHandler(IExchangeAccountFactory exchangeFactory)
         {
             _exchangeFactory = exchangeFactory;
         }

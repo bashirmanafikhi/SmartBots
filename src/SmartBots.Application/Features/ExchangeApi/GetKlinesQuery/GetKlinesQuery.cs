@@ -4,7 +4,7 @@ using SmartBots.Application.Interfaces;
 namespace SmartBots.Application.Features.ExchangeApi.GetKlinesQuery
 {
     public record GetKlinesQuery(
-        Guid ExchangeId,
+        Guid ExchangeAccountId,
         string Symbol,
         KlineInterval Interval,
         DateTime? StartTime = null,

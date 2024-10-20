@@ -3,16 +3,16 @@ using SmartBots.Application.Interfaces;
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public class GetAllExchangesQueryHandler : IRequestHandler<GetAllExchangesQuery, List<ExchangeDto>>
+    public class GetAllExchangesQueryHandler : IRequestHandler<GetAllExchangesQuery, List<ExchangeAccountDto>>
     {
-        private readonly IExchangeRepository _exchangeRepository;
+        private readonly IExchangeAccountRepository _exchangeRepository;
 
-        public GetAllExchangesQueryHandler(IExchangeRepository exchangeRepository)
+        public GetAllExchangesQueryHandler(IExchangeAccountRepository exchangeRepository)
         {
             _exchangeRepository = exchangeRepository;
         }
 
-        public async Task<List<ExchangeDto>> Handle(GetAllExchangesQuery query, CancellationToken cancellationToken)
+        public async Task<List<ExchangeAccountDto>> Handle(GetAllExchangesQuery query, CancellationToken cancellationToken)
         {
             return await _exchangeRepository.GetCurrentUserItemsAsync(cancellationToken);
         }

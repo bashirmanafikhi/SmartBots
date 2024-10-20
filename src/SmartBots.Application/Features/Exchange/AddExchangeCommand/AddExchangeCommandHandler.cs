@@ -4,22 +4,22 @@ using SmartBots.Application.Interfaces;
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public class AddExchangeCommandHandler : IRequestHandler<AddExchangeCommand, ExchangeDto>
+    public class AddExchangeCommandHandler : IRequestHandler<AddExchangeCommand, ExchangeAccountDto>
     {
-        private readonly IExchangeRepository _exchangeRepository;
+        private readonly IExchangeAccountRepository _exchangeRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AddExchangeCommandHandler(IUnitOfWork unitOfWork, IExchangeRepository exchangeRepository, IMapper mapper)
+        public AddExchangeCommandHandler(IUnitOfWork unitOfWork, IExchangeAccountRepository exchangeRepository, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _exchangeRepository = exchangeRepository;
             _mapper = mapper;
         }
 
-        public async Task<ExchangeDto> Handle(AddExchangeCommand command, CancellationToken cancellationToken)
+        public async Task<ExchangeAccountDto> Handle(AddExchangeCommand command, CancellationToken cancellationToken)
         {
-            var exchange = new Domain.Entities.Exchange()
+            var exchangeAccount = new Domain.Entities.ExchangeAccount()
             {
                 Name = command.Name,
                 Type = command.Type,
@@ -28,10 +28,10 @@ namespace SmartBots.Application.Features.Exchange
                 IsTest = command.IsTest,
             };
 
-            await _exchangeRepository.AddAsync(exchange, cancellationToken);
+            await _exchangeRepository.AddAsync(exchangeAccount, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<ExchangeDto>(exchange);
+            return _mapper.Map<ExchangeAccountDto>(exchangeAccount);
         }
     }
 }

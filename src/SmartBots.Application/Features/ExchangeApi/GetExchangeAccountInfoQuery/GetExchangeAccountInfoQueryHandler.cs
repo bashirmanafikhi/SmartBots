@@ -5,12 +5,12 @@ namespace SmartBots.Application.Features.ExchangeApi
 {
     public class GetExchangeAccountInfoQueryHandler : IRequestHandler<GetExchangeAccountInfoQuery, ExchangeAccountInfo>
     {
-        private readonly IExchangeRepository _exchangeRepository;
-        private readonly IExchangeFactory _exchangeFactory;
+        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountFactory _exchangeFactory;
 
         public GetExchangeAccountInfoQueryHandler(
-            IExchangeRepository exchangeRepository,
-            IExchangeFactory exchangeFactory)
+            IExchangeAccountRepository exchangeRepository,
+            IExchangeAccountFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;
@@ -18,13 +18,13 @@ namespace SmartBots.Application.Features.ExchangeApi
 
         public async Task<ExchangeAccountInfo> Handle(GetExchangeAccountInfoQuery request, CancellationToken cancellationToken)
         {
-            var exchange = await _exchangeRepository.GetByIdAsync(request.ExchangeId);
-            if (exchange == null)
+            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.ExchangeAccountId);
+            if (exchangeAccount == null)
             {
                 return new ExchangeAccountInfo();
             }
 
-            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchange);
+            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchangeAccount);
 
             var accountInfo = await exchangeClient.GetAccountInfoAsync();
 

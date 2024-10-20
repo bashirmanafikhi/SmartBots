@@ -4,17 +4,17 @@ using System.Linq.Expressions;
 
 namespace SmartBots.Application.Interfaces
 {
-    public interface IExchangeRepository
+    public interface IExchangeAccountRepository
     {
-        Task<Exchange?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<bool> AddAsync(Exchange item, CancellationToken cancellationToken = default);
-        Task<bool> DeleteAsync(Exchange item, CancellationToken cancellationToken = default);
-        Task<IList<Exchange>> GetAllAsync(CancellationToken cancellationToken = default);
-        Task<IList<Exchange>> GetFilteredAsync(
-            Expression<Func<Exchange, bool>> filter,
+        Task<ExchangeAccount?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<bool> AddAsync(ExchangeAccount item, CancellationToken cancellationToken = default);
+        Task<bool> DeleteAsync(ExchangeAccount item, CancellationToken cancellationToken = default);
+        Task<IList<ExchangeAccount>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<IList<ExchangeAccount>> GetFilteredAsync(
+            Expression<Func<ExchangeAccount, bool>> filter,
             CancellationToken cancellationToken = default);
-        IQueryable<Exchange> Query();
+        IQueryable<ExchangeAccount> Query();
 
-        Task<List<ExchangeDto>> GetCurrentUserItemsAsync(CancellationToken cancellationToken = default);
+        Task<List<ExchangeAccountDto>> GetCurrentUserItemsAsync(CancellationToken cancellationToken = default);
     }
 }

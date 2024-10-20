@@ -5,11 +5,11 @@ namespace SmartBots.Application.Features.ExchangeApi
 {
     public class GetExchangeAccountInfoQuery : IRequest<ExchangeAccountInfo>
     {
-        public Guid ExchangeId { get; }
+        public Guid ExchangeAccountId { get; }
 
-        public GetExchangeAccountInfoQuery(Guid exchangeId)
+        public GetExchangeAccountInfoQuery(Guid exchangeAccountId)
         {
-            ExchangeId = exchangeId;
+            ExchangeAccountId = exchangeAccountId;
         }
     }
 }

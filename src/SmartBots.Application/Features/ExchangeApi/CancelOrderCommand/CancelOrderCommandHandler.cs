@@ -5,20 +5,20 @@ namespace SmartBots.Application.Features.ExchangeApi.CancelOrderCommand
 {
     public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand>
     {
-        private readonly IExchangeRepository _exchangeRepository;
-        private readonly IExchangeFactory _exchangeFactory;
+        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountFactory _exchangeFactory;
 
-        public CancelOrderCommandHandler(IExchangeRepository exchangeRepository, IExchangeFactory exchangeFactory)
+        public CancelOrderCommandHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;
         }
         public async Task Handle(CancelOrderCommand request, CancellationToken cancellationToken)
         {
-            var exchange = await _exchangeRepository.GetByIdAsync(request.ExchangeId);
-            if (exchange == null) return;
+            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.ExchangeAccountId);
+            if (exchangeAccount == null) return;
 
-            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchange);
+            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchangeAccount);
             await exchangeClient.CancelOrderAsync(request.Symbol, request.OrderId);
         }
     }

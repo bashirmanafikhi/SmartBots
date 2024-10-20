@@ -9,5 +9,5 @@ namespace SmartBots.Application.Features.Exchange;
 public sealed class UpdateExchangeAccountCommand : IRequest<bool>
 {
     public Guid Id { get; set; }
-    public ExchangeDto Model { get; set; }
+    public ExchangeAccountDto Model { get; set; }
 }

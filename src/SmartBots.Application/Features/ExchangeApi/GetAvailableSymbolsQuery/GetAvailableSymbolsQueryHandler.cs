@@ -5,10 +5,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetAvailableSymbolsQuery
 {
     public class GetAvailableSymbolsQueryHandler : IRequestHandler<GetAvailableSymbolsQuery, IEnumerable<Symbol>>
     {
-        private readonly IExchangeRepository _exchangeRepository;
-        private readonly IExchangeFactory _exchangeFactory;
+        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountFactory _exchangeFactory;
 
-        public GetAvailableSymbolsQueryHandler(IExchangeRepository exchangeRepository, IExchangeFactory exchangeFactory)
+        public GetAvailableSymbolsQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;
@@ -16,10 +16,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetAvailableSymbolsQuery
 
         public async Task<IEnumerable<Symbol>> Handle(GetAvailableSymbolsQuery request, CancellationToken cancellationToken)
         {
-            var exchange = await _exchangeRepository.GetByIdAsync(request.ExchangeId);
-            if (exchange == null) return Enumerable.Empty<Symbol>();
+            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.ExchangeAccountId);
+            if (exchangeAccount == null) return Enumerable.Empty<Symbol>();
 
-            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchange);
+            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchangeAccount);
             return await exchangeClient.GetAvailableSymbolsAsync(request.IsSpotTradingAllowed);
         }
     }

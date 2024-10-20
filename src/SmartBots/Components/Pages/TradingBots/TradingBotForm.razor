@@ -48,7 +48,7 @@
                                             <!-- Exchange Account Name -->
                                             <div class="col-sm-6 col-md-4">
                                                 <label for="exchangeAccount" class="form-label">Exchange Account Name <span class="text-danger">*</span></label>
-                                                <InputSelect @bind-Value="NewItem.ExchangeId" class="form-select" id="exchangeAccount" required>
+                                                <InputSelect @bind-Value="NewItem.ExchangeAccountId" class="form-select" id="exchangeAccount" required>
                                                     @foreach (var exhange in Exchanges)
                                                     {
                                                         <option value="@exhange.Id">@exhange.Name</option>
@@ -228,7 +228,7 @@
     public Guid? TradingBotId { get; set; } // This parameter comes from the URL (null if not provided)
 
     private TradingBotDto NewItem { get; set; }
-    private List<ExchangeDto> Exchanges { get; set; } = [];
+    private List<ExchangeAccountDto> Exchanges { get; set; } = [];
 
     private bool IsUpdateMode => TradingBotId.HasValue;
 

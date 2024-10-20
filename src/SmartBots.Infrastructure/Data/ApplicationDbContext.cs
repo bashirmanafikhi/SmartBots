@@ -8,7 +8,7 @@ namespace SmartBots.Infrastructure.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Todo> Todos => Set<Todo>();
-        public DbSet<Exchange> Exchanges => Set<Exchange>();
+        public DbSet<ExchangeAccount> ExchangeAccounts => Set<ExchangeAccount>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

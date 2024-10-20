@@ -8,7 +8,7 @@ internal sealed class UpdateTradingBotCommandHandler : IRequestHandler<UpdateTra
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly ITradingBotRepository _tradingBotRepository;
-    private readonly IExchangeRepository _exchangeRepository;
+    private readonly IExchangeAccountRepository _exchangeRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -17,7 +17,7 @@ internal sealed class UpdateTradingBotCommandHandler : IRequestHandler<UpdateTra
         ITradingBotRepository tradingBotRepository,
         IMapper mapper,
         IUnitOfWork unitOfWork,
-        IExchangeRepository exchangeRepository)
+        IExchangeAccountRepository exchangeRepository)
     {
         _currentUserService = currentUserService;
         _tradingBotRepository = tradingBotRepository;
@@ -33,9 +33,9 @@ internal sealed class UpdateTradingBotCommandHandler : IRequestHandler<UpdateTra
         if (bot is null)
             return false; // throw not found ex
 
-        var exchange = await _exchangeRepository.GetByIdAsync(request.Model.ExchangeId, cancellationToken);
+        var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.Model.ExchangeAccountId, cancellationToken);
 
-        if (exchange is null) 
+        if (exchangeAccount is null) 
             return false; // throw not found ex
 
         var currentUserId = _currentUserService.GetUserId();
@@ -50,7 +50,7 @@ internal sealed class UpdateTradingBotCommandHandler : IRequestHandler<UpdateTra
             request.Model.ExtraOrders,
             request.Model.StopLoss,
             request.Model.TakeProfit,
-            exchange);
+            exchangeAccount);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

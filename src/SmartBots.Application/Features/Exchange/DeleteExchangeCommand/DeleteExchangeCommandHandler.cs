@@ -7,10 +7,10 @@ namespace SmartBots.Application.Features.Exchange
     public class DeleteExchangeCommandHandler : IRequestHandler<DeleteExchangeCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IExchangeRepository _exchangeRepository;
+        private readonly IExchangeAccountRepository _exchangeRepository;
         private readonly ICurrentUserService _currentUserService;
 
-        public DeleteExchangeCommandHandler(IUnitOfWork unitOfWork, IExchangeRepository exchangeRepository, ICurrentUserService currentUserService)
+        public DeleteExchangeCommandHandler(IUnitOfWork unitOfWork, IExchangeAccountRepository exchangeRepository, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _exchangeRepository = exchangeRepository;
@@ -19,16 +19,16 @@ namespace SmartBots.Application.Features.Exchange
 
         public async Task<bool> Handle(DeleteExchangeCommand command, CancellationToken cancellationToken)
         {
-            var exchange = await _exchangeRepository.GetByIdAsync(command.Id);
-            if (exchange == null)
+            var exchangeAccount = await _exchangeRepository.GetByIdAsync(command.Id);
+            if (exchangeAccount == null)
             {
-                return false; // Exchange not found
+                return false; // Exchange Account not found
             }
 
             var currentuserid = _currentUserService.GetUserId();
-            exchange.Authorize(currentuserid);
+            exchangeAccount.Authorize(currentuserid);
 
-            await _exchangeRepository.DeleteAsync(exchange, cancellationToken);
+            await _exchangeRepository.DeleteAsync(exchangeAccount, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;

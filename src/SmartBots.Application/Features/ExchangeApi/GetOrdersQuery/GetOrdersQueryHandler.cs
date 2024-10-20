@@ -5,10 +5,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetOrdersQuery
 {
     public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, IEnumerable<Order>>
     {
-        private readonly IExchangeRepository _exchangeRepository;
-        private readonly IExchangeFactory _exchangeFactory;
+        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountFactory _exchangeFactory;
 
-        public GetOrdersQueryHandler(IExchangeRepository exchangeRepository, IExchangeFactory exchangeFactory)
+        public GetOrdersQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;
@@ -16,10 +16,10 @@ namespace SmartBots.Application.Features.ExchangeApi.GetOrdersQuery
 
         public async Task<IEnumerable<Order>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
         {
-            var exchange = await _exchangeRepository.GetByIdAsync(request.ExchangeId);
-            if (exchange == null) return Enumerable.Empty<Order>();
+            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.ExchangeAccountId);
+            if (exchangeAccount == null) return Enumerable.Empty<Order>();
 
-            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchange);
+            var exchangeClient = _exchangeFactory.CreateExchangeClient(exchangeAccount);
             return await exchangeClient.GetOrdersAsync(request.Symbol, request.StartTime, request.EndTime);
         }
     }

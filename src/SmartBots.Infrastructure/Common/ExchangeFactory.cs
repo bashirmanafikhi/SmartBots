@@ -5,27 +5,27 @@ using SmartBots.Domain.Enums;
 
 namespace SmartBots.Infrastructure.Common
 {
-    internal class ExchangeFactory : IExchangeFactory
+    internal class ExchangeFactory : IExchangeAccountFactory
     {
-        public IExchangeClient CreateExchangeClient(Exchange exchange)
+        public IExchangeClient CreateExchangeClient(ExchangeAccount exchange)
         {
             switch (exchange.Type)
             {
                 case ExchangeType.Binance:
                     return new BinanceClient(exchange.ApiKey, exchange.ApiSecret);
                 default:
-                    throw new ArgumentException("Invalid exchange type");
+                    throw new ArgumentException("Invalid exchange account type");
             }
         }
 
-        public IMarketDataClient CreateMarketDataClient(Exchange exchange)
+        public IMarketDataClient CreateMarketDataClient(ExchangeAccount exchange)
         {
             switch (exchange.Type)
             {
                 case ExchangeType.Binance:
                     return new BinanceMarketDataClient(exchange.ApiKey, exchange.ApiSecret);
                 default:
-                    throw new ArgumentException("Invalid exchange type");
+                    throw new ArgumentException("Invalid exchange account type");
             }
         }
 
@@ -36,7 +36,7 @@ namespace SmartBots.Infrastructure.Common
                 case ExchangeType.Binance:
                     return new BinanceWebSocketClient();
                 default:
-                    throw new ArgumentException("Invalid exchange type");
+                    throw new ArgumentException("Invalid exchange account type");
             }
         }
     }
