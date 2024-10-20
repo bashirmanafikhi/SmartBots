@@ -7,18 +7,18 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <label for="stopLossPercentage" class="form-label">Stop Loss Percentage</label>
-        <InputNumber @bind-Value="StopLossSettings.StopLossPercentage" class="form-control" id="stopLossPercentage" placeholder="e.g., 2.5" />
+        <InputNumber @bind-Value="StopLossSettings.StopLossPercentage" class="form-control" id="stopLossPercentage" placeholder="e.g., 2.5" disabled="@(!StopLossSettings.UseStopLoss)" />
     </div>
     <div class="col-sm-6 col-md-3">
         <label for="timeoutSeconds" class="form-label">Timeout Seconds</label>
-        <InputNumber @bind-Value="StopLossSettings.TimeoutSeconds" class="form-control" id="timeoutSeconds" placeholder="e.g., 60" />
+        <InputNumber @bind-Value="StopLossSettings.TimeoutSeconds" class="form-control" id="timeoutSeconds" placeholder="e.g., 60" disabled="@(!StopLossSettings.UseStopLoss)" />
     </div>
     <div class="col-sm-6 col-md-2 d-flex align-items-center">
-        <InputCheckbox @bind-Value="StopLossSettings.IncludeExtraOrdersPositions" class="form-check-input me-2" id="includeExtraOrders" />
+        <InputCheckbox @bind-Value="StopLossSettings.IncludeExtraOrdersPositions" class="form-check-input me-2" id="includeExtraOrders" disabled="@(!StopLossSettings.UseStopLoss)" />
         <label for="includeExtraOrders" class="form-check-label">Include Extra Orders</label>
     </div>
     <div class="col-sm-6 col-md-2 d-flex align-items-center">
-        <InputCheckbox @bind-Value="StopLossSettings.TrailingStopLoss" class="form-check-input me-2" id="trailingStopLoss" />
+        <InputCheckbox @bind-Value="StopLossSettings.TrailingStopLoss" class="form-check-input me-2" id="trailingStopLoss" disabled="@(!StopLossSettings.UseStopLoss)" />
         <label for="trailingStopLoss" class="form-check-label">Trailing Stop Loss</label>
     </div>
 </div>

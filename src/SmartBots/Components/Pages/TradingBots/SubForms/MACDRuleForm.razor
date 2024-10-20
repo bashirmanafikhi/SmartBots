@@ -1,0 +1,25 @@
+﻿@using SmartBots.Domain.Entities.IndicatorRules
+
+<h6 class="card-title">MACD</h6>
+
+<div class="mb-2">
+    <label>Fast Period:</label>
+    <InputNumber @bind-Value="Rule.FastPeriod" class="form-control form-control-sm" />
+    <label>Slow Period:</label>
+    <InputNumber @bind-Value="Rule.SlowPeriod" class="form-control form-control-sm" />
+    <label>Signal Line Period:</label>
+    <InputNumber @bind-Value="Rule.SignalLinePeriod" class="form-control form-control-sm" />
+</div>
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        <InputCheckbox @bind-Value="Rule.IsUsedForOpening" class="form-check-input" id="@($"open-{Rule.GetHashCode()}")" />
+        <label for="@($"open-{Rule.GetHashCode()}")" class="form-check-label">Open</label>
+        <InputCheckbox @bind-Value="Rule.IsUsedForClosing" class="form-check-input" id="@($"close-{Rule.GetHashCode()}")" />
+        <label for="@($"close-{Rule.GetHashCode()}")" class="form-check-label">Close</label>
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public MACDRule Rule { get; set; } = new();
+}

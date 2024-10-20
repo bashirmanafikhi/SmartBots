@@ -2,161 +2,76 @@
 @using SmartBots.Domain.Entities
 @using SmartBots.Domain.Entities.IndicatorRules
 
-<!-- Tables for Trading Rules -->
 <div class="row">
-    <!-- Bollinger Bands Rules Table -->
+    <!-- Dropdown for selecting the type of trading rule -->
     <div class="col-12 mb-4">
-        <h5>Bollinger Bands Rules</h5>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Period</th>
-                        <th>Std Dev</th>
-                        <th>Open</th>
-                        <th>Close</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var rule in TradingRules.OfType<BollingerBandsRule>())
-                    {
-                        <tr>
-                            <td>
-                                <InputNumber @bind-Value="rule.Period" class="form-control form-control-sm" />
-                            </td>
-                            <td>
-                                <InputNumber @bind-Value="rule.StandardDeviation" class="form-control form-control-sm" />
-                            </td>
-                            <td class="text-center">
-                                <InputCheckbox @bind-Value="rule.IsUsedForOpening" class="form-check-input" />
-                            </td>
-                            <td class="text-center">
-                                <InputCheckbox @bind-Value="rule.IsUsedForClosing" class="form-check-input" />
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveRule(rule))">Delete</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <h5>Add Trading Rule</h5>
+        <div class="mb-2">
+            <select @bind="selectedRuleType" class="form-select form-select-sm">
+                <option value="" disabled selected>Select Rule Type</option>
+                <option value="@nameof(BollingerBandsRule)">Bollinger Bands</option>
+                <option value="@nameof(MACDRule)">MACD</option>
+                <option value="@nameof(RSIRule)">RSI</option>
+            </select>
         </div>
-        <!-- Add New Bollinger Bands Rule Button -->
-        <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddBollingerBandsRule">
-            <i class="bi bi-plus"></i> Add Bollinger Bands Rule
-        </button>
+        <div>
+            <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddTradingRule">
+                <i class="bi bi-plus"></i> Add Rule
+            </button>
+        </div>
     </div>
 
-    <hr />
-
-    <!-- MACD Rules Table -->
     <div class="col-12 mb-4">
-        <h5>MACD Rules</h5>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Fast Period</th>
-                        <th>Slow Period</th>
-                        <th>Signal Line</th>
-                        <th>Open</th>
-                        <th>Close</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var rule in TradingRules.OfType<MACDRule>())
-                    {
-                        <tr>
-                            <td>
-                                <InputNumber @bind-Value="rule.FastPeriod" class="form-control form-control-sm" />
-                            </td>
-                            <td>
-                                <InputNumber @bind-Value="rule.SlowPeriod" class="form-control form-control-sm" />
-                            </td>
-                            <td>
-                                <InputNumber @bind-Value="rule.SignalLinePeriod" class="form-control form-control-sm" />
-                            </td>
-                            <td class="text-center">
-                                <InputCheckbox @bind-Value="rule.IsUsedForOpening" class="form-check-input" />
-                            </td>
-                            <td class="text-center">
-                                <InputCheckbox @bind-Value="rule.IsUsedForClosing" class="form-check-input" />
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveRule(rule))">Delete</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <!-- Add New MACD Rule Button -->
-        <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddMACDRule">
-            <i class="bi bi-plus"></i> Add MACD Rule
-        </button>
-    </div>
+        <h5>Trading Rules</h5>
+        <div class="row">
+            @foreach (var rule in TradingRules)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
 
-    <hr />
+                            @if (rule is BollingerBandsRule bollingerRule)
+                            {
+                                <BollingerBandsRuleForm Rule="bollingerRule" />
+                            }
+                            else if (rule is MACDRule macdRule)
+                            {
+                                <MACDRuleForm Rule="macdRule" />
+                            }
+                            else if (rule is RSIRule rsiRule)
+                            {
+                                <RSIRuleForm Rule="rsiRule" />
+                            }
 
-    <!-- RSI Rules Table -->
-    <div class="col-12 mb-4">
-        <h5>RSI Rules</h5>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Period</th>
-                        <th>Overbought</th>
-                        <th>Oversold</th>
-                        <th>Open</th>
-                        <th>Close</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var rule in TradingRules.OfType<RSIRule>())
-                    {
-                        <tr>
-                            <td>
-                                <InputNumber @bind-Value="rule.Period" class="form-control form-control-sm" />
-                            </td>
-                            <td>
-                                <InputNumber @bind-Value="rule.OverboughtThreshold" class="form-control form-control-sm" />
-                            </td>
-                            <td>
-                                <InputNumber @bind-Value="rule.OversoldThreshold" class="form-control form-control-sm" />
-                            </td>
-                            <td class="text-center">
-                                <InputCheckbox @bind-Value="rule.IsUsedForOpening" class="form-check-input" />
-                            </td>
-                            <td class="text-center">
-                                <InputCheckbox @bind-Value="rule.IsUsedForClosing" class="form-check-input" />
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveRule(rule))">Delete</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                            <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveRule(rule))">Delete</button>
+
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
-        <!-- Add New RSI Rule Button -->
-        <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddRSIRule">
-            <i class="bi bi-plus"></i> Add RSI Rule
-        </button>
     </div>
 </div>
 
-
-
 @code {
-    [Parameter] public List<TradingRule> TradingRules { get; set; }
+    [Parameter] public List<TradingRule> TradingRules { get; set; } = new();
+    private string? selectedRuleType;
 
-    private void AddBollingerBandsRule() => TradingRules.Add(new BollingerBandsRule { Period = 20, StandardDeviation = 2.0 });
-    private void AddMACDRule() => TradingRules.Add(new MACDRule { FastPeriod = 12, SlowPeriod = 26, SignalLinePeriod = 9 });
-    private void AddRSIRule() => TradingRules.Add(new RSIRule { Period = 14, OverboughtThreshold = 70, OversoldThreshold = 30 });
+    private void AddTradingRule()
+    {
+        TradingRule? newRule = selectedRuleType switch
+        {
+            nameof(BollingerBandsRule) => new BollingerBandsRule { Period = 20, StandardDeviation = 2.0 },
+            nameof(MACDRule) => new MACDRule { FastPeriod = 12, SlowPeriod = 26, SignalLinePeriod = 9 },
+            nameof(RSIRule) => new RSIRule { Period = 14, OverboughtThreshold = 70, OversoldThreshold = 30 },
+            _ => null
+        };
+
+        if (newRule != null)
+        {
+            TradingRules.Add(newRule);
+        }
+    }
 
     private void RemoveRule(TradingRule rule) => TradingRules.Remove(rule);
 }

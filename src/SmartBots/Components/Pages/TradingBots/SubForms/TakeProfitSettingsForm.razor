@@ -7,18 +7,18 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <label for="takeProfitPercentage" class="form-label">Take Profit Percentage</label>
-        <InputNumber @bind-Value="TakeProfitSettings.TakeProfitPercentage" class="form-control" id="takeProfitPercentage" placeholder="e.g., 5.0" />
+        <InputNumber @bind-Value="TakeProfitSettings.TakeProfitPercentage" class="form-control" id="takeProfitPercentage" placeholder="e.g., 5.0" disabled="@(!TakeProfitSettings.UseTakeProfit)" />
     </div>
     <div class="col-sm-6 col-md-3">
         <label for="trailingDeviationPercentage" class="form-label">Trailing Deviation Percentage</label>
-        <InputNumber @bind-Value="TakeProfitSettings.TrailingDeviationPercentage" class="form-control" id="trailingDeviationPercentage" placeholder="e.g., 1.0" />
+        <InputNumber @bind-Value="TakeProfitSettings.TrailingDeviationPercentage" class="form-control" id="trailingDeviationPercentage" placeholder="e.g., 1.0" disabled="@(!TakeProfitSettings.UseTakeProfit)" />
     </div>
     <div class="col-sm-6 col-md-2 d-flex align-items-center">
-        <InputCheckbox @bind-Value="TakeProfitSettings.IncludeExtraOrdersPositions" class="form-check-input me-2" id="IncludeExtraOrdersPositions" />
-        <label for="IncludeExtraOrdersPositions" class="form-check-label">Include Extra Orders Positions</label>
+        <InputCheckbox @bind-Value="TakeProfitSettings.IncludeExtraOrdersPositions" class="form-check-input me-2" id="includeExtraOrdersPositions" disabled="@(!TakeProfitSettings.UseTakeProfit)" />
+        <label for="includeExtraOrdersPositions" class="form-check-label">Include Extra Orders Positions</label>
     </div>
     <div class="col-sm-6 col-md-2 d-flex align-items-center">
-        <InputCheckbox @bind-Value="TakeProfitSettings.TrailingTakeProfit" class="form-check-input me-2" id="trailingTakeProfit" />
+        <InputCheckbox @bind-Value="TakeProfitSettings.TrailingTakeProfit" class="form-check-input me-2" id="trailingTakeProfit" disabled="@(!TakeProfitSettings.UseTakeProfit)" />
         <label for="trailingTakeProfit" class="form-check-label">Trailing Take Profit</label>
     </div>
 </div>
