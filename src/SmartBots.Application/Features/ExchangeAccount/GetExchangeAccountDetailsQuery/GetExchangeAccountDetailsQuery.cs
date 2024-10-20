@@ -2,7 +2,7 @@
 
 namespace SmartBots.Application.Features.Exchange;
 
-public record GetExchangeDetailsQuery : IRequest<ExchangeAccountDto>
+public record GetExchangeAccountDetailsQuery : IRequest<ExchangeAccountDto>
 {
     public Guid Id { get; set; }
 }

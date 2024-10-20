@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.CancelOrderCommand
     public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public CancelOrderCommandHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
+        public CancelOrderCommandHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

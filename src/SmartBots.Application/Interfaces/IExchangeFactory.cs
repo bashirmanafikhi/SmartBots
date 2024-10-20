@@ -3,7 +3,7 @@ using SmartBots.Domain.Enums;
 
 namespace SmartBots.Application.Interfaces
 {
-    public interface IExchangeAccountFactory
+    public interface IExchangeFactory
     {
         IExchangeClient CreateExchangeClient(ExchangeAccount exchange);
         IMarketDataClient CreateMarketDataClient(ExchangeAccount exchange);

@@ -3,7 +3,7 @@ using SmartBots.Domain.Enums;
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public record AddExchangeCommand : IRequest<ExchangeAccountDto>
+    public record AddExchangeAccountCommand : IRequest<ExchangeAccountDto>
     {
         public string Name { get; set; }
         public ExchangeType Type { get; set; }

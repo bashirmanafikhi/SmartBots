@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.GetOpenOrdersQuery
     public class GetOpenOrdersQueryHandler : IRequestHandler<GetOpenOrdersQuery, IEnumerable<Order>>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public GetOpenOrdersQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
+        public GetOpenOrdersQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

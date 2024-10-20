@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.GetKlinesQuery
     public class GetKlinesQueryHandler : IRequestHandler<GetKlinesQuery, IEnumerable<Kline>>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public GetKlinesQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
+        public GetKlinesQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

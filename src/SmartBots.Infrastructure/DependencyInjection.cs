@@ -51,7 +51,7 @@ namespace SmartBots.Infrastructure
                 .AddTransient<IExchangeAccountRepository, ExchangeAccountRepository>()
                 .AddTransient<ITradingBotRepository, TradingBotRepository>()
                 .AddTransient<ICurrentUserService, CurrentUserService>()
-                .AddTransient<IExchangeAccountFactory, ExchangeFactory>();
+                .AddTransient<IExchangeFactory, ExchangeFactory>();
         }
     }
 }

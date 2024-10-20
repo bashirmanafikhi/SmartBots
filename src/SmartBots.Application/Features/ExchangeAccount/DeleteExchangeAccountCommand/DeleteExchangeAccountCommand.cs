@@ -2,7 +2,7 @@
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public record DeleteExchangeCommand : IRequest<bool>
+    public record DeleteExchangeAccountCommand : IRequest<bool>
     {
         public Guid Id { get; set; }
     }

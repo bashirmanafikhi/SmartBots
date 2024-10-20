@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.SubscribeToKlineUpdatesRequ
 {
     public class SubscribeToKlineUpdatesHandler : IRequestHandler<SubscribeToKlineUpdatesRequest, bool>
     {
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public SubscribeToKlineUpdatesHandler(IExchangeAccountFactory exchangeFactory)
+        public SubscribeToKlineUpdatesHandler(IExchangeFactory exchangeFactory)
         {
             _exchangeFactory = exchangeFactory;
         }

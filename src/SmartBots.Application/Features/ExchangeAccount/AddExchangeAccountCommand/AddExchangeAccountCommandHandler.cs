@@ -4,20 +4,20 @@ using SmartBots.Application.Interfaces;
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public class AddExchangeCommandHandler : IRequestHandler<AddExchangeCommand, ExchangeAccountDto>
+    public class AddExchangeAccountCommandHandler : IRequestHandler<AddExchangeAccountCommand, ExchangeAccountDto>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AddExchangeCommandHandler(IUnitOfWork unitOfWork, IExchangeAccountRepository exchangeRepository, IMapper mapper)
+        public AddExchangeAccountCommandHandler(IUnitOfWork unitOfWork, IExchangeAccountRepository exchangeRepository, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _exchangeRepository = exchangeRepository;
             _mapper = mapper;
         }
 
-        public async Task<ExchangeAccountDto> Handle(AddExchangeCommand command, CancellationToken cancellationToken)
+        public async Task<ExchangeAccountDto> Handle(AddExchangeAccountCommand command, CancellationToken cancellationToken)
         {
             var exchangeAccount = new Domain.Entities.ExchangeAccount()
             {

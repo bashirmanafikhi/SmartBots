@@ -2,9 +2,9 @@
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public class AddExchangeCommandValidator : AbstractValidator<AddExchangeCommand>
+    public class AddExchangeAccountCommandValidator : AbstractValidator<AddExchangeAccountCommand>
     {
-        public AddExchangeCommandValidator()
+        public AddExchangeAccountCommandValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
@@ -14,7 +14,7 @@ namespace SmartBots.Application.Features.Exchange
 
             RuleFor(x => x.Type)
                 .IsInEnum()
-                .WithMessage("Invalid exchange account type");
+                .WithMessage("Invalid exchange type");
 
             RuleFor(x => x.ApiKey)
                 .NotEmpty()

@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.GetAvailableSymbolsQuery
     public class GetAvailableSymbolsQueryHandler : IRequestHandler<GetAvailableSymbolsQuery, IEnumerable<Symbol>>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public GetAvailableSymbolsQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
+        public GetAvailableSymbolsQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

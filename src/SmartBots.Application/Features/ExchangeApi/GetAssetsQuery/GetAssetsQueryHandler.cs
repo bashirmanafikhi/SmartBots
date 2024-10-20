@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.GetAssetsQuery
     public class GetAssetsQueryHandler : IRequestHandler<GetAssetsQuery, IEnumerable<Asset>>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public GetAssetsQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
+        public GetAssetsQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

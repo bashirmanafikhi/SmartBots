@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.GetOrderBookQuery
     public class GetOrderBookQueryHandler : IRequestHandler<GetOrderBookQuery, OrderBook>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public GetOrderBookQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
+        public GetOrderBookQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

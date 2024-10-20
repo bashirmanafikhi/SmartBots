@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.PlaceOrderCommand
     public class PlaceOrderCommandHandler : IRequestHandler<PlaceOrderCommand, Order>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public PlaceOrderCommandHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
+        public PlaceOrderCommandHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

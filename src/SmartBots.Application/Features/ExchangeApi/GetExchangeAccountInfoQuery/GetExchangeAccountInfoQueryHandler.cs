@@ -6,11 +6,11 @@ namespace SmartBots.Application.Features.ExchangeApi
     public class GetExchangeAccountInfoQueryHandler : IRequestHandler<GetExchangeAccountInfoQuery, ExchangeAccountInfo>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
         public GetExchangeAccountInfoQueryHandler(
             IExchangeAccountRepository exchangeRepository,
-            IExchangeAccountFactory exchangeFactory)
+            IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

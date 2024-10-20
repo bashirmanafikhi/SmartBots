@@ -6,9 +6,9 @@ namespace SmartBots.Application.Features.ExchangeApi.GetTickerPriceQuery
     public class GetTickerPriceQueryHandler : IRequestHandler<GetTickerPriceQuery, TickerPrice>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
-        private readonly IExchangeAccountFactory _exchangeFactory;
+        private readonly IExchangeFactory _exchangeFactory;
 
-        public GetTickerPriceQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeAccountFactory exchangeFactory)
+        public GetTickerPriceQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
             _exchangeRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;

@@ -1,4 +1,4 @@
-﻿@page "/ExchangesAccounts"
+﻿@page "/ExchangeAccounts"
 @rendermode InteractiveServer
 @using SmartBots.Application.Features.Exchange
 @using SmartBots.Components.Layout
@@ -77,12 +77,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadExchanges();
+        await LoadExchangeAccounts();
     }
 
-    private async Task LoadExchanges()
+    private async Task LoadExchangeAccounts()
     {
-        ExchangeAccounts = await Mediator.Send(new GetAllExchangesQuery());
+        ExchangeAccounts = await Mediator.Send(new GetAllExchangeAccountsQuery());
     }
 
     private async Task SubmitExchange()
@@ -97,7 +97,7 @@
         }
         else
         {
-            await Mediator.Send(new AddExchangeCommand()
+            await Mediator.Send(new AddExchangeAccountCommand()
             {
                 Name = ExchangeModel.Name,
                 Type = ExchangeModel.Type,
@@ -107,7 +107,7 @@
             });
         }
 
-        await LoadExchanges();
+        await LoadExchangeAccounts();
         ClearForm();
     }
 
@@ -126,8 +126,8 @@
 
     private async Task DeleteExchange(ExchangeAccountDto exchange)
     {
-        await Mediator.Send(new DeleteExchangeCommand { Id = exchange.Id });
-        await LoadExchanges();
+        await Mediator.Send(new DeleteExchangeAccountCommand { Id = exchange.Id });
+        await LoadExchangeAccounts();
     }
 
     private void ClearForm()

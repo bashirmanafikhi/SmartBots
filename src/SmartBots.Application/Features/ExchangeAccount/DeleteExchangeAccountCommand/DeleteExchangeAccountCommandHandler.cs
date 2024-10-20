@@ -4,20 +4,20 @@ using SmartBots.Domain.Interfaces;
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public class DeleteExchangeCommandHandler : IRequestHandler<DeleteExchangeCommand, bool>
+    public class DeleteExchangeAccountCommandHandler : IRequestHandler<DeleteExchangeAccountCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IExchangeAccountRepository _exchangeRepository;
         private readonly ICurrentUserService _currentUserService;
 
-        public DeleteExchangeCommandHandler(IUnitOfWork unitOfWork, IExchangeAccountRepository exchangeRepository, ICurrentUserService currentUserService)
+        public DeleteExchangeAccountCommandHandler(IUnitOfWork unitOfWork, IExchangeAccountRepository exchangeRepository, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _exchangeRepository = exchangeRepository;
             _currentUserService = currentUserService;
         }
 
-        public async Task<bool> Handle(DeleteExchangeCommand command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteExchangeAccountCommand command, CancellationToken cancellationToken)
         {
             var exchangeAccount = await _exchangeRepository.GetByIdAsync(command.Id);
             if (exchangeAccount == null)

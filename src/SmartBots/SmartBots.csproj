@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartBots.Client\SmartBots.Client.csproj" />
     <ProjectReference Include="..\SmartBots.Infrastructure\SmartBots.Infrastructure.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
   </ItemGroup>
 
 </Project>

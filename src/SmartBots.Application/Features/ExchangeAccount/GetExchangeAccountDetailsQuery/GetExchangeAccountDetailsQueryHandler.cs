@@ -4,18 +4,18 @@ using SmartBots.Domain.Interfaces;
 
 namespace SmartBots.Application.Features.Exchange
 {
-    public class GetExchangeDetailsQueryHandler : IRequestHandler<GetExchangeDetailsQuery, ExchangeAccountDto>
+    public class GetExchangeAccountDetailsQueryHandler : IRequestHandler<GetExchangeAccountDetailsQuery, ExchangeAccountDto>
     {
         private readonly IExchangeAccountRepository _exchangeRepository;
         private readonly ICurrentUserService _currentUserService;
 
-        public GetExchangeDetailsQueryHandler(IExchangeAccountRepository exchangeRepository, ICurrentUserService currentUserService)
+        public GetExchangeAccountDetailsQueryHandler(IExchangeAccountRepository exchangeRepository, ICurrentUserService currentUserService)
         {
             _exchangeRepository = exchangeRepository;
             _currentUserService = currentUserService;
         }
 
-        public async Task<ExchangeAccountDto> Handle(GetExchangeDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<ExchangeAccountDto> Handle(GetExchangeAccountDetailsQuery request, CancellationToken cancellationToken)
         {
             var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.Id);
             if (exchangeAccount == null)

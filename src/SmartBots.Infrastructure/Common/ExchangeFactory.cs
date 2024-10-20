@@ -5,7 +5,7 @@ using SmartBots.Domain.Enums;
 
 namespace SmartBots.Infrastructure.Common
 {
-    internal class ExchangeFactory : IExchangeAccountFactory
+    internal class ExchangeFactory : IExchangeFactory
     {
         public IExchangeClient CreateExchangeClient(ExchangeAccount exchange)
         {
