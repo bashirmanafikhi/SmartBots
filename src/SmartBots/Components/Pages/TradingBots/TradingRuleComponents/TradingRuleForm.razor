@@ -1,0 +1,17 @@
+﻿@using SmartBots.Domain.Entities
+@using SmartBots.Domain.Entities.IndicatorRules
+@code {
+    [Parameter]
+    public TradingRule Rule { get; set; }
+}
+
+<div>
+    @if (Rule is BollingerBandsRule bbRule)
+    {
+        <BollingerBandsRuleComponent Rule="bbRule" />
+    }
+    else if (Rule is MACDRule macdRule)
+    {
+        <MACDRuleComponent Rule="macdRule" />
+    }
+</div>

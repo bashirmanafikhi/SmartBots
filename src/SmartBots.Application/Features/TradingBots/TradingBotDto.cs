@@ -27,6 +27,8 @@ public class TradingBotDto : BaseDto, IMapFrom<TradingBot>
     public ExtraOrdersSettings ExtraOrders { get; set; } = new ExtraOrdersSettings();
     public StopLossSettings StopLoss { get; set; } = new StopLossSettings();
     public TakeProfitSettings TakeProfit { get; set; } = new TakeProfitSettings();
+
+    public List<TradingRule> TradingRules { get; set; } = new List<TradingRule>();
 }
 
 
