@@ -1,0 +1,28 @@
+﻿@using SmartBots.Domain.Entities
+<div class="row g-3">
+    <div class="col-sm-6 col-md-4">
+        <label for="extraOrderCount" class="form-label">Count</label>
+        <InputNumber @bind-Value="ExtraOrdersSettings.Count" class="form-control" id="extraOrderCount" placeholder="Enter count" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <label for="firstVolumeScale" class="form-label">First Volume Scale</label>
+        <InputNumber @bind-Value="ExtraOrdersSettings.FirstVolumeScale" class="form-control" id="firstVolumeScale" placeholder="e.g., 1.5" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <label for="firstDeviationPercentage" class="form-label">First Deviation Percentage</label>
+        <InputNumber @bind-Value="ExtraOrdersSettings.FirstDeviationPercentage" class="form-control" id="firstDeviationPercentage" placeholder="e.g., 0.5" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <label for="stepVolumeScale" class="form-label">Step Volume Scale</label>
+        <InputNumber @bind-Value="ExtraOrdersSettings.StepVolumeScale" class="form-control" id="stepVolumeScale" placeholder="e.g., 1.2" />
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <label for="stepDeviationScale" class="form-label">Step Deviation Scale</label>
+        <InputNumber @bind-Value="ExtraOrdersSettings.StepDeviationScale" class="form-control" id="stepDeviationScale" placeholder="e.g., 0.3" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ExtraOrdersSettings ExtraOrdersSettings { get; set; }
+}

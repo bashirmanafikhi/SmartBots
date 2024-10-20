@@ -1,0 +1,56 @@
+﻿@using SmartBots.Application.Features.Exchange
+@using SmartBots.Application.Features.TradingBots
+@using SmartBots.Domain.Enums
+
+<div class="row g-3">
+    <!-- Bot Name -->
+    <div class="col-sm-6 col-md-4">
+        <label for="botName" class="form-label">Bot Name <span class="text-danger">*</span></label>
+        <InputText @bind-Value="TradingBot.Name" class="form-control" id="botName" placeholder="Enter bot name" required />
+    </div>
+
+    <!-- Exchange Account Name -->
+    <div class="col-sm-6 col-md-4">
+        <label for="exchangeAccount" class="form-label">Exchange Account Name <span class="text-danger">*</span></label>
+        <InputSelect @bind-Value="TradingBot.ExchangeAccountId" class="form-select" id="exchangeAccount" required>
+            @foreach (var exchange in ExchangeAccounts)
+            {
+                <option value="@exchange.Id">@exchange.Name</option>
+            }
+        </InputSelect>
+    </div>
+
+    <!-- Base Asset -->
+    <div class="col-sm-6 col-md-4">
+        <label for="baseAsset" class="form-label">Base Asset <span class="text-danger">*</span></label>
+        <InputText @bind-Value="TradingBot.BaseAsset" class="form-control" id="baseAsset" placeholder="e.g., BTC" required />
+    </div>
+
+    <!-- Quote Asset -->
+    <div class="col-sm-6 col-md-4">
+        <label for="quoteAsset" class="form-label">Quote Asset <span class="text-danger">*</span></label>
+        <InputText @bind-Value="TradingBot.QuoteAsset" class="form-control" id="quoteAsset" placeholder="e.g., USDT" required />
+    </div>
+
+    <!-- Trade Size -->
+    <div class="col-sm-6 col-md-4">
+        <label for="tradeSize" class="form-label">Trade Size <span class="text-danger">*</span></label>
+        <InputNumber @bind-Value="TradingBot.TradeSize" class="form-control" id="tradeSize" placeholder="Enter trade size" required />
+    </div>
+
+    <!-- Bot Type -->
+    <div class="col-sm-6 col-md-4">
+        <label for="botType" class="form-label">Bot Type <span class="text-danger">*</span></label>
+        <InputSelect @bind-Value="TradingBot.BotType" class="form-select" id="botType" required>
+            @foreach (var botType in Enum.GetValues(typeof(BotType)))
+            {
+                <option value="@botType">@botType</option>
+            }
+        </InputSelect>
+    </div>
+</div>
+
+@code {
+    [Parameter] public TradingBotDto TradingBot { get; set; }
+    [Parameter] public List<ExchangeAccountDto> ExchangeAccounts { get; set; } = new();
+}

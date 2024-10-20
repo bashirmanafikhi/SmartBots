@@ -1,0 +1,29 @@
+﻿@using SmartBots.Domain.Entities
+
+<div class="row g-3">
+    <div class="col-sm-6 col-md-2 d-flex align-items-center">
+        <InputCheckbox @bind-Value="TakeProfitSettings.UseTakeProfit" class="form-check-input me-2" id="useTakeProfit" />
+        <label for="useTakeProfit" class="form-check-label">Use Take Profit</label>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <label for="takeProfitPercentage" class="form-label">Take Profit Percentage</label>
+        <InputNumber @bind-Value="TakeProfitSettings.TakeProfitPercentage" class="form-control" id="takeProfitPercentage" placeholder="e.g., 5.0" />
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <label for="trailingDeviationPercentage" class="form-label">Trailing Deviation Percentage</label>
+        <InputNumber @bind-Value="TakeProfitSettings.TrailingDeviationPercentage" class="form-control" id="trailingDeviationPercentage" placeholder="e.g., 1.0" />
+    </div>
+    <div class="col-sm-6 col-md-2 d-flex align-items-center">
+        <InputCheckbox @bind-Value="TakeProfitSettings.IncludeExtraOrdersPositions" class="form-check-input me-2" id="IncludeExtraOrdersPositions" />
+        <label for="IncludeExtraOrdersPositions" class="form-check-label">Include Extra Orders Positions</label>
+    </div>
+    <div class="col-sm-6 col-md-2 d-flex align-items-center">
+        <InputCheckbox @bind-Value="TakeProfitSettings.TrailingTakeProfit" class="form-check-input me-2" id="trailingTakeProfit" />
+        <label for="trailingTakeProfit" class="form-check-label">Trailing Take Profit</label>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public TakeProfitSettings TakeProfitSettings { get; set; }
+}

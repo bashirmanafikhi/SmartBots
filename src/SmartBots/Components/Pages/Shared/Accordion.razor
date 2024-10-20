@@ -1,0 +1,37 @@
+﻿<div class="accordion mb-4" id="@ParentId">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="@HeadingId">
+            <button class="accordion-button @AccordionState" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#@CollapseId"
+                    aria-expanded="@IsExpanded" aria-controls="@CollapseId"
+                    @onclick="ToggleAccordion">
+                <i class="bi bi-arrow-repeat me-2"></i> @Title
+            </button>
+        </h2>
+        <div id="@CollapseId" class="accordion-collapse collapse @CollapseState"
+             aria-labelledby="@HeadingId" data-bs-parent="@ParentId">
+            <div class="accordion-body">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private string AccordionState => IsExpanded ? string.Empty : "collapsed";
+    private string CollapseState => IsExpanded ? "show" : string.Empty;
+
+    [Parameter] public bool IsExpanded { get; set; } = false;
+
+    private string ParentId => $"accordion-{Guid.NewGuid()}";
+    private string HeadingId => $"heading-{Guid.NewGuid()}";
+    private string CollapseId => $"collapse-{Guid.NewGuid()}";
+
+    private void ToggleAccordion()
+    {
+        IsExpanded = !IsExpanded;
+    }
+}
