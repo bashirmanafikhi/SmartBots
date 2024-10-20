@@ -3,7 +3,9 @@
 @using MediatR
 @using SmartBots.Application.Features.TradingBots
 @using SmartBots.Application.Features.Exchange
+@using SmartBots.Components.Pages.TradingBots.TradingRuleComponents
 @using SmartBots.Domain.Entities
+@using SmartBots.Domain.Entities.IndicatorRules
 @using SmartBots.Domain.Enums
 @using Microsoft.AspNetCore.Components.Forms
 @rendermode InteractiveServer
@@ -196,6 +198,40 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Trading Rules -->
+                        <div class="accordion mb-4" id="tradingRulesAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTradingRules">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTradingRules" aria-expanded="false" aria-controls="collapseTradingRules">
+                                        <i class="bi bi-cash me-2"></i> Trading Rules
+                                    </button>
+                                </h2>
+                                <div id="collapseTradingRules" class="accordion-collapse collapse" aria-labelledby="headingTradingRules" data-bs-parent="#tradingRulesAccordion">
+                                    <div class="accordion-body">
+
+                                        <h3>Manage Trading Rules</h3>
+
+                                        @foreach (var tradingRule in NewItem.TradingRules)
+                                        {
+                                            <TradingRuleForm Rule="tradingRule" />
+                                            <hr />
+                                        }
+
+                                        <div class="row">
+                                            <InputSelect class="form-select" @bind-Value="SelectedRuleType">
+                                                <option value="BollingerBandsRule">Bollinger Bands</option>
+                                                <option value="MACDRule">MACD</option>
+                                            </InputSelect>
+
+                                            <button class="btn btn-primary" @onclick="AddNewRule">
+                                                New Trading Rule of the selected type
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -261,17 +297,17 @@
         if (IsUpdateMode)
         {
             await Mediator.Send(new UpdateTradingBotCommand
-            {
-                Id = TradingBotId!.Value,
-                Model = NewItem
-            });
+                {
+                    Id = TradingBotId!.Value,
+                    Model = NewItem
+                });
         }
         else
         {
             await Mediator.Send(new AddTradingBotCommand
-            {
-                Model = NewItem
-            });
+                {
+                    Model = NewItem
+                });
         }
 
         NavigationManager.NavigateTo("/TradingBots");
@@ -280,5 +316,19 @@
     private async Task CancelUpdate()
     {
         NavigationManager.NavigateTo("/TradingBots");
+    }
+
+    private string SelectedRuleType = "BollingerBandsRule";
+
+    private void AddNewRule()
+    {
+        TradingRule newRule = SelectedRuleType switch
+        {
+            "BollingerBandsRule" => new BollingerBandsRule(),
+            "MACDRule" => new MACDRule(),
+            _ => throw new NotImplementedException()
+        };
+
+         NewItem.TradingRules.Add(newRule);
     }
 }

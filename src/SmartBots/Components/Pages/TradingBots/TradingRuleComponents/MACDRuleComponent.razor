@@ -1,0 +1,17 @@
+﻿@using SmartBots.Domain.Entities.IndicatorRules
+@inherits ComponentBase
+@code {
+    [Parameter]
+    public MACDRule Rule { get; set; }
+}
+
+<div class="form-group">
+    <label>Fast Period:</label>
+    <InputNumber @bind-Value="Rule.FastPeriod" />
+
+    <label>Slow Period:</label>
+    <InputNumber @bind-Value="Rule.SlowPeriod" />
+
+    <label>Signal Line Period:</label>
+    <InputNumber @bind-Value="Rule.SignalLinePeriod" />
+</div>
