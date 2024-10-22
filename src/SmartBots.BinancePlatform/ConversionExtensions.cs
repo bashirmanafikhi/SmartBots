@@ -187,10 +187,10 @@ namespace SmartBots.BinancePlatform
             return new Application.Interfaces.Kline
             {
                 OpenTime = k.OpenTime,
-                Open = k.OpenPrice,
-                High = k.HighPrice,
-                Low = k.LowPrice,
-                Close = k.ClosePrice,
+                OpenPrice = k.OpenPrice,
+                HighPrice = k.HighPrice,
+                LowPrice = k.LowPrice,
+                ClosePrice = k.ClosePrice,
                 Volume = k.Volume,
                 CloseTime = k.CloseTime
             };
@@ -215,9 +215,9 @@ namespace SmartBots.BinancePlatform
             };
         }
 
-        public static KlineData ToKlineData(this IBinanceStreamKlineData binanceKline)
+        public static KlineUpdateData ToKlineData(this IBinanceStreamKlineData binanceKline)
         {
-            return new KlineData
+            return new KlineUpdateData
             {
                 Symbol = binanceKline.Symbol,
                 Interval = (Application.Interfaces.KlineInterval)binanceKline.Data.Interval,

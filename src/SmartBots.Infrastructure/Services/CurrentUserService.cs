@@ -2,7 +2,7 @@
 using SmartBots.Application.Interfaces;
 using System.Security.Claims;
 
-namespace SmartBots.Infrastructure.Common
+namespace SmartBots.Infrastructure.Services
 {
     public class CurrentUserService : ICurrentUserService
     {

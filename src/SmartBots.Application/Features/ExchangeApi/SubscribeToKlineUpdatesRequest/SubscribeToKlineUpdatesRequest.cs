@@ -14,6 +14,6 @@ namespace SmartBots.Application.Features.ExchangeApi.SubscribeToKlineUpdatesRequ
         public ExchangeType ExchangeType { get; set; } = ExchangeType.Binance;
         public string Symbol { get; set; }
         public KlineInterval Interval { get; set; }
-        public Action<KlineData> OnUpdate { get; set; }
+        public Action<KlineUpdateData> OnUpdate { get; set; }
     }
 }

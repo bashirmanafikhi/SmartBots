@@ -12,9 +12,5 @@ namespace SmartBots.Domain.Entities
         // Usage Flags
         public bool IsUsedForOpening { get; set; }
         public bool IsUsedForClosing { get; set; }
-
-        // Abstract Method to be implemented by derived classes
-        public abstract Signal EvaluateSignal();
     }
-
 }

@@ -38,7 +38,7 @@ namespace SmartBots.BinancePlatform
             }
         }
 
-        public async Task<bool> SubscribeToKlineUpdatesAsync(string symbol, KlineInterval interval, Action<KlineData> onUpdate, CancellationToken cancellationToken)
+        public async Task<bool> SubscribeToKlineUpdatesAsync(string symbol, KlineInterval interval, Action<KlineUpdateData> onUpdate, CancellationToken cancellationToken)
         {
             var subscription = await _socketClient.SpotApi.ExchangeData.SubscribeToKlineUpdatesAsync(
                 symbol, interval.ToBinanceKlineInterval(), update => onUpdate(update.Data.ToKlineData()), cancellationToken);

@@ -68,6 +68,9 @@
                                              aria-label="@($"Edit {@bot.Name}")">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </NavLink>
+                                    <NavLink class="btn btn-sm btn-warning" href="@($"TradingBot/{bot.Id}/AutoTrading")">
+                                        Auto Trading
+                                    </NavLink>
                                     <button class="btn btn-sm btn-danger" @onclick="() => DeleteItem(bot)" aria-label="Delete @bot.Name">
                                         Delete
                                     </button>

@@ -1,0 +1,41 @@
+﻿@page "/TradingBot/{id:guid}/AutoTrading"
+@using SmartBots.Application.Features.TradingBots
+@inject IMediator Mediator
+@rendermode InteractiveServer
+
+<h3>Auto Trading</h3>
+
+<button class="btn btn-primary" @onclick="StartAutoTrading">Start Auto Trading</button>
+@if (tradingBot is null)
+{
+    <p>Loading Trading Bot ... </p>
+}
+else
+{
+    <p>Bot Name: @tradingBot.Name</p>
+    <button class="btn btn-primary" @onclick="StartAutoTrading">Start Auto Trading</button>
+}
+
+
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    TradingBotDto tradingBot = null;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //tradingBot = await Mediator.Send(new GetTradingBotQuery(Id));
+        tradingBot = new();
+        StateHasChanged();
+    }
+
+    private async void StartAutoTrading()
+    {
+        await Mediator.Send(new StartAutoTradingCommand()
+        {
+            Id = this.Id,
+            Interval = Application.Interfaces.KlineInterval.OneMinute
+        });
+    }
+}

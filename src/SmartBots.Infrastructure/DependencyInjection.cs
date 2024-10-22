@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartBots.Application.Interfaces;
-using SmartBots.Infrastructure.Common;
 using SmartBots.Infrastructure.Data;
 using SmartBots.Infrastructure.Interceptors;
 using SmartBots.Infrastructure.Repositories;
+using SmartBots.Infrastructure.Services;
 
 namespace SmartBots.Infrastructure
 {
@@ -51,7 +51,12 @@ namespace SmartBots.Infrastructure
                 .AddTransient<IExchangeAccountRepository, ExchangeAccountRepository>()
                 .AddTransient<ITradingBotRepository, TradingBotRepository>()
                 .AddTransient<ICurrentUserService, CurrentUserService>()
-                .AddTransient<IExchangeFactory, ExchangeFactory>();
+                .AddTransient<IExchangeFactory, ExchangeFactory>()
+                .AddTransient<ITradingBotManager, TradingBotManager>()
+                .AddTransient<IRealTimeDataManager, RealTimeDataManager>()
+                .AddTransient<ITechnicalAnalysisService, TechnicalAnalysisService>()
+                .AddTransient<ITradingRuleManager, TradingRuleManager>();
+
         }
     }
 }
