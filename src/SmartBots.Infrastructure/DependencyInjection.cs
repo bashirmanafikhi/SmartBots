@@ -31,7 +31,7 @@ namespace SmartBots.Infrastructure
                     builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
                 .AddInterceptors(sp.GetRequiredService<AuditableEntityInterceptor>());
 
-            });
+            }, contextLifetime:ServiceLifetime.Transient);
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)

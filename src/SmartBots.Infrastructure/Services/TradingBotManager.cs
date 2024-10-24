@@ -98,7 +98,7 @@ namespace SmartBots.Infrastructure.Services
                     break;
 
                 case TradingSignal.Hold:
-                    _logger.LogInformation("Hold signal for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
+                    //_logger.LogInformation("Hold signal for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
                     break;
             }
         }

@@ -66,10 +66,10 @@ namespace SmartBots.Infrastructure.Services
 
             // for now, I prefer to ensure all the rules gave the same signal 
 
-            if (buySignals.Count == tradingRules.Count)
+            if (buySignals.Where(x => x == true).Count() == tradingRules.Count)
                 return TradingSignal.Buy;
 
-            if (sellSignals.Count == tradingRules.Count)
+            if (sellSignals.Where(x => x == true).Count() == tradingRules.Count)
                 return TradingSignal.Sell;
 
             return TradingSignal.Hold;
