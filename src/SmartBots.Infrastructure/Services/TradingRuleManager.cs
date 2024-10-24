@@ -23,7 +23,7 @@ namespace SmartBots.Infrastructure.Services
             var buySignals = new List<bool>();
             var sellSignals = new List<bool>();
 
-            foreach (var rule in tradingRules)
+            foreach (var rule in tradingRules.Where(x => x.IsUsedForClosing || x.IsUsedForOpening))
             {
                 switch (rule)
                 {

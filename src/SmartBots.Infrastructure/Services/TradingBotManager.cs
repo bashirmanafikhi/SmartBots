@@ -38,50 +38,48 @@ namespace SmartBots.Infrastructure.Services
                 return; // Prevent duplicate start
             }
 
-            if (_activeBots.TryAdd(bot.Id, bot))
-            {
-                _logger.LogInformation("Starting bot {BotName} with ID {BotId}.", bot.Name, bot.Id);
-
-                try
-                {
-                    // Subscribe to real-time data updates
-                    string symbol = $"{bot.BaseAsset}{bot.QuoteAsset}";
-
-                    await _realTimeDataManager.SubscribeToAll(
-                        bot.ExchangeAccountId,
-                        symbol,
-                        interval,
-                        async (klineData, lastPrice) =>
-                        {
-                            try
-                            {
-                                if (klineData.Count == 0)
-                                    return;
-
-                                var signal = await _tradingRuleManager.EvaluateSignalsAsync(klineData, bot.TradingRules);
-
-                                await HandleSignal(bot, lastPrice, symbol, signal);
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.LogError(ex, "Error while handling kline");
-                            }
-                        },
-                        orderUpdateData =>
-                        {
-                            _logger.LogInformation("orderUpdateData = " + orderUpdateData.Status);
-                        },
-                        cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to start bot {BotName} with ID {BotId}.", bot.Name, bot.Id);
-                    _activeBots.TryRemove(bot.Id, out _); // Rollback if startup fails
-                }
-            }
-            else
+            if (!_activeBots.TryAdd(bot.Id, bot))
             {
                 _logger.LogError("Failed to add bot {BotName} with ID {BotId} to active list.", bot.Name, bot.Id);
+                return;
+            }
+
+            try
+            {
+                _logger.LogInformation("Starting bot {BotName} with ID {BotId}.", bot.Name, bot.Id);
+                // Subscribe to real-time data updates
+                string symbol = $"{bot.BaseAsset}{bot.QuoteAsset}";
+
+                await _realTimeDataManager.SubscribeToAll(
+                    bot.ExchangeAccountId,
+                    symbol,
+                    interval,
+                    async (klineData, lastPrice) =>
+                    {
+                        try
+                        {
+                            if (klineData.Count == 0)
+                                return;
+
+                            var signal = await _tradingRuleManager.EvaluateSignalsAsync(klineData, bot.TradingRules);
+
+                            await HandleSignal(bot, lastPrice, symbol, signal);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Error while handling kline");
+                        }
+                    },
+                    orderUpdateData =>
+                    {
+                        _logger.LogInformation("orderUpdateData = " + orderUpdateData.Status);
+                    },
+                    cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to start bot {BotName} with ID {BotId}.", bot.Name, bot.Id);
+                _activeBots.TryRemove(bot.Id, out _); // Rollback if startup fails
             }
         }
 
