@@ -43,19 +43,21 @@ namespace SmartBots.Infrastructure
         private static void AddRepositories(this IServiceCollection services)
         {
             services
-                .AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork))
-                .AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>))
-                .AddTransient(typeof(IUserOwnedEntityRepository<>), typeof(UserOwnedEntityRepository<>))
-                .AddTransient<ITradingRuleRepository, TradingRuleRepository>()
-                .AddTransient<ITodoRepository, TodoRepository>()
-                .AddTransient<IExchangeAccountRepository, ExchangeAccountRepository>()
-                .AddTransient<ITradingBotRepository, TradingBotRepository>()
-                .AddTransient<ICurrentUserService, CurrentUserService>()
-                .AddTransient<IExchangeFactory, ExchangeFactory>()
-                .AddTransient<ITradingBotManager, TradingBotManager>()
-                .AddTransient<IRealTimeDataManager, RealTimeDataManager>()
-                .AddTransient<ITechnicalAnalysisService, TechnicalAnalysisService>()
-                .AddTransient<ITradingRuleManager, TradingRuleManager>();
+                .AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork))
+                .AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
+                .AddScoped(typeof(IUserOwnedEntityRepository<>), typeof(UserOwnedEntityRepository<>))
+
+                .AddScoped<ITradingRuleRepository, TradingRuleRepository>()
+                .AddScoped<ITodoRepository, TodoRepository>()
+                .AddScoped<IExchangeAccountRepository, ExchangeAccountRepository>()
+                .AddScoped<ITradingBotRepository, TradingBotRepository>()
+
+                .AddScoped<ICurrentUserService, CurrentUserService>()
+                .AddScoped<IExchangeFactory, ExchangeFactory>()
+                .AddScoped<ITradingBotManager, TradingBotManager>()
+                .AddScoped<IRealTimeDataManager, RealTimeDataManager>()
+                .AddScoped<ITechnicalAnalysisService, TechnicalAnalysisService>()
+                .AddScoped<ITradingRuleManager, TradingRuleManager>();
 
         }
     }

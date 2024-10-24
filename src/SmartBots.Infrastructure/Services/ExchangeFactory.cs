@@ -18,12 +18,45 @@ namespace SmartBots.Infrastructure.Services
             }
         }
 
+        public IExchangeClient CreateExchangeClient(ExchangeType exchangeType)
+        {
+            switch (exchangeType)
+            {
+                case ExchangeType.Binance:
+                    return new BinanceClient();
+                default:
+                    throw new ArgumentException("Invalid exchange account type");
+            }
+        }
+
         public IMarketDataClient CreateMarketDataClient(ExchangeAccount exchange)
         {
             switch (exchange.Type)
             {
                 case ExchangeType.Binance:
                     return new BinanceMarketDataClient(exchange.ApiKey, exchange.ApiSecret);
+                default:
+                    throw new ArgumentException("Invalid exchange account type");
+            }
+        }
+
+        public IMarketDataClient CreateMarketDataClient(ExchangeType exchangeType)
+        {
+            switch (exchangeType)
+            {
+                case ExchangeType.Binance:
+                    return new BinanceMarketDataClient();
+                default:
+                    throw new ArgumentException("Invalid exchange account type");
+            }
+        }
+
+        public IExchangeWebSocketClient CreateWebSocketClient(ExchangeAccount exchange)
+        {
+            switch (exchange.Type)
+            {
+                case ExchangeType.Binance:
+                    return new BinanceWebSocketClient(exchange.ApiKey, exchange.ApiSecret);
                 default:
                     throw new ArgumentException("Invalid exchange account type");
             }

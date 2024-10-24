@@ -5,18 +5,18 @@ namespace SmartBots.Application.Features.ExchangeApi.GetOpenOrdersQuery
 {
     public class GetOpenOrdersQueryHandler : IRequestHandler<GetOpenOrdersQuery, IEnumerable<Order>>
     {
-        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountRepository _exchangeAccountRepository;
         private readonly IExchangeFactory _exchangeFactory;
 
         public GetOpenOrdersQueryHandler(IExchangeAccountRepository exchangeRepository, IExchangeFactory exchangeFactory)
         {
-            _exchangeRepository = exchangeRepository;
+            _exchangeAccountRepository = exchangeRepository;
             _exchangeFactory = exchangeFactory;
         }
 
         public async Task<IEnumerable<Order>> Handle(GetOpenOrdersQuery request, CancellationToken cancellationToken)
         {
-            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.ExchangeAccountId);
+            var exchangeAccount = await _exchangeAccountRepository.GetByIdAsync(request.ExchangeAccountId);
             if (exchangeAccount == null) return Enumerable.Empty<Order>();
 
             var exchangeClient = _exchangeFactory.CreateExchangeClient(exchangeAccount);

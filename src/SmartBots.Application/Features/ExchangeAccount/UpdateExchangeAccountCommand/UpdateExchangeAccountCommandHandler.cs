@@ -6,7 +6,7 @@ namespace SmartBots.Application.Features.Exchange;
 internal sealed class UpdateExchangeAccountCommandHandler : IRequestHandler<UpdateExchangeAccountCommand, bool>
 {
     private readonly ICurrentUserService _currentUserService;
-    private readonly IExchangeAccountRepository _exchangeRepository;
+    private readonly IExchangeAccountRepository _exchangeAccountRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public UpdateExchangeAccountCommandHandler(
@@ -15,14 +15,14 @@ internal sealed class UpdateExchangeAccountCommandHandler : IRequestHandler<Upda
         IUnitOfWork unitOfWork)
     {
         _currentUserService = currentUserService;
-        _exchangeRepository = exchangeRepository;
+        _exchangeAccountRepository = exchangeRepository;
         _unitOfWork = unitOfWork;
     }
 
 
     public async Task<bool> Handle(UpdateExchangeAccountCommand request, CancellationToken cancellationToken)
     {
-        var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.Id, cancellationToken);
+        var exchangeAccount = await _exchangeAccountRepository.GetByIdAsync(request.Id, cancellationToken);
 
         if (exchangeAccount is null)
             return false; // throw not found ex

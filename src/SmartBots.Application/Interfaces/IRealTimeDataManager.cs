@@ -8,8 +8,14 @@ namespace SmartBots.Application.Interfaces
 {
     public interface IRealTimeDataManager
     {
-        Task SubscribeToKlineAndTickerUpdates(string symbol, KlineInterval interval,
-            Action<List<Kline>, decimal> onUpdate, CancellationToken cancellationToken = default);
+        Task SubscribeToAll(
+            Guid exchangeAccountId,
+            string symbol, 
+            KlineInterval interval,
+            Action<List<Kline>, decimal> onUpdate,
+            Action<OrderUpdateData> onOrderUpdate,
+            CancellationToken cancellationToken = default);
+
         List<Kline> GetCandlestickData();
         decimal GetLastPrice();
     }

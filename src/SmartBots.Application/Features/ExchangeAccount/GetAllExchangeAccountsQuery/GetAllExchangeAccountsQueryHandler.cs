@@ -5,16 +5,16 @@ namespace SmartBots.Application.Features.Exchange
 {
     public class GetAllExchangeAccountsQueryHandler : IRequestHandler<GetAllExchangeAccountsQuery, List<ExchangeAccountDto>>
     {
-        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountRepository _exchangeAccountRepository;
 
         public GetAllExchangeAccountsQueryHandler(IExchangeAccountRepository exchangeRepository)
         {
-            _exchangeRepository = exchangeRepository;
+            _exchangeAccountRepository = exchangeRepository;
         }
 
         public async Task<List<ExchangeAccountDto>> Handle(GetAllExchangeAccountsQuery query, CancellationToken cancellationToken)
         {
-            return await _exchangeRepository.GetCurrentUserItemsAsync(cancellationToken);
+            return await _exchangeAccountRepository.GetCurrentUserItemsAsync(cancellationToken);
         }
     }
 }

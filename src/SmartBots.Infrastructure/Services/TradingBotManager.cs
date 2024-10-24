@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using SmartBots.Application.Features.ExchangeApi.PlaceOrderCommand;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Entities;
 using System.Collections.Concurrent;
@@ -7,13 +9,17 @@ namespace SmartBots.Infrastructure.Services
 {
     public class TradingBotManager : ITradingBotManager
     {
+        private readonly List<Order> orders = new List<Order>();
+
         private readonly ConcurrentDictionary<Guid, TradingBot> _activeBots = new();
+        private readonly IMediator _mediator;
         private readonly IRealTimeDataManager _realTimeDataManager;
         private readonly ITradingRuleManager _tradingRuleManager;
         private readonly ILogger<TradingBotManager> _logger;
 
-        public TradingBotManager(IRealTimeDataManager realTimeDataManager, ITradingRuleManager tradingRuleManager, ILogger<TradingBotManager> logger)
+        public TradingBotManager(IMediator mediator, IRealTimeDataManager realTimeDataManager, ITradingRuleManager tradingRuleManager, ILogger<TradingBotManager> logger)
         {
+            _mediator = mediator;
             _realTimeDataManager = realTimeDataManager ?? throw new ArgumentNullException(nameof(realTimeDataManager));
             _tradingRuleManager = tradingRuleManager;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -41,34 +47,29 @@ namespace SmartBots.Infrastructure.Services
                     // Subscribe to real-time data updates
                     string symbol = $"{bot.BaseAsset}{bot.QuoteAsset}";
 
-                    await _realTimeDataManager.SubscribeToKlineAndTickerUpdates(
+                    await _realTimeDataManager.SubscribeToAll(
+                        bot.ExchangeAccountId,
                         symbol,
                         interval,
                         async (klineData, lastPrice) =>
                         {
-                            if (klineData.Count == 0)
-                                return;
-
-                            var signal = await _tradingRuleManager.EvaluateSignalsAsync(klineData, bot.TradingRules);
-
-                            switch (signal)
+                            try
                             {
-                                case TradingSignal.Buy:
-                                    _logger.LogInformation("Buy signal detected for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
-                                    // Place Buy Order Logic
-                                    break;
+                                if (klineData.Count == 0)
+                                    return;
 
-                                case TradingSignal.Sell:
-                                    _logger.LogInformation("Sell signal detected for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
-                                    // Place Sell Order Logic
-                                    break;
+                                var signal = await _tradingRuleManager.EvaluateSignalsAsync(klineData, bot.TradingRules);
 
-                                case TradingSignal.Hold:
-                                    _logger.LogInformation("Hold signal for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
-                                    break;
+                                await HandleSignal(bot, lastPrice, symbol, signal);
                             }
-
-                            _logger.LogInformation("Evaluated signals for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "Error while handling kline");
+                            }
+                        },
+                        orderUpdateData =>
+                        {
+                            _logger.LogInformation("orderUpdateData = " + orderUpdateData.Status);
                         },
                         cancellationToken);
                 }
@@ -81,6 +82,62 @@ namespace SmartBots.Infrastructure.Services
             else
             {
                 _logger.LogError("Failed to add bot {BotName} with ID {BotId} to active list.", bot.Name, bot.Id);
+            }
+        }
+
+        private async Task HandleSignal(TradingBot bot, decimal lastPrice, string symbol, TradingSignal signal)
+        {
+            switch (signal)
+            {
+                case TradingSignal.Buy:
+                    await HandleBuySignal(bot, lastPrice, symbol);
+                    break;
+
+                case TradingSignal.Sell:
+                    await HandleSellSignal(bot, lastPrice, symbol);
+                    break;
+
+                case TradingSignal.Hold:
+                    _logger.LogInformation("Hold signal for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
+                    break;
+            }
+        }
+
+        private async Task HandleSellSignal(TradingBot bot, decimal lastPrice, string symbol)
+        {
+            if (orders.Count == 0 || orders.LastOrDefault()?.Side == OrderSide.BUY)
+            {
+                var order = await _mediator.Send(new PlaceOrderCommand(bot.ExchangeAccountId, new OrderRequest
+                {
+                    Price = lastPrice,
+                    Quantity = (decimal)bot.TradeSize,
+                    Side = OrderSide.SELL,
+                    Symbol = symbol,
+                    TimeInForce = TimeInForce.FOK,
+                    Type = OrderType.LIMIT
+                }));
+                orders.Add(order);
+                _logger.LogInformation("Sell order placed for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
+                _logger.LogInformation($"Order Status: {order.Status}");
+            }
+        }
+
+        private async Task HandleBuySignal(TradingBot bot, decimal lastPrice, string symbol)
+        {
+            if (orders.Count == 0 || orders.LastOrDefault()?.Side == OrderSide.SELL)
+            {
+                var order = await _mediator.Send(new PlaceOrderCommand(bot.ExchangeAccountId, new OrderRequest
+                {
+                    Price = lastPrice,
+                    Quantity = (decimal)bot.TradeSize,
+                    Side = OrderSide.BUY,
+                    Symbol = symbol,
+                    TimeInForce = TimeInForce.FOK,
+                    Type = OrderType.LIMIT
+                }));
+                orders.Add(order);
+                _logger.LogInformation("Buy order placed for bot {BotName} at {Time}.", bot.Name, DateTime.UtcNow);
+                _logger.LogInformation($"Order Status: {order.Status}");
             }
         }
 

@@ -6,14 +6,14 @@ namespace SmartBots.Application.Features.Exchange
 {
     public class AddExchangeAccountCommandHandler : IRequestHandler<AddExchangeAccountCommand, ExchangeAccountDto>
     {
-        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountRepository _exchangeAccountRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public AddExchangeAccountCommandHandler(IUnitOfWork unitOfWork, IExchangeAccountRepository exchangeRepository, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _exchangeRepository = exchangeRepository;
+            _exchangeAccountRepository = exchangeRepository;
             _mapper = mapper;
         }
 
@@ -28,7 +28,7 @@ namespace SmartBots.Application.Features.Exchange
                 IsTest = command.IsTest,
             };
 
-            await _exchangeRepository.AddAsync(exchangeAccount, cancellationToken);
+            await _exchangeAccountRepository.AddAsync(exchangeAccount, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<ExchangeAccountDto>(exchangeAccount);

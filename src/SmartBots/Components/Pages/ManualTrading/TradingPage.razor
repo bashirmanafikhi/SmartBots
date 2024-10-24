@@ -8,6 +8,7 @@
 @using SmartBots.Application.Features.ExchangeApi.GetAvailableSymbolsQuery
 @using SmartBots.Application.Features.ExchangeApi.GetTickerPriceQuery
 @using SmartBots.Application.Features.ExchangeApi.PlaceOrderCommand
+@using SmartBots.Application.Features.ExchangeApi.SubscribeToUserDataUpdatesRequest
 @using SmartBots.Application.Interfaces
 @inject IMediator Mediator
 @attribute [Authorize]
@@ -142,6 +143,22 @@
     {
         AvailableSymbols = await Mediator.Send(new GetAvailableSymbolsQuery(exchangeId, true));
         await LoadOpenOrders();
+
+
+
+        await Mediator.Send(new SubscribeToUserDataUpdatesRequest(
+    exchangeId,
+    orderUpdate =>
+    {
+        Console.WriteLine("Status: " + orderUpdate.Status);
+    },
+    null,
+    null,
+    balanceUpdateData =>
+    {
+        Console.WriteLine("Balance: " + balanceUpdateData.Balance);
+    },
+    null));
     }
 
     private async Task FetchCurrentPrice()

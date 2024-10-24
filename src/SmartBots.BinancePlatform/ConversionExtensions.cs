@@ -2,6 +2,7 @@
 using Binance.Net.Interfaces;
 using Binance.Net.Objects.Models;
 using Binance.Net.Objects.Models.Spot;
+using Binance.Net.Objects.Models.Spot.Socket;
 using SmartBots.Application.Interfaces;
 
 namespace SmartBots.BinancePlatform
@@ -239,5 +240,50 @@ namespace SmartBots.BinancePlatform
                 LastPrice = binanceTick.LastPrice,
             };
         }
+
+        public static OrderUpdateData ToOrderUpdateData(this BinanceStreamOrderUpdate update)
+        {
+            return new OrderUpdateData
+            {
+                Symbol = update.Symbol,
+                OrderId = update.Id,
+                Quantity = update.QuantityFilled,
+                Price = update.Price,
+                Status = update.Status.ToOrderStatus()
+            };
+        }
+
+        public static OcoOrderUpdateData ToOcoOrderUpdateData(this BinanceStreamOrderList update)
+        {
+            return new OcoOrderUpdateData
+            {
+                Symbol = update.Symbol,
+                ListId = update.ListClientOrderId.ToString(),
+                Status = update.ListOrderStatus.ToString()
+            };
+        }
+
+        public static AccountPositionUpdateData ToAccountPositionUpdateData(this BinanceStreamPositionsUpdate update)
+        {
+            return new AccountPositionUpdateData
+            {
+                Positions = update.Balances.Select(b => new PositionData
+                {
+                    Asset = b.Asset,
+                    Free = b.Available,
+                    Locked = b.Locked
+                }).ToList()
+            };
+        }
+
+        public static BalanceUpdateData ToBalanceUpdateData(this BinanceStreamBalanceUpdate update)
+        {
+            return new BalanceUpdateData
+            {
+                Asset = update.Asset,
+                Balance = update.BalanceDelta
+            };
+        }
+
     }
 }

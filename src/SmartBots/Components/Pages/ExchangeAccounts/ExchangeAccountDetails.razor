@@ -5,10 +5,12 @@
 @inject IMediator Mediator
 @rendermode InteractiveServer
 
+<CustomErrorBoundary>
 <h3>Account Info</h3>
 @if (accountInfo is null)
 {
-    <p>Loading Account Info ... </p>
+        <p>Loading Account Info ... </p>
+        <button @onclick="() => GetDetails()">Get Details</button>
 }
 else
 {
@@ -62,7 +64,7 @@ else
         </div>
     </div>
 }
-
+</CustomErrorBoundary>
 
 
 @code {
@@ -72,7 +74,20 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        accountInfo = await Mediator.Send(new GetExchangeAccountInfoQuery(Id));
+        //accountInfo = await Mediator.Send(new GetExchangeAccountInfoQuery(Id));
         StateHasChanged();
+    }
+
+    private async Task GetDetails()
+    {
+        try
+        {
+            var details = await Mediator.Send(new GetExchangeAccountDetailsQuery(Id));
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }

@@ -6,18 +6,18 @@ namespace SmartBots.Application.Features.Exchange
 {
     public class GetExchangeAccountDetailsQueryHandler : IRequestHandler<GetExchangeAccountDetailsQuery, ExchangeAccountDto>
     {
-        private readonly IExchangeAccountRepository _exchangeRepository;
+        private readonly IExchangeAccountRepository _exchangeAccountRepository;
         private readonly ICurrentUserService _currentUserService;
 
         public GetExchangeAccountDetailsQueryHandler(IExchangeAccountRepository exchangeRepository, ICurrentUserService currentUserService)
         {
-            _exchangeRepository = exchangeRepository;
+            _exchangeAccountRepository = exchangeRepository;
             _currentUserService = currentUserService;
         }
 
         public async Task<ExchangeAccountDto> Handle(GetExchangeAccountDetailsQuery request, CancellationToken cancellationToken)
         {
-            var exchangeAccount = await _exchangeRepository.GetByIdAsync(request.Id);
+            var exchangeAccount = await _exchangeAccountRepository.GetByIdAsync(request.Id);
             if (exchangeAccount == null)
             {
                 return new ExchangeAccountDto(); // Exchange not found

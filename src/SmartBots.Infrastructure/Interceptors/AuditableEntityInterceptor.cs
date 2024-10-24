@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using SmartBots.Application.Interfaces;
 using SmartBots.Domain.Interfaces;
 
@@ -8,11 +9,11 @@ namespace SmartBots.Infrastructure.Interceptors
 {
     public class AuditableEntityInterceptor : SaveChangesInterceptor
     {
-        private readonly ICurrentUserService _currentUserService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public AuditableEntityInterceptor(ICurrentUserService currentUserService)
+        public AuditableEntityInterceptor(IServiceProvider serviceProvider)
         {
-            _currentUserService = currentUserService;
+            _serviceProvider = serviceProvider;
         }
 
         public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -36,15 +37,17 @@ namespace SmartBots.Infrastructure.Interceptors
             {
                 if (entry.Entity is IAuditableEntity auditable)
                 {
+                    var currentUserService = _serviceProvider.GetRequiredService<ICurrentUserService>();
+
                     if (entry.State == EntityState.Added)
                     {
                         auditable.CreatedDate = DateTime.UtcNow;
-                        auditable.CreatedBy = _currentUserService.GetUserId();
+                        auditable.CreatedBy = currentUserService.GetUserId();
                     }
                     else if (entry.State == EntityState.Modified)
                     {
                         auditable.UpdatedDate = DateTime.UtcNow;
-                        auditable.UpdatedBy = _currentUserService.GetUserId();
+                        auditable.UpdatedBy = currentUserService.GetUserId();
                     }
                 }
             }

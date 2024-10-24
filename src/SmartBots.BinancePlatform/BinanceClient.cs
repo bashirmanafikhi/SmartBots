@@ -3,6 +3,7 @@ using Binance.Net.Clients;
 using Binance.Net.Enums;
 using Binance.Net.Objects.Models.Spot;
 using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using SmartBots.Application.Interfaces;
 
@@ -13,6 +14,11 @@ namespace SmartBots.BinancePlatform
     public class BinanceClient : IExchangeClient
     {
         private readonly BinanceRestClient _client;
+
+        public BinanceClient()
+        {
+            _client = new BinanceRestClient();
+        }
 
         public BinanceClient(string apiKey, string secretKey)
         {

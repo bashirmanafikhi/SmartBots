@@ -5,6 +5,7 @@ using SmartBots.Application.Features.ExchangeApi.SubscribeToTickerUpdatesRequest
 using SmartBots.Application.Interfaces;
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
+using SmartBots.Application.Features.ExchangeApi.SubscribeToUserDataUpdatesRequest;
 
 
 namespace SmartBots.Infrastructure.Services
@@ -26,21 +27,36 @@ namespace SmartBots.Infrastructure.Services
         public List<Kline> GetCandlestickData() => _candlestickData.ToList();
         public decimal GetLastPrice() => LastPrice;
 
-        public async Task SubscribeToKlineAndTickerUpdates(
+        public async Task SubscribeToAll(
+            Guid exchangeAccountId,
             string symbol,
             KlineInterval interval,
             Action<List<Kline>, decimal> onUpdate,
+            Action<OrderUpdateData> onOrderUpdate,
             CancellationToken cancellationToken = default)
         {
             try
             {
                 await SubscribeToTickerUpdates(symbol, onUpdate, cancellationToken);
                 await LoadCandlestickDataAndSubscribeAsync(symbol, interval, cancellationToken);
+
+                await SubscribeToOrdersUpdates(exchangeAccountId, onOrderUpdate);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error subscribing to Kline and Ticker updates for {Symbol}", symbol);
+                _logger.LogError(ex, "Error SubscribeToAll for {Symbol}", symbol);
             }
+        }
+
+        private async Task SubscribeToOrdersUpdates(Guid exchangeAccountId, Action<OrderUpdateData> onOrderUpdate)
+        {
+            await _mediator.Send(new SubscribeToUserDataUpdatesRequest(
+                exchangeAccountId,
+                onOrderUpdate,
+                null,
+                null,
+                balanceUpdateData => { },
+                null));
         }
 
         private async Task SubscribeToTickerUpdates(
@@ -56,7 +72,7 @@ namespace SmartBots.Infrastructure.Services
                     OnUpdate = tickerData =>
                     {
                         LastPrice = tickerData.LastPrice;
-                        _logger.LogInformation("Received Ticker Update: LastPrice = {LastPrice}", LastPrice);
+                        //_logger.LogInformation("Received Ticker Update: LastPrice = {LastPrice}", LastPrice);
                         onUpdate?.Invoke(GetCandlestickData(), LastPrice);
                     }
                 }, cancellationToken);
@@ -134,7 +150,7 @@ namespace SmartBots.Infrastructure.Services
                     existingCandle.LowPrice = Math.Min(existingCandle.LowPrice, klineData.LowPrice);
                     existingCandle.Volume = klineData.Volume;
 
-                    _logger.LogInformation("Updated existing candle: {OpenTime}", existingCandle.OpenTime);
+                   // _logger.LogInformation("Updated existing candle: {OpenTime}", existingCandle.OpenTime);
                 }
                 else
                 {
@@ -150,7 +166,7 @@ namespace SmartBots.Infrastructure.Services
                     };
                     _candlestickData.Add(newCandle);
 
-                    _logger.LogInformation("Added new candle: {OpenTime} - {CloseTime}", newCandle.OpenTime, newCandle.CloseTime);
+                   // _logger.LogInformation("Added new candle: {OpenTime} - {CloseTime}", newCandle.OpenTime, newCandle.CloseTime);
                 }
             }
             catch (Exception ex)

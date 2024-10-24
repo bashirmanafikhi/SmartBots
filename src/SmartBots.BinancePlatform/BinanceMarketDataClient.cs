@@ -9,6 +9,11 @@ namespace SmartBots.BinancePlatform
     {
         private readonly BinanceRestClient _client;
 
+        public BinanceMarketDataClient()
+        {
+            _client = new BinanceRestClient();
+        }
+
         public BinanceMarketDataClient(string apiKey, string secretKey)
         {
             _client = new BinanceRestClient(options =>
